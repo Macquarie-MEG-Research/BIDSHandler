@@ -15,8 +15,9 @@ import os.path as op
 from os import listdir
 import json
 
-from utils import (get_bids_params, realize_paths,
-                   bids_params_are_subsets, splitall)
+from .BIDSErrors import MappingError
+from .utils import (get_bids_params, realize_paths,
+                    bids_params_are_subsets, splitall)
 
 
 class Scan():
@@ -76,6 +77,8 @@ class Scan():
                 else:
                     if not op.isdir(op.join(self.path, fname)):
                         self.associated_files[bids_params['file']] = fname
+        if self.sidecar is None:
+            raise MappingError
         """
         # TODO: check if this is how all sidecar files work? maybe just MEG?
         # May need to modify how this works for other modalities
@@ -100,33 +103,39 @@ class Scan():
 #region properties
 
     @property
-    def subject(self):
-        return self.session.subject
-
-    @property
-    def project(self):
-        return self.session.subject.project
-
-    @property
-    def raw_file(self):
-        return op.join(self.path, self._raw_file)
-
-    @property
-    def raw_file_relative(self):
-        return op.join(self._path, self._raw_file)
-
-    @property
     def path(self):
         """Determine path location based on parent paths."""
         return op.join(self.session.path, self._path)
 
+    @property
+    def project(self):
+        """Parent Project object."""
+        return self.subject.project
+
+    @property
+    def raw_file(self):
+        """Absolute path of associated raw file."""
+        return realize_paths(self, self._raw_file)
+
+    @property
+    def raw_file_relative(self):
+        """Relative path (to parent session) of associated raw file."""
+        return op.join(self._path, self._raw_file)
+
+    @property
+    def subject(self):
+        """Parent Subject object."""
+        return self.session.subject
+
 #region class methods
+
+    def __eq__(self, other):
+        return ((self.acq == other.acq) &
+                (self.task == other.task) &
+                (self.run == other.run) &
+                (self.session._id == other.session._id) &
+                (self.subject._id == other.project._id) &
+                (self.project._id == other.project._id))
 
     def __repr__(self):
         return self.path
-
-    def __eq__(self, other):
-        return (self.acq == other.acq & self.task == other.task &
-                self.run == other.run & self.session.ID == other.session.ID &
-                self.subject.ID == other.project.ID &
-                self.project.ID == other.project.ID)
