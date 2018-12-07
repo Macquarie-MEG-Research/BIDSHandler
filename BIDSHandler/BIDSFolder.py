@@ -56,9 +56,8 @@ class BIDSFolder():
             if other._id in self._projects:
                 self.project(other._id).add(other)
             else:
-                new_project = Project.clone_into_bidsfolder(self, other)
+                new_project = Project._clone_into_bidsfolder(self, other)
                 new_project.add(other)
-                new_project._check()
                 self._projects[other._id] = new_project
 
         elif isinstance(other, (Subject, Session, Scan)):
@@ -67,8 +66,8 @@ class BIDSFolder():
             if other.project._id in self._projects:
                 self.project(other.project._id).add(other, copier)
             else:
-                new_project = Project.clone_into_bidsfolder(self,
-                                                            other.project)
+                new_project = Project._clone_into_bidsfolder(self,
+                                                             other.project)
                 new_project.add(other)
                 self._projects[other.project._id] = new_project
         else:

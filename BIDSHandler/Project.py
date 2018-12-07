@@ -1,5 +1,7 @@
 import os.path as op
 import os
+import pandas as pd
+from collections import OrderedDict
 
 from .Subject import Subject
 from .Session import Session
@@ -10,11 +12,12 @@ from .utils import copyfiles, realize_paths
 
 class Project():
     def __init__(self, id_, bids_folder, initialize=True):
-        self.ID = self._id = id_
+        self._id = id_
         self.bids_folder = bids_folder
         self._participants_tsv = None
+        self._description = None
+        self._readme = None
         self._subjects = dict()
-        self.description = 'None'
 
         if initialize:
             self.add_subjects()
@@ -52,9 +55,8 @@ class Project():
                 if other in self:
                     self.subject(other._id).add(other)
                 else:
-                    new_subject = Subject.clone_into_project(self, other)
+                    new_subject = Subject._clone_into_project(self, other)
                     new_subject.add(other)
-                    new_subject._check()
                     self._subjects[other._id] = new_subject
             else:
                 raise AssociationError("subject", "project")
@@ -65,8 +67,8 @@ class Project():
                     self.subject(other.subject._id).add(other, copier)
                 else:
                     # Otherwise create a new subject and add the session to it.
-                    new_subject = Subject.clone_into_project(self,
-                                                             other.subject)
+                    new_subject = Subject._clone_into_project(self,
+                                                              other.subject)
                     new_subject.add(other, copier)
                     self._subjects[other.subject._id] = new_subject
             else:
@@ -88,20 +90,25 @@ class Project():
                 self._subjects[sub_id] = Subject(sub_id, self)
             elif fname == 'participants.tsv':
                 self._participants_tsv = fname
+            elif fname == 'dataset_description.json':
+                self._description = fname
+            elif fname == 'README.txt':
+                self._readme = fname
 
-    @staticmethod
-    def clone_into_bidsfolder(bids_folder, other):
-        """Create a copy of the Project with a new parent BIDSFolder.
-
-        Parameters
-        ----------
-        bids_folder : Instance of BIDSFolder
-            New parent BIDSFolder.
-        other : instance of Project
-            Original Project instance to clone.
-        """
-        os.makedirs(realize_paths(bids_folder, other.ID), exist_ok=True)
-        return Project(other._id, bids_folder, initialize=False)
+    def create_empty_participants_tsv(self):
+        """Create an empty participants.tsv file for this project."""
+        self._participants_tsv = 'participants.tsv'
+        full_path = realize_paths(self, self._participants_tsv)
+        if not op.exists(full_path):
+            df = pd.DataFrame(
+                OrderedDict([
+                    ('participant_id', []),
+                    ('age', []),
+                    ('sex', []),
+                    ('group', [])]),
+                columns=['participant_id', 'age', 'sex', 'group'])
+        df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
+                  encoding='utf-8')
 
     def subject(self, id_):
         """Return the Subject in this project with the corresponding ID."""
@@ -133,7 +140,31 @@ class Project():
         if len(self._subjects) == 0:
             raise MappingError
 
+    @staticmethod
+    def _clone_into_bidsfolder(bids_folder, other):
+        """Create a copy of the Project with a new parent BIDSFolder.
+
+        Parameters
+        ----------
+        bids_folder : Instance of BIDSFolder
+            New parent BIDSFolder.
+        other : instance of Project
+            Original Project instance to clone.
+        """
+        os.makedirs(realize_paths(bids_folder, other.ID), exist_ok=True)
+        new_project = Project(other._id, bids_folder, initialize=False)
+        new_project.create_empty_participants_tsv()
+        return new_project
+
 #region properties
+
+    @property
+    def description(self):
+        return realize_paths(self, self._description)
+
+    @property
+    def ID(self):
+        return str(self._id)
 
     @property
     def participants_tsv(self):
@@ -143,6 +174,10 @@ class Project():
     def path(self):
         """Determine path location based on parent paths."""
         return op.join(self.bids_folder.path, self.ID)
+
+    @property
+    def readme(self):
+        return realize_paths(self, self._readme)
 
     @property
     def scans(self):

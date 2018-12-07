@@ -57,18 +57,11 @@ class Subject():
         elif isinstance(other, Session):
             if (self._id == other.subject._id and
                     self.project._id == other.project._id):
-                # If the session doesn't already exist, add it.
-                if other not in self:
-                    new_session = Session.clone_into_subject(self, other)
-                # Otherwise simply use the existing session.
+                if other in self:
+                    self.session(other._id).add(other)
                 else:
-                    new_session = self.session(other._id)
-                # For every scan in the added session, add to the new one.
-                for scan in other.scans:
-                    new_session.add(scan, copier)
-                new_session._check()
-                # Only add the new session to the list if it is indeed new.
-                if other._id not in self._sessions:
+                    new_session = Session._clone_into_subject(self, other)
+                    new_session.add(other)
                     self._sessions[other._id] = new_session
             else:
                 raise AssociationError("session", "project and subject")
@@ -78,10 +71,9 @@ class Subject():
                 if other.session in self:
                     self.session(other.session._id).add(other, copier)
                 else:
-                    new_session = Session.clone_into_subject(self,
-                                                             other.session)
+                    new_session = Session._clone_into_subject(self,
+                                                              other.session)
                     new_session.add(other, copier)
-                    new_session._check()
                     self._sessions[other.session._id] = new_session
             else:
                 raise AssociationError("scan", "project and subject")
@@ -95,38 +87,6 @@ class Subject():
             if op.isdir(full_path) and 'ses' in fname:
                 ses_id = fname.split('-')[1]
                 self._sessions[ses_id] = Session(ses_id, self)
-
-    @staticmethod
-    def clone_into_project(project, other):
-        """Create a copy of the Subject with a new parent Project.
-
-        Parameters
-        ----------
-        project : Instance of Project
-            New parent Project.
-        other : instance of Subject
-            Original Subject instance to clone.
-        """
-        os.makedirs(realize_paths(project, other.ID), exist_ok=True)
-
-        # Create a new empty subject object.
-        new_subject = Subject(other._id, project, initialize=False)
-
-        # Merge the subject data into the participants.tsv file.
-        df = pd.read_csv(project.participants_tsv, sep='\t')
-        other_sub_df = pd.DataFrame(
-            OrderedDict([
-                ('participant_id', [other.ID]),
-                ('age', [other.age]),
-                ('sex', [other.sex]),
-                ('group', [other.group])]),
-            columns=['participant_id', 'age', 'sex', 'group'])
-        df = df.append(other_sub_df)
-        df.to_csv(project.participants_tsv, sep='\t', index=False,
-                  na_rep='n/a', encoding='utf-8')
-        # can now safely get the subject info
-        new_subject.get_subject_info()
-        return new_subject
 
     def contained_files(self):
         """Get the list of contained files."""
@@ -163,6 +123,38 @@ class Subject():
     def _check(self):
         if len(self._sessions) == 0:
             raise MappingError
+
+    @staticmethod
+    def _clone_into_project(project, other):
+        """Create a copy of the Subject with a new parent Project.
+
+        Parameters
+        ----------
+        project : Instance of Project
+            New parent Project.
+        other : instance of Subject
+            Original Subject instance to clone.
+        """
+        os.makedirs(realize_paths(project, other.ID), exist_ok=True)
+
+        # Create a new empty subject object.
+        new_subject = Subject(other._id, project, initialize=False)
+
+        # Merge the subject data into the participants.tsv file.
+        df = pd.read_csv(project.participants_tsv, sep='\t')
+        other_sub_df = pd.DataFrame(
+            OrderedDict([
+                ('participant_id', [other.ID]),
+                ('age', [other.age]),
+                ('sex', [other.sex]),
+                ('group', [other.group])]),
+            columns=['participant_id', 'age', 'sex', 'group'])
+        df = df.append(other_sub_df)
+        df.to_csv(project.participants_tsv, sep='\t', index=False,
+                  na_rep='n/a', encoding='utf-8')
+        # can now safely get the subject info
+        new_subject.get_subject_info()
+        return new_subject
 
 #region properties
 

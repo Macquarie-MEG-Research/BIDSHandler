@@ -96,23 +96,6 @@ class Session():
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
 
-    @staticmethod
-    def clone_into_subject(subject, other):
-        """Create a copy of the Session with a new parent Subject.
-
-        Parameters
-        ----------
-        subjecty : Instance of Subject
-            New parent Subject.
-        other : instance of Session
-            Original Session instance to clone.
-        """
-        os.makedirs(realize_paths(subject, other.ID), exist_ok=True)
-        # Create a new empty session object.
-        new_session = Session(other._id, subject, initialize=False)
-        new_session.create_empty_scan_tsv()
-        return new_session
-
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()
@@ -120,6 +103,17 @@ class Session():
         for scan in self.scans:
             file_list.update(scan.contained_files())
         return file_list
+
+    def create_empty_scan_tsv(self):
+        """Create an empty scans.tsv file for this session."""
+        self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
+        full_path = realize_paths(self, self._scans_tsv)
+        if not op.exists(full_path):
+            df = pd.DataFrame(OrderedDict([('filename', []),
+                                           ('acq_time', [])]),
+                              columns=['filename', 'acq_time'])
+            df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
+                      encoding='utf-8')
 
     # TODO: Rename?
     def determine_content(self):
@@ -150,22 +144,28 @@ class Session():
                 return scan
         raise NoScanError
 
-    def create_empty_scan_tsv(self):
-        """Create an empty scans.tsv file for this session."""
-        self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
-        full_path = realize_paths(self, self._scans_tsv)
-        if not op.exists(full_path):
-            df = pd.DataFrame(OrderedDict([('filename', []),
-                                           ('acq_time', [])]),
-                              columns=['filename', 'acq_time'])
-            df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
-                      encoding='utf-8')
-
 #region private methods
 
     def _check(self):
         if len(self._scans) == 0:
             raise MappingError
+
+    @staticmethod
+    def _clone_into_subject(subject, other):
+        """Create a copy of the Session with a new parent Subject.
+
+        Parameters
+        ----------
+        subjecty : Instance of Subject
+            New parent Subject.
+        other : instance of Session
+            Original Session instance to clone.
+        """
+        os.makedirs(realize_paths(subject, other.ID), exist_ok=True)
+        # Create a new empty session object.
+        new_session = Session(other._id, subject, initialize=False)
+        new_session.create_empty_scan_tsv()
+        return new_session
 
 #region properties
 
