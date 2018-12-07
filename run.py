@@ -6,11 +6,11 @@ root2 = "C:\\Users\\MQ20184158\\Documents\\MEG data\\rs_test_data_for_matt\\BIDS
 
 a = BIDSFolder(root1)
 b = BIDSFolder(root2)
-suba = a.project('WS001').subject(2)
-projb = b.project('WS001')
+subb = b.project('WS001').subject(2)
+proja = a.project('WS001')
 
-print(suba)
-print(projb)
+print(subb)
+print(proja)
 
-projb.add(suba)
-print(projb)
+a.add(subb)
+print(proja)

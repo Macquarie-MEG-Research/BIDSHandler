@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 import pandas as pd
 
-from .BIDSErrors import MappingError, NoSessionError
+from .BIDSErrors import MappingError, NoSessionError, AssociationError
 from .Session import Session
 from .Scan import Scan
 from .utils import copyfiles, realize_paths
@@ -54,7 +54,7 @@ class Subject():
                     self.add(session, copier)
             else:
                 raise ValueError("Added subject must have same ID.")
-        if isinstance(other, Session):
+        elif isinstance(other, Session):
             if (self._id == other.subject._id and
                     self.project._id == other.project._id):
                 # If the session doesn't already exist, add it.
@@ -71,8 +71,7 @@ class Subject():
                 if other._id not in self._sessions:
                     self._sessions[other._id] = new_session
             else:
-                raise ValueError("Added session must exist in same project "
-                                 "and subject.")
+                raise AssociationError("session", "project and subject")
         elif isinstance(other, Scan):
             if (self._id == other.subject._id and
                     self.project._id == other.project._id):
@@ -85,11 +84,10 @@ class Subject():
                     new_session._check()
                     self._sessions[other.session._id] = new_session
             else:
-                raise ValueError("Added scan must exist in the same project "
-                                 "and subject.")
+                raise AssociationError("scan", "project and subject")
         else:
             raise TypeError("Cannot add a {0} object to a Subject".format(
-                other.__name__))
+                type(other).__name__))
 
     def add_sessions(self):
         for fname in os.listdir(self.path):

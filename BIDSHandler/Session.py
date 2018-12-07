@@ -5,7 +5,7 @@ from collections import OrderedDict
 import pandas as pd
 
 from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
-from .BIDSErrors import MappingError, NoScanError
+from .BIDSErrors import MappingError, NoScanError, AssociationError
 from .Scan import Scan
 
 
@@ -61,7 +61,7 @@ class Session():
                     self.add(scan)
             else:
                 raise ValueError("Added session must have same ID.")
-        if isinstance(other, Scan):
+        elif isinstance(other, Scan):
             # TODO-LT: handle other modalities
             # we need to make sure that the scan is of the same person/session:
             if (self._id == other.session._id and
@@ -91,12 +91,10 @@ class Session():
                 scan = Scan(other.raw_file_relative, other.acq_time, self)
                 self._scans.append(scan)
             else:
-                # TODO: raise custom error?
-                raise ValueError("Added scan must exist in the same project, "
-                                 "subject and session.")
+                raise AssociationError("scan", "project, subject and session")
         else:
-            raise TypeError("Cannot add a {0} object to a Scan".format(
-                other.__name__))
+            raise TypeError("Cannot add a {0} object to a Subject".format(
+                type(other).__name__))
 
     @staticmethod
     def clone_into_subject(subject, other):

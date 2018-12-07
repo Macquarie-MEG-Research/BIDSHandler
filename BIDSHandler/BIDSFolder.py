@@ -32,7 +32,6 @@ class BIDSFolder():
         self._projects = projects
 
     def add(self, other, copier=copyfiles):
-        #!INCOMPLETE
         """Add another Scan to this object.
 
         Parameters
@@ -50,31 +49,28 @@ class BIDSFolder():
             shutil.copy.
         """
         if isinstance(other, BIDSFolder):
+            # merge all child projects in
             for project in other.projects:
                 self.add(project, copier)
         elif isinstance(other, Project):
             if other._id in self._projects:
                 self.project(other._id).add(other)
             else:
-                # Add a new project.
-                os.makedirs(op.join(self.path, other.ID))
-                new_project = Project(other._id, self, initialize=False)
-                # TODO: get file list etc.
-        elif isinstance(other, Subject):
+                new_project = Project.clone_into_bidsfolder(self, other)
+                new_project.add(other)
+                new_project._check()
+                self._projects[other._id] = new_project
+
+        elif isinstance(other, (Subject, Session, Scan)):
             # If the project the subject is a part of exists add the subject to
             # this project.
             if other.project._id in self._projects:
                 self.project(other.project._id).add(other, copier)
             else:
-                # Otherwise add a new project and add the subject to it.
-                new_project = Project(other.project.ID, self,
-                                      initialize=False)
-                os.makedirs(op.join(self.path, other.project.ID))
-
-        elif isinstance(other, Session):
-            print('sess')
-        elif isinstance(other, Scan):
-            print('scan')
+                new_project = Project.clone_into_bidsfolder(self,
+                                                            other.project)
+                new_project.add(other)
+                self._projects[other.project._id] = new_project
         else:
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))

@@ -4,7 +4,7 @@ import os
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
-from .BIDSErrors import NoSubjectError, MappingError
+from .BIDSErrors import NoSubjectError, MappingError, AssociationError
 from .utils import copyfiles, realize_paths
 
 
@@ -47,25 +47,21 @@ class Project():
                     self.add(subject, copier)
             else:
                 raise ValueError("Added project must have same ID.")
-        if isinstance(other, Subject):
-            if self._id == other.project.id:
-                if other._id not in self._subjects:
-                    new_subject = Subject.clone_into_project(self, other)
+        elif isinstance(other, Subject):
+            if self._id == other.project._id:
+                if other in self:
+                    self.subject(other._id).add(other)
                 else:
-                    new_subject = self.subject(other._id)
-                for session in other.sessions:
-                    new_subject.add(session, copier)
-                new_subject._check()
-                # Add the new subject to the list of subjects.
-                if other._id not in self._subjects:
+                    new_subject = Subject.clone_into_project(self, other)
+                    new_subject.add(other)
+                    new_subject._check()
                     self._subjects[other._id] = new_subject
             else:
-                raise ValueError("Cannot add a subject from a different "
-                                 "project.")
-        if isinstance(other, Session):
+                raise AssociationError("subject", "project")
+        elif isinstance(other, (Session, Scan)):
             if self._id == other.project._id:
-                # If the subject already exists add the session to it.
                 if other.subject in self:
+                    # If the subject already exists add the session to it.
                     self.subject(other.subject._id).add(other, copier)
                 else:
                     # Otherwise create a new subject and add the session to it.
@@ -74,32 +70,13 @@ class Project():
                     new_subject.add(other, copier)
                     self._subjects[other.subject._id] = new_subject
             else:
-                raise ValueError("Cannot add a session from a different "
-                                 "project.")
-        elif isinstance(other, Scan):
-            if self._id == other.project._id:
-                if other.subject in self:
-                    if other.session in self.subject(other.subject._id):
-                        self.subject(other.subject._id).session(
-                            other.session._id).add(other, copier)
-                    else:
-                        # Create a new session.
-                        new_session = Session.clone_into_subject(
-                            self.subject(other.subject._id),
-                            other.session)
-                        new_session.add(other, copier)
-                        new_session._check()
-                        self.subject(other.subject._id)._sessions[
-                            other.session._id] = new_session
+                if isinstance(other, Session):
+                    raise AssociationError("session", "project")
                 else:
-                    # Create a new subject.
-                    new_subject = Subject.clone_into_project(self,
-                                                             other.subject)
-                    new_session = Session.clone_into_subject(new_subject,
-                                                             other.session)
-            else:
-                raise ValueError("Cannot add a session from a different "
-                                 "project.")
+                    raise AssociationError("scan", "project")
+        else:
+            raise TypeError("Cannot add a {0} object to a Subject".format(
+                type(other).__name__))
 
     def add_subjects(self):
         """Add all the subjects in the folder to the Project."""
