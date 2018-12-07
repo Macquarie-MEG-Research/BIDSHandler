@@ -160,7 +160,9 @@ class Project():
 
     @property
     def description(self):
-        return realize_paths(self, self._description)
+        if self._description is not None:
+            return realize_paths(self, self._description)
+        raise FileNotFoundError
 
     @property
     def ID(self):
@@ -168,7 +170,9 @@ class Project():
 
     @property
     def participants_tsv(self):
-        return realize_paths(self, self._participants_tsv)
+        if self._participants_tsv is not None:
+            return realize_paths(self, self._participants_tsv)
+        raise FileNotFoundError
 
     @property
     def path(self):
@@ -177,7 +181,9 @@ class Project():
 
     @property
     def readme(self):
-        return realize_paths(self, self._readme)
+        if self._readme is not None:
+            return realize_paths(self, self._readme)
+        raise FileNotFoundError
 
     @property
     def scans(self):

@@ -1,6 +1,27 @@
-def test_load():
-    # test the loading of a folder into the BIDS hierarchy
+# test various aspects of loading BIDS folders
 
-    # loading we can just throw the folder into a BIDSFolder object and then
-    # poll some properties and make sure they are correct.
-    pass
+import tempfile
+import os.path as op
+import shutil
+#import pytest
+
+from BIDSHandler import BIDSFolder, Session  #, MappingError
+
+TESTPATH1 = 'data/BIDSTEST1'
+TESTPATH2 = 'data/BIDSTEST2'
+
+
+def test_containment():
+    with tempfile.TemporaryDirectory() as tmp:
+        # copy the dst to a temp folder
+        shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
+        src_bf = BIDSFolder(TESTPATH1)
+        dst_bf = BIDSFolder(op.join(tmp, 'BIDSTEST2'))
+
+        proj = src_bf.project('test1')
+        subj = proj.subject('1')
+        sess = subj.session('1')
+        scan = sess.scan(task='resting', run='1')
+        assert subj in dst_bf.project('test1')
+        assert sess in dst_bf.project('test1').subject('1')
+        assert scan in dst_bf.project('test1').subject('1').session('1')

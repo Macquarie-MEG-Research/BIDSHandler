@@ -80,7 +80,7 @@ class Session():
                 combine_tsv(self.scans_tsv, other_scan_df, 'filename')
 
                 file_list = (list(other.associated_files.values()) +
-                             [other.sidecar] + [other._raw_file])
+                             [other._sidecar] + [other._raw_file])
                 # copy the files over
                 fl_left = realize_paths(other, file_list)
                 fl_right = []

@@ -6,7 +6,7 @@ from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
 from .BIDSErrors import MappingError, NoProjectError
-from .utils import copyfiles
+from .utils import copyfiles, realize_paths
 
 
 class BIDSFolder():
@@ -57,6 +57,13 @@ class BIDSFolder():
                 self.project(other._id).add(other)
             else:
                 new_project = Project._clone_into_bidsfolder(self, other)
+                # copy over the description and readme:
+                file_list = [other._description, other._readme]
+                fl_left = realize_paths(other, file_list)
+                fl_right = realize_paths(new_project, file_list)
+                copier(fl_left, fl_right)
+                new_project._description = other._description
+                new_project._readme = other._readme
                 new_project.add(other)
                 self._projects[other._id] = new_project
 
@@ -68,6 +75,13 @@ class BIDSFolder():
             else:
                 new_project = Project._clone_into_bidsfolder(self,
                                                              other.project)
+                # copy over the description and readme:
+                file_list = [other.project._description, other.project._readme]
+                fl_left = realize_paths(other.project, file_list)
+                fl_right = realize_paths(new_project, file_list)
+                copier(fl_left, fl_right)
+                new_project._description = other.project._description
+                new_project._readme = other.project._readme
                 new_project.add(other)
                 self._projects[other.project._id] = new_project
         else:

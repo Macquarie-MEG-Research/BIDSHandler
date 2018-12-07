@@ -91,7 +91,3 @@ def splitall(path):
             path = parts[0]
             allparts.insert(0, parts[1])
     return allparts
-
-
-if __name__ == "__main__":
-    print(get_bids_params('sub-1111_ses-aab_scans.json'))

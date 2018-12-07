@@ -27,7 +27,7 @@ class Scan():
         self.acq_time = acq_time
         self.session = session
         self._get_params()
-        self.sidecar = None
+        self._sidecar = None
         self.associated_files = dict()
         self._assign_metadata()
         # load information from the sidecar
@@ -46,14 +46,14 @@ class Scan():
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()
-        file_list.add(realize_paths(self, self.sidecar))
+        file_list.add(self.sidecar)
         file_list.update(realize_paths(self,
                                        list(self.associated_files.values())))
         return file_list
 
     def read_info(self):
         """Read the sidecar.json and load the information into self.info"""
-        with open(realize_paths(self, self.sidecar), 'r') as sidecar:
+        with open(self.sidecar, 'r') as sidecar:
             self.info = json.load(sidecar)
 
 #region private methods
@@ -73,18 +73,13 @@ class Scan():
             if bids_params_are_subsets(filename_data, bids_params):
                 if (bids_params['file'] == self._path and
                         bids_params['ext'] == '.json'):
-                    self.sidecar = fname
+                    self._sidecar = fname
                 else:
                     if not op.isdir(op.join(self.path, fname)):
                         self.associated_files[bids_params['file']] = fname
-        if self.sidecar is None:
+        if self._sidecar is None:
+            # TODO: move to a ._check method and add more checks...
             raise MappingError
-        """
-        # TODO: check if this is how all sidecar files work? maybe just MEG?
-        # May need to modify how this works for other modalities
-        if self._path in self.associated_files:
-            self.sidecar = self.associated_files.pop(self._path)
-        """
 
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
@@ -123,6 +118,11 @@ class Scan():
         return op.join(self._path, self._raw_file)
 
     @property
+    def sidecar(self):
+        """Absolute path of associated sidecar file."""
+        return realize_paths(self, self._sidecar)
+
+    @property
     def subject(self):
         """Parent Subject object."""
         return self.session.subject
@@ -134,7 +134,7 @@ class Scan():
                 (self.task == other.task) &
                 (self.run == other.run) &
                 (self.session._id == other.session._id) &
-                (self.subject._id == other.project._id) &
+                (self.subject._id == other.subject._id) &
                 (self.project._id == other.project._id))
 
     def __repr__(self):
