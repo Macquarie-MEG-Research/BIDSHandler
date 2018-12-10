@@ -40,11 +40,6 @@ class Scan():
 
 #region public methods
 
-    def copy(self, session):
-        """Return a new instance of this Scan with the new session."""
-        # should be able to drop this and simply do copy.copy(other)
-        return Scan(self.raw_file_relative, self.acq_time, session)
-
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()

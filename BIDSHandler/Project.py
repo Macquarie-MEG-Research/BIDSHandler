@@ -186,7 +186,16 @@ class Project():
         raise FileNotFoundError
 
     @property
+    def sessions(self):
+        """List of all Sessions contained in the Project."""
+        session_list = []
+        for subject in self.subjects:
+            session_list.extend(subject.sessions)
+        return session_list
+
+    @property
     def scans(self):
+        """List of all Scans contained in the Project."""
         scan_list = []
         for subject in self.subjects:
             scan_list.extend(subject.scans)
@@ -194,27 +203,42 @@ class Project():
 
     @property
     def subjects(self):
+        """List of all Subjects contained in the Project."""
         return list(self._subjects.values())
-
-    @subjects.setter
-    def subjects(self, other):
-        self.add(other)
 
 #region class methods
 
     def __contains__(self, other):
-        """ other: instance of Subject """
+        """Determine if the Subject contains a certain session or scan.
+
+        Parameters
+        ----------
+        other : Instance of Scan, Session or Subject
+            Scan, Session or Subject object to check whether it is contained by
+            this Project.
+        """
         if isinstance(other, Subject):
             return other._id in self._subjects
+        elif isinstance(other, (Session, Scan)):
+            for subject in self.subjects:
+                if other in subject:
+                    return True
+            return False
         else:
-            #TODO: allow checks for sessions and scans
-            raise TypeError("Can only determine if a subject is contained.")
+            raise TypeError("Can only determine if a Scan, Session or Subject "
+                            "is contained.")
 
     def __iter__(self):
         return iter(self._subjects.values())
 
+    def __getitem__(self, item):
+        """
+        Return the child subject with the corresponding name (if it exists).
+        """
+        return self.subject(item)
+
     def __repr__(self):
         output = []
-        output.append('Project ID: {0}'.format(self.ID))
+        output.append('ID: {0}'.format(self.ID))
         output.append('Number of subjects: {0}'.format(len(self.subjects)))
         return '\n'.join(output)

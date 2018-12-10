@@ -196,11 +196,8 @@ class Session():
 
     @property
     def scans(self):
+        """List of contained Scans."""
         return self._scans
-
-    @scans.setter
-    def scans(self, other):
-        self.add(other)
 
     @property
     def scans_tsv(self):
@@ -215,7 +212,7 @@ class Session():
         Parameters
         ----------
         other : Instance of Scan
-            Scan object to test whether it is contained in this session
+            Scan object to test whether it is contained in this Session.
         """
         for scan in self._scans:
             if scan == other:
@@ -227,6 +224,6 @@ class Session():
 
     def __repr__(self):
         output = []
-        output.append(self.ID)
+        output.append('ID: {0}'.format(self.ID))
         output.append('Number of scans: {0}'.format(len(self.scans)))
         return '\n'.join(output)

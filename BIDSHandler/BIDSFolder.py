@@ -19,18 +19,6 @@ class BIDSFolder():
 
 #region public methods
 
-    def determine_content(self):
-        """ return a list of all the BIDS projects in the specified folder """
-        projects = dict()
-        try:
-            for f in os.listdir(self.path):
-                full_path = op.join(self.path, f)
-                if op.isdir(full_path):
-                    projects[f] = Project(f, self)
-        except MappingError:
-            self._projects = dict()
-        self._projects = projects
-
     def add(self, other, copier=copyfiles):
         """Add another Scan to this object.
 
@@ -88,6 +76,18 @@ class BIDSFolder():
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
 
+    def determine_content(self):
+        """ return a list of all the BIDS projects in the specified folder """
+        projects = dict()
+        try:
+            for f in os.listdir(self.path):
+                full_path = op.join(self.path, f)
+                if op.isdir(full_path):
+                    projects[f] = Project(f, self)
+        except MappingError:
+            self._projects = dict()
+        self._projects = projects
+
     def project(self, id_):
         try:
             return self._projects[id_]
@@ -99,18 +99,41 @@ class BIDSFolder():
 
     @property
     def projects(self):
+        """List of all Projects contained in the BIDS folder."""
         return list(self._projects.values())
 
     @property
+    def scans(self):
+        """List of all Scans contained in the BIDS folder."""
+        scan_list = []
+        for project in self.projects:
+            scan_list.extend(project.scans)
+
+    @property
+    def sessions(self):
+        """List of all Sessions contained in the BIDS folder."""
+        session_list = []
+        for project in self.projects:
+            session_list.extend(project.sessions)
+        return session_list
+
+    @property
     def subjects(self):
+        """List of all Subjects contained in the BIDS folder."""
         subject_list = []
         for project in self.projects:
             subject_list.extend(project.subjects)
 
 #region class methods
 
-    def __repr__(self):
-        return "BIDS folder containing {0} projects".format(len(self.projects))
-
     def __iter__(self):
         return iter(self.projects)
+
+    def __getitem__(self, item):
+        """
+        Return the child project with the corresponding name (if it exists).
+        """
+        return self.project(item)
+
+    def __repr__(self):
+        return "BIDS folder containing {0} projects".format(len(self.projects))

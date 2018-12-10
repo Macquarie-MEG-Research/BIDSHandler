@@ -82,6 +82,8 @@ class Subject():
                 type(other).__name__))
 
     def add_sessions(self):
+        # TODO: allow the session to be determined when there is only one, and
+        # it's not a folder with 'ses' in the name.
         for fname in os.listdir(self.path):
             full_path = op.join(self.path, fname)
             if op.isdir(full_path) and 'ses' in fname:
@@ -174,21 +176,17 @@ class Subject():
         return op.join(self.project.path, self.ID)
 
     @property
-    def sessions(self):
-        """List of contained Sessions."""
-        return list(self._sessions.values())
-
-    @sessions.setter
-    def sessions(self, other):
-        self.add(other)
-
-    @property
     def scans(self):
         """List of contained Scans."""
         scan_list = []
         for session in self.sessions:
             scan_list.extend(session.scans)
         return scan_list
+
+    @property
+    def sessions(self):
+        """List of contained Sessions."""
+        return list(self._sessions.values())
 
 #region class methods
 
@@ -199,12 +197,10 @@ class Subject():
         ----------
         other : Instance of Scan or Session
             Scan or Session object to check whether it is contained by this
-            subject.
+            Subject.
         """
         if isinstance(other, Session):
-            if other._id in self._sessions:
-                return True
-            return False
+            return other._id in self._sessions
         elif isinstance(other, Scan):
             for session in self.sessions:
                 if other in session:
@@ -217,12 +213,17 @@ class Subject():
     def __iter__(self):
         return iter(self._sessions.values())
 
+    def __getitem__(self, item):
+        """
+        Return the child session with the corresponding name (if it exists).
+        """
+        return self.session(item)
+
     def __repr__(self):
         output = []
-        output.append(self.ID)
-        output.append('Info:')
+        output.append('ID: {0}'.format(self.ID))
         output.append('Age: {0}'.format(self.age))
         output.append('Gender: {0}'.format(self.sex))
         output.append('Group: {0}'.format(self.group))
-        output.append('Sessions: {0}'.format(len(self.sessions)))
+        output.append('Number of Sessions: {0}'.format(len(self.sessions)))
         return '\n'.join(output)
