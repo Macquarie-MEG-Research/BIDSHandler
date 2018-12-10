@@ -11,6 +11,8 @@ Data each scan object needs:
 
 """
 
+# TODO: fix handling of split .fif files
+
 import os.path as op
 from os import listdir
 import json
@@ -75,6 +77,7 @@ class Scan():
                         bids_params['ext'] == '.json'):
                     self._sidecar = fname
                 else:
+                    # TODO: this will not work for .ds folders...
                     if not op.isdir(op.join(self.path, fname)):
                         self.associated_files[bids_params['file']] = fname
         if self._sidecar is None:

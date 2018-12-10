@@ -53,10 +53,10 @@ class Project():
         elif isinstance(other, Subject):
             if self._id == other.project._id:
                 if other in self:
-                    self.subject(other._id).add(other)
+                    self.subject(other._id).add(other, copier)
                 else:
                     new_subject = Subject._clone_into_project(self, other)
-                    new_subject.add(other)
+                    new_subject.add(other, copier)
                     self._subjects[other._id] = new_subject
             else:
                 raise AssociationError("subject", "project")

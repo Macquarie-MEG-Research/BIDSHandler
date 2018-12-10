@@ -58,7 +58,7 @@ class Session():
         if isinstance(other, Session):
             if self._id == other._id:
                 for scan in other.scans:
-                    self.add(scan)
+                    self.add(scan, copier)
             else:
                 raise ValueError("Added session must have same ID.")
         elif isinstance(other, Scan):
@@ -70,6 +70,8 @@ class Session():
                 # Handle merging the scans.tsv file
                 if other in self:
                     # we don't want to add it if it is already in this session
+                    # TODO: add overwrite argument to allow it to still be
+                    # added.
                     return
                 other_scan_df = pd.DataFrame(
                     OrderedDict([
@@ -80,7 +82,10 @@ class Session():
                 combine_tsv(self.scans_tsv, other_scan_df, 'filename')
 
                 file_list = (list(other.associated_files.values()) +
-                             [other._sidecar] + [other._raw_file])
+                             [other._sidecar])
+                if other.info['Manufacturer'] != 'Elekta':
+                    # I think I only elekta data will have it already picked up
+                    file_list.append(other._raw_file)
                 # copy the files over
                 fl_left = realize_paths(other, file_list)
                 fl_right = []

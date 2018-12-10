@@ -54,7 +54,7 @@ class BIDSFolder():
                 self.add(project, copier)
         elif isinstance(other, Project):
             if other._id in self._projects:
-                self.project(other._id).add(other)
+                self.project(other._id).add(other, copier)
             else:
                 new_project = Project._clone_into_bidsfolder(self, other)
                 # copy over the description and readme:
@@ -64,7 +64,7 @@ class BIDSFolder():
                 copier(fl_left, fl_right)
                 new_project._description = other._description
                 new_project._readme = other._readme
-                new_project.add(other)
+                new_project.add(other, copier)
                 self._projects[other._id] = new_project
 
         elif isinstance(other, (Subject, Session, Scan)):
@@ -82,7 +82,7 @@ class BIDSFolder():
                 copier(fl_left, fl_right)
                 new_project._description = other.project._description
                 new_project._readme = other.project._readme
-                new_project.add(other)
+                new_project.add(other, copier)
                 self._projects[other.project._id] = new_project
         else:
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(

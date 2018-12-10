@@ -58,10 +58,10 @@ class Subject():
             if (self._id == other.subject._id and
                     self.project._id == other.project._id):
                 if other in self:
-                    self.session(other._id).add(other)
+                    self.session(other._id).add(other, copier)
                 else:
                     new_session = Session._clone_into_subject(self, other)
-                    new_session.add(other)
+                    new_session.add(other, copier)
                     self._sessions[other._id] = new_session
             else:
                 raise AssociationError("session", "project and subject")
