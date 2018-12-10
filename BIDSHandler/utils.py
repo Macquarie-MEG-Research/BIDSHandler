@@ -18,7 +18,10 @@ def get_bids_params(fname):
 
 
 def bids_params_are_subsets(params1, params2):
-    """Equivalent to asking if params1 >= params2."""
+    """
+    Equivalent to asking if params1 ⊇ params2.
+    Ie. returns true if set(params2) is a subset of set(params1).
+    """
     param1_keys = set(params1.keys())
     param2_keys = set(params2.keys())
     for key in ['file', 'ext']:
