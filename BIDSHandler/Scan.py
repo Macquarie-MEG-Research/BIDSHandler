@@ -1,18 +1,3 @@
-"""
-Data each scan object needs:
- - Raw file path(s) - how to handle marker?
- - channels.tsv path
- - events.tsv path
- - sidecar.json path
- - coordsystem.json path
- - modality (MEG, EEG etc.)
- - manufacturer
-+ lots of info that can be extracted from the sidecar file.
-
-"""
-
-# TODO: fix handling of split .fif files
-
 import os.path as op
 from os import listdir
 import json
@@ -32,10 +17,10 @@ class Scan():
         self._sidecar = None
         self.associated_files = dict()
         self._assign_metadata()
-        # load information from the sidecar
+        # Load information from the sidecar.
         self.info = dict()
         self.read_info()
-        # finally we do any manufacturer specific loading
+        # Finally we do any manufacturer specific loading.
         self._load_extras()
 
 #region public methods
@@ -67,14 +52,26 @@ class Scan():
         filename_data = get_bids_params(op.basename(self._raw_file))
         for fname in listdir(self.path):
             bids_params = get_bids_params(fname)
+            part = bids_params.pop('part', None)
             if bids_params_are_subsets(filename_data, bids_params):
                 if (bids_params['file'] == self._path and
                         bids_params['ext'] == '.json'):
                     self._sidecar = fname
                 else:
                     # TODO: this will not work for .ds folders...
-                    if not op.isdir(op.join(self.path, fname)):
-                        self.associated_files[bids_params['file']] = fname
+                    if not op.isdir(realize_paths(self, fname)):
+                        if part is None:
+                            self.associated_files[bids_params['file']] = fname
+                        else:
+                            if part == '01':
+                                # Assign the correct raw file name
+                                self._raw_file = fname
+                            else:
+                                # Give a unique key to avoid conflict if there
+                                # are lots of parts for some reason...
+                                key = str(bids_params['file']) + '_' + part
+                                self.associated_files[key] = fname
+
         if self._sidecar is None:
             # TODO: move to a ._check method and add more checks...
             raise MappingError
@@ -82,8 +79,8 @@ class Scan():
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
         if self.info['Manufacturer'] == 'KIT/Yokogawa':
-            # need to load the marker files
-            # these will be in the same folder as the raw data
+            # Need to load the marker files.
+            # These will be in the same folder as the raw data.
             filename_data = get_bids_params(op.basename(self._raw_file))
             raw_folder = op.dirname(self._raw_file)
             for fname in listdir(op.join(self.path, raw_folder)):

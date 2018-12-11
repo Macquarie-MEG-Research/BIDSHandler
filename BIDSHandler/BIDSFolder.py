@@ -126,6 +126,26 @@ class BIDSFolder():
 
 #region class methods
 
+    def __contains__(self, other):
+        """Determine if the Subject contains a certain Scan, Session, Subject
+        or Project.
+
+        Parameters
+        ----------
+        other : Instance of Scan, Session, Subject or Project
+            Object to check whether it is contained in this BIDS folder.
+        """
+        if isinstance(other, Project):
+            return other._id in self.projects
+        elif isinstance(other, (Subject, Session, Scan)):
+            for project in self.projects:
+                if other in project:
+                    return True
+            return False
+        else:
+            raise TypeError("Can only determine if a Scan, Session or Subject "
+                            "is contained.")
+
     def __iter__(self):
         return iter(self.projects)
 

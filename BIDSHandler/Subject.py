@@ -191,13 +191,12 @@ class Subject():
 #region class methods
 
     def __contains__(self, other):
-        """Determine if the Subject contains a certain session or scan.
+        """Determine if the Subject contains a certain Scan or Session.
 
         Parameters
         ----------
         other : Instance of Scan or Session
-            Scan or Session object to check whether it is contained by this
-            Subject.
+            Object to check whether it is contained in this Subject.
         """
         if isinstance(other, Session):
             return other._id in self._sessions

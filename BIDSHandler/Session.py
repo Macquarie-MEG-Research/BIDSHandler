@@ -63,13 +63,13 @@ class Session():
                 raise ValueError("Added session must have same ID.")
         elif isinstance(other, Scan):
             # TODO-LT: handle other modalities
-            # we need to make sure that the scan is of the same person/session:
+            # We need to make sure that the scan is of the same person/session:
             if (self._id == other.session._id and
                     self.subject._id == other.subject._id and
                     self.project._id == other.project._id):
-                # Handle merging the scans.tsv file
+                # Handle merging the scans.tsv file.
                 if other in self:
-                    # we don't want to add it if it is already in this session
+                    # We don't want to add it if it is already in this session.
                     # TODO: add overwrite argument to allow it to still be
                     # added.
                     return
@@ -78,21 +78,21 @@ class Session():
                         ('filename', [other.raw_file_relative]),
                         ('acq_time', [other.acq_time])]),
                     columns=['filename', 'acq_time'])
-                # combine the new data into the original tsv
+                # Combine the new data into the original tsv.
                 combine_tsv(self.scans_tsv, other_scan_df, 'filename')
 
-                file_list = (list(other.associated_files.values()) +
-                             [other._sidecar])
-                if other.info['Manufacturer'] != 'Elekta':
-                    # I think I only elekta data will have it already picked up
-                    file_list.append(other._raw_file)
-                # copy the files over
-                fl_left = realize_paths(other, file_list)
+                # Assign as a set to avoid any potential doubling of the raw
+                # file path.
+                files = set(other.associated_files.values())
+                files.add(other._sidecar)
+                files.add(other._raw_file)
+                # Copy the files over.
+                fl_left = realize_paths(other, files)
                 fl_right = []
-                for fpath in file_list:
+                for fpath in files:
                     fl_right.append(op.join(self.path, other._path, fpath))
                 copier(fl_left, fl_right)
-                # add the scan object to our scans list
+                # Add the scan object to our scans list.
                 scan = Scan(other.raw_file_relative, other.acq_time, self)
                 self._scans.append(scan)
             else:
@@ -142,8 +142,8 @@ class Session():
                             Scan(row['filename'], row['acq_time'], self))
 
     def scan(self, task=None, acq=None, run=None):
-        # TODO: allow this to return a list if mutliple scans match
-        # consider None a wildcard.
+        # TODO: Allow this to return a list if mutliple scans match.
+        # Consider None a wildcard.
         for scan in self.scans:
             if (scan.task == task and scan.acq == acq and scan.run == run):
                 return scan
@@ -212,7 +212,7 @@ class Session():
         Parameters
         ----------
         other : Instance of Scan
-            Scan object to test whether it is contained in this Session.
+            Object to test whether it is contained in this Session.
         """
         for scan in self._scans:
             if scan == other:

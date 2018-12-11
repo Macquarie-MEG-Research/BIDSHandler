@@ -209,13 +209,13 @@ class Project():
 #region class methods
 
     def __contains__(self, other):
-        """Determine if the Subject contains a certain session or scan.
+        """Determine if the Project contains a certain Scan, Session or
+        Project.
 
         Parameters
         ----------
         other : Instance of Scan, Session or Subject
-            Scan, Session or Subject object to check whether it is contained by
-            this Project.
+            Object to check whether it is contained in this Project.
         """
         if isinstance(other, Subject):
             return other._id in self._subjects

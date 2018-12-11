@@ -70,7 +70,7 @@ def realize_paths(obj, rel_paths):
         Relative path from an object
 
     """
-    if isinstance(rel_paths, list):
+    if isinstance(rel_paths, (list, set)):
         ret_paths = []
         for fpath in rel_paths:
             ret_paths.append(op.join(obj.path, fpath))
