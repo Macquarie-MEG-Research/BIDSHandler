@@ -15,26 +15,28 @@ class BIDSFolder():
         self._projects = dict()
 
         if initialize:
-            self.determine_content()
+            self._add_projects()
 
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan to this object.
+        """Add another Scan, Session, Subject, Project or BIDSFolder to this
+        object.
 
         Parameters
         ----------
-        other : Instance of BIDSFolder, Project, Subject Session or Scan
-            Object to be added to this session.
-            This can be any level of BIDS object.
+        other : Instance of Scan, Session, Subject, Project or BIDSFolder
+            Object to be added to this BIDSFolder.
+            The added object must already exist in the same context as this
+            object (except BIDSFolder objects).
         copier : function
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
-            `function(src_files: list, dst: string)`
-            Where src_files is the list of files to be moved and dst is the
-            destination folder.
+            `function(src_files: list, dst_files: list)`
+            Where src_files is the list of files to be moved and dst_files is
+            the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy.
+            shutil.copy and creates any directories that do not already exist.
         """
         if isinstance(other, BIDSFolder):
             # merge all child projects in
@@ -76,8 +78,18 @@ class BIDSFolder():
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
 
-    def determine_content(self):
-        """ return a list of all the BIDS projects in the specified folder """
+    def project(self, id_):
+        """Return the Project corresponding to the provided id."""
+        try:
+            return self._projects[id_]
+        except KeyError:
+            raise NoProjectError("Project {0} doesn't exist in this "
+                                 "BIDS folder".format(id_))
+
+#region private methods
+
+    def _add_projects(self):
+        """Add all the projects in the folder to the BIDS folder."""
         projects = dict()
         try:
             for f in os.listdir(self.path):
@@ -87,13 +99,6 @@ class BIDSFolder():
         except MappingError:
             self._projects = dict()
         self._projects = projects
-
-    def project(self, id_):
-        try:
-            return self._projects[id_]
-        except KeyError:
-            raise NoProjectError("Project {0} doesn't exist in this "
-                                 "BIDS folder".format(id_))
 
 #region properties
 

@@ -19,7 +19,7 @@ class Scan():
         self._assign_metadata()
         # Load information from the sidecar.
         self.info = dict()
-        self.read_info()
+        self._load_info()
         # Finally we do any manufacturer specific loading.
         self._load_extras()
 
@@ -33,19 +33,7 @@ class Scan():
                                        list(self.associated_files.values())))
         return file_list
 
-    def read_info(self):
-        """Read the sidecar.json and load the information into self.info"""
-        with open(self.sidecar, 'r') as sidecar:
-            self.info = json.load(sidecar)
-
 #region private methods
-
-    def _get_params(self):
-        """Find the scan parameters from the file name."""
-        filename_data = get_bids_params(op.basename(self._raw_file))
-        self.task = filename_data.get('task', None)
-        self.run = filename_data.get('run', None)
-        self.acq = filename_data.get('acq', None)
 
     def _assign_metadata(self):
         """Scan folder for associated metadata files."""
@@ -64,7 +52,7 @@ class Scan():
                             self.associated_files[bids_params['file']] = fname
                         else:
                             if part == '01':
-                                # Assign the correct raw file name
+                                # Assign the correct raw file name.
                                 self._raw_file = fname
                             else:
                                 # Give a unique key to avoid conflict if there
@@ -72,9 +60,18 @@ class Scan():
                                 key = str(bids_params['file']) + '_' + part
                                 self.associated_files[key] = fname
 
+        self._check()
+
+    def _check(self):
         if self._sidecar is None:
-            # TODO: move to a ._check method and add more checks...
             raise MappingError
+
+    def _get_params(self):
+        """Find the scan parameters from the file name."""
+        filename_data = get_bids_params(op.basename(self._raw_file))
+        self.task = filename_data.get('task', None)
+        self.run = filename_data.get('run', None)
+        self.acq = filename_data.get('acq', None)
 
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
@@ -89,6 +86,11 @@ class Scan():
                     if bids_params['file'] == 'markers':
                         self.associated_files['markers'] = op.join(raw_folder,
                                                                    fname)
+
+    def _load_info(self):
+        """Read the sidecar.json and load the information into self.info"""
+        with open(self.sidecar, 'r') as sidecar:
+            self.info = json.load(sidecar)
 
 #region properties
 
@@ -133,4 +135,4 @@ class Scan():
                 (self.project._id == other.project._id))
 
     def __repr__(self):
-        return self.path
+        return self.raw_file_relative

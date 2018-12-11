@@ -32,28 +32,28 @@ class Session():
         self.recording_types = []
 
         if initialize:
-            self.determine_content()
+            self._add_scans()
             self._check()
 
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan to this object.
+        """Add another Scan or Session to this object.
 
         Parameters
         ----------
-        other : Instance of Session or Scan
-            Scan object to be added to this session.
-            The scan must previously exist in the same project, subject and
-            session as this current session.
+        other : Instance of Scan or Session
+            Object to be added to this Session.
+            The added object must already exist in the same context as this
+            object.
         copier : function
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
-            `function(src_files: list, dst: string)`
-            Where src_files is the list of files to be moved and dst is the
-            destination folder.
+            `function(src_files: list, dst_files: list)`
+            Where src_files is the list of files to be moved and dst_files is
+            the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy.
+            shutil.copy and creates any directories that do not already exist.
         """
         if isinstance(other, Session):
             if self._id == other._id:
@@ -109,19 +109,17 @@ class Session():
             file_list.update(scan.contained_files())
         return file_list
 
-    def create_empty_scan_tsv(self):
-        """Create an empty scans.tsv file for this session."""
-        self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
-        full_path = realize_paths(self, self._scans_tsv)
-        if not op.exists(full_path):
-            df = pd.DataFrame(OrderedDict([('filename', []),
-                                           ('acq_time', [])]),
-                              columns=['filename', 'acq_time'])
-            df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
-                      encoding='utf-8')
+    def scan(self, task=None, acq=None, run=None):
+        # TODO: Allow this to return a list if mutliple scans match.
+        # Consider None a wildcard.
+        for scan in self.scans:
+            if (scan.task == task and scan.acq == acq and scan.run == run):
+                return scan
+        raise NoScanError
 
-    # TODO: Rename?
-    def determine_content(self):
+#region private methods
+
+    def _add_scans(self):
         """Parse the session folder to find what recordings are included."""
         for fname in os.listdir(self.path):
             full_path = op.join(self.path, fname)
@@ -141,16 +139,6 @@ class Session():
                         self._scans.append(
                             Scan(row['filename'], row['acq_time'], self))
 
-    def scan(self, task=None, acq=None, run=None):
-        # TODO: Allow this to return a list if mutliple scans match.
-        # Consider None a wildcard.
-        for scan in self.scans:
-            if (scan.task == task and scan.acq == acq and scan.run == run):
-                return scan
-        raise NoScanError
-
-#region private methods
-
     def _check(self):
         if len(self._scans) == 0:
             raise MappingError
@@ -169,8 +157,19 @@ class Session():
         os.makedirs(realize_paths(subject, other.ID), exist_ok=True)
         # Create a new empty session object.
         new_session = Session(other._id, subject, initialize=False)
-        new_session.create_empty_scan_tsv()
+        new_session._create_empty_scan_tsv()
         return new_session
+
+    def _create_empty_scan_tsv(self):
+        """Create an empty scans.tsv file for this session."""
+        self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
+        full_path = realize_paths(self, self._scans_tsv)
+        if not op.exists(full_path):
+            df = pd.DataFrame(OrderedDict([('filename', []),
+                                           ('acq_time', [])]),
+                              columns=['filename', 'acq_time'])
+            df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
+                      encoding='utf-8')
 
 #region properties
 

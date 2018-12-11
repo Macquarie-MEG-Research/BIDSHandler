@@ -20,27 +20,28 @@ class Project():
         self._subjects = dict()
 
         if initialize:
-            self.add_subjects()
+            self._add_subjects()
             self._check()
 
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Subject, Session or Scan to this object.
+        """Add another Scan, Session, Subject or Project to this object.
 
         Parameters
         ----------
-        other : Instance of Project, Subject, Session or Scan
-            Scan, Session or Subject object to be added to this Project.
-            The object must previously exist in the same context.
+        other : Instance of Scan, Session, Subject or Project
+            Object to be added to this Project.
+            The added object must already exist in the same context as this
+            object.
         copier : function
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
-            `function(src_files: list, dst: string)`
-            Where src_files is the list of files to be moved and dst is the
-            destination folder.
+            `function(src_files: list, dst_files: list)`
+            Where src_files is the list of files to be moved and dst_files is
+            the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy.
+            shutil.copy and creates any directories that do not already exist.
         """
         if isinstance(other, Project):
             # If the project has the same ID, take all the child subjects and
@@ -80,36 +81,6 @@ class Project():
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
 
-    def add_subjects(self):
-        """Add all the subjects in the folder to the Project."""
-        for fname in os.listdir(self.path):
-            full_path = op.join(self.path, fname)
-            # TODO: use utils.get_bids_params?
-            if op.isdir(full_path) and 'sub-' in fname:
-                sub_id = fname.split('-')[1]
-                self._subjects[sub_id] = Subject(sub_id, self)
-            elif fname == 'participants.tsv':
-                self._participants_tsv = fname
-            elif fname == 'dataset_description.json':
-                self._description = fname
-            elif fname == 'README.txt':
-                self._readme = fname
-
-    def create_empty_participants_tsv(self):
-        """Create an empty participants.tsv file for this project."""
-        self._participants_tsv = 'participants.tsv'
-        full_path = realize_paths(self, self._participants_tsv)
-        if not op.exists(full_path):
-            df = pd.DataFrame(
-                OrderedDict([
-                    ('participant_id', []),
-                    ('age', []),
-                    ('sex', []),
-                    ('group', [])]),
-                columns=['participant_id', 'age', 'sex', 'group'])
-        df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
-                  encoding='utf-8')
-
     def subject(self, id_):
         """Return the Subject in this project with the corresponding ID."""
         try:
@@ -120,23 +91,34 @@ class Project():
                 "Possible subjects: {2}".format(id_, self.ID,
                                                 list(self._subjects.keys())))
 
-    def query(self, **kwargs):
-        # return any data within the project that matches the kwargs given.
-        pass
-
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()
-        # TODO: add readme and dataset_description.json
-        file_list.add(realize_paths(self, self.participants_tsv))
+        file_list.add(self.participants_tsv)
+        file_list.add(self.readme)
+        file_list.add(self.description)
         for subject in self.subjects:
             file_list.update(subject.contained_files())
         return file_list
 
 #region private methods
 
+    def _add_subjects(self):
+        """Add all the subjects in the folder to the Project."""
+        for fname in os.listdir(self.path):
+            full_path = op.join(self.path, fname)
+            if op.isdir(full_path) and 'sub-' in fname:
+                sub_id = fname.split('-')[1]
+                self._subjects[sub_id] = Subject(sub_id, self)
+            elif fname == 'participants.tsv':
+                self._participants_tsv = fname
+            elif fname == 'dataset_description.json':
+                self._description = fname
+            elif fname == 'README.txt':
+                self._readme = fname
+
     def _check(self):
-        """Check that there aren't no subjects."""
+        """Check that there are some subjects."""
         if len(self._subjects) == 0:
             raise MappingError
 
@@ -153,8 +135,23 @@ class Project():
         """
         os.makedirs(realize_paths(bids_folder, other.ID), exist_ok=True)
         new_project = Project(other._id, bids_folder, initialize=False)
-        new_project.create_empty_participants_tsv()
+        new_project._create_empty_participants_tsv()
         return new_project
+
+    def _create_empty_participants_tsv(self):
+        """Create an empty participants.tsv file for this project."""
+        self._participants_tsv = 'participants.tsv'
+        full_path = realize_paths(self, self._participants_tsv)
+        if not op.exists(full_path):
+            df = pd.DataFrame(
+                OrderedDict([
+                    ('participant_id', []),
+                    ('age', []),
+                    ('sex', []),
+                    ('group', [])]),
+                columns=['participant_id', 'age', 'sex', 'group'])
+        df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
+                  encoding='utf-8')
 
 #region properties
 

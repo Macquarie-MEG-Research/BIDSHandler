@@ -22,29 +22,29 @@ class Subject():
         self.group = 'n/a'
 
         if initialize:
-            self.get_subject_info()
-            self.add_sessions()
+            self._load_subject_info()
+            self._add_sessions()
             self._check()
 
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Session or Scan to this object.
+        """Add another Scan, Session or Subject to this object.
 
         Parameters
         ----------
-        other : Instance of Subject, Session or Scan
-            Scan or Session object to be added to this Subject.
-            The object must previously exist in the same project and subject
-            as this current subject.
+        other : Instance of Scan, Session or Subject
+            Object to be added to this Subject.
+            The added object must already exist in the same context as this
+            object.
         copier : function
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
-            `function(src_files: list, dst: string)`
-            Where src_files is the list of files to be moved and dst is the
-            destination folder.
+            `function(src_files: list, dst_files: list)`
+            Where src_files is the list of files to be moved and dst_files is
+            the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy.
+            shutil.copy and creates any directories that do not already exist.
         """
         if isinstance(other, Subject):
             # If the subject has the same ID, take all the child sessions and
@@ -81,15 +81,6 @@ class Subject():
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
 
-    def add_sessions(self):
-        # TODO: allow the session to be determined when there is only one, and
-        # it's not a folder with 'ses' in the name.
-        for fname in os.listdir(self.path):
-            full_path = op.join(self.path, fname)
-            if op.isdir(full_path) and 'ses' in fname:
-                ses_id = fname.split('-')[1]
-                self._sessions[ses_id] = Session(ses_id, self)
-
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()
@@ -97,21 +88,8 @@ class Subject():
             file_list.update(session.contained_files())
         return file_list
 
-    def get_subject_info(self):
-        participant_path = op.join(op.dirname(self.path), 'participants.tsv')
-        if not op.exists(participant_path):
-            raise MappingError
-        participants = pd.read_csv(participant_path, sep='\t')
-        for i in range(len(participants)):
-            row = participants.iloc[i]
-            if row['participant_id'] == self.ID:
-                self.age = row.get('age', 'n/a')
-                self.sex = row.get('sex', 'n/a')
-                self.group = row.get('group', 'n/a')
-                break
-        pass
-
     def session(self, id_):
+        """Return the Session corresponding to the provided id."""
         try:
             return self._sessions[str(id_)]
         except KeyError:
@@ -121,6 +99,15 @@ class Subject():
                                                 list(self._sessions.keys())))
 
 #region private methods
+
+    def _add_sessions(self):
+        # TODO: allow the session to be determined when there is only one, and
+        # it's not a folder with 'ses' in the name.
+        for fname in os.listdir(self.path):
+            full_path = op.join(self.path, fname)
+            if op.isdir(full_path) and 'ses' in fname:
+                ses_id = fname.split('-')[1]
+                self._sessions[ses_id] = Session(ses_id, self)
 
     def _check(self):
         if len(self._sessions) == 0:
@@ -155,8 +142,22 @@ class Subject():
         df.to_csv(project.participants_tsv, sep='\t', index=False,
                   na_rep='n/a', encoding='utf-8')
         # can now safely get the subject info
-        new_subject.get_subject_info()
+        new_subject._load_subject_info()
         return new_subject
+
+    def _load_subject_info(self):
+        participant_path = op.join(op.dirname(self.path), 'participants.tsv')
+        if not op.exists(participant_path):
+            raise MappingError
+        participants = pd.read_csv(participant_path, sep='\t')
+        for i in range(len(participants)):
+            row = participants.iloc[i]
+            if row['participant_id'] == self.ID:
+                self.age = row.get('age', 'n/a')
+                self.sex = row.get('sex', 'n/a')
+                self.group = row.get('group', 'n/a')
+                break
+        pass
 
 #region properties
 
