@@ -222,6 +222,13 @@ class Session():
         return iter(self._scans)
 
     def __repr__(self):
+        return '<Session, ID: {0}, {1} scan{2}, @ {3}>'.format(
+            self.ID,
+            len(self.scans),
+            ('s' if len(self.scans) > 1 else ''),
+            self.path)
+
+    def __str__(self):
         output = []
         output.append('ID: {0}'.format(self.ID))
         output.append('Number of scans: {0}'.format(len(self.scans)))

@@ -113,6 +113,7 @@ class BIDSFolder():
         scan_list = []
         for project in self.projects:
             scan_list.extend(project.scans)
+        return scan_list
 
     @property
     def sessions(self):
@@ -161,4 +162,10 @@ class BIDSFolder():
         return self.project(item)
 
     def __repr__(self):
+        return '<BIDSFolder, {0} project{1}, @ {2}>'.format(
+            len(self.projects),
+            ('s' if len(self.projects) > 1 else ''),
+            self.path)
+
+    def __str__(self):
         return "BIDS folder containing {0} projects".format(len(self.projects))

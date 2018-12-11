@@ -135,4 +135,7 @@ class Scan():
                 (self.project._id == other.project._id))
 
     def __repr__(self):
+        return '<Scan, @ {0}>'.format(self.raw_file)
+
+    def __str__(self):
         return self.raw_file_relative

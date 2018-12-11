@@ -220,6 +220,13 @@ class Subject():
         return self.session(item)
 
     def __repr__(self):
+        return '<Subject, ID: {0}, {1} session{2}, @ {3}>'.format(
+            self.ID,
+            len(self.sessions),
+            ('s' if len(self.sessions) > 1 else ''),
+            self.path)
+
+    def __str__(self):
         output = []
         output.append('ID: {0}'.format(self.ID))
         output.append('Age: {0}'.format(self.age))

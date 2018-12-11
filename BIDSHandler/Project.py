@@ -235,6 +235,13 @@ class Project():
         return self.subject(item)
 
     def __repr__(self):
+        return '<Project, ID: {0}, {1} subject{2}, @ {3}>'.format(
+            self.ID,
+            len(self.subjects),
+            ('s' if len(self.subjects) > 1 else ''),
+            self.path)
+
+    def __str__(self):
         output = []
         output.append('ID: {0}'.format(self.ID))
         output.append('Number of subjects: {0}'.format(len(self.subjects)))
