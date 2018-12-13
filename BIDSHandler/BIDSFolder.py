@@ -1,12 +1,13 @@
 import os
 import os.path as op
+import xml.etree.ElementTree as ET
 
 from .Project import Project
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
 from .BIDSErrors import MappingError, NoProjectError
-from .utils import copyfiles, realize_paths
+from .utils import copyfiles, realize_paths, prettyprint_xml
 
 
 class BIDSFolder():
@@ -77,6 +78,17 @@ class BIDSFolder():
         else:
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
+
+    def generate_map(self):
+        """
+        Generate a map of the BIDS folder.
+
+        Returns a string representation which can be written to a file.
+        """
+        root = ET.Element('BIDSTree', attrib={'path': self.path})
+        for project in self.projects:
+            root.append(project.generate_map())
+        return prettyprint_xml(ET.tostring(root, encoding='unicode'))
 
     def project(self, id_):
         """Return the Project corresponding to the provided id."""

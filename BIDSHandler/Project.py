@@ -2,6 +2,7 @@ import os.path as op
 import os
 import pandas as pd
 from collections import OrderedDict
+import xml.etree.ElementTree as ET
 
 from .Subject import Subject
 from .Session import Session
@@ -81,16 +82,6 @@ class Project():
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
 
-    def subject(self, id_):
-        """Return the Subject in this project with the corresponding ID."""
-        try:
-            return self._subjects[str(id_)]
-        except KeyError:
-            raise NoSubjectError(
-                "Subject {0} doesn't exist in project {1}. "
-                "Possible subjects: {2}".format(id_, self.ID,
-                                                list(self._subjects.keys())))
-
     def contained_files(self):
         """Get the list of contained files."""
         file_list = set()
@@ -100,6 +91,23 @@ class Project():
         for subject in self.subjects:
             file_list.update(subject.contained_files())
         return file_list
+
+    def generate_map(self):
+        """Generate a map of the Project."""
+        root = ET.Element('Project', attrib={'ID': str(self._id)})
+        for subject in self.subjects:
+            root.append(subject.generate_map())
+        return root
+
+    def subject(self, id_):
+        """Return the Subject in this project with the corresponding ID."""
+        try:
+            return self._subjects[str(id_)]
+        except KeyError:
+            raise NoSubjectError(
+                "Subject {0} doesn't exist in project {1}. "
+                "Possible subjects: {2}".format(id_, self.ID,
+                                                list(self._subjects.keys())))
 
 #region private methods
 

@@ -1,6 +1,7 @@
 import os.path as op
 from os import listdir
 import json
+import xml.etree.ElementTree as ET
 
 from .BIDSErrors import MappingError
 from .utils import (get_bids_params, realize_paths,
@@ -32,6 +33,10 @@ class Scan():
         file_list.update(realize_paths(self,
                                        list(self.associated_files.values())))
         return file_list
+
+    def generate_map(self):
+        """Generate a map of the Scan."""
+        return ET.Element('Scan', attrib={'path': self.raw_file_relative})
 
 #region private methods
 

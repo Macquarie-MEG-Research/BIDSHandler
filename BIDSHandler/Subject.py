@@ -1,6 +1,7 @@
 import os
 import os.path as op
 from collections import OrderedDict
+import xml.etree.ElementTree as ET
 
 import pandas as pd
 
@@ -87,6 +88,18 @@ class Subject():
         for session in self.sessions:
             file_list.update(session.contained_files())
         return file_list
+
+    def generate_map(self):
+        """Generate a map of the Subject."""
+        attribs = {'ID': str(self._id), 'age': str(self.age), 'sex': self.sex,
+                   'group': self.group}
+        for key, value in attribs.items():
+            if value == 'n/a':
+                attribs.pop(key)
+        root = ET.Element('Subject', attrib=attribs)
+        for session in self.sessions:
+            root.append(session.generate_map())
+        return root
 
     def session(self, id_):
         """Return the Session corresponding to the provided id."""

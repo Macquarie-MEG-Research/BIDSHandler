@@ -2,6 +2,8 @@ import os
 import os.path as op
 from collections import OrderedDict
 
+import xml.etree.ElementTree as ET
+
 import pandas as pd
 
 from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
@@ -108,6 +110,13 @@ class Session():
         for scan in self.scans:
             file_list.update(scan.contained_files())
         return file_list
+
+    def generate_map(self):
+        """Generate a map of the Session."""
+        root = ET.Element('Session', attrib={'ID': str(self._id)})
+        for scan in self.scans:
+            root.append(scan.generate_map())
+        return root
 
     def scan(self, task=None, acq=None, run=None):
         # TODO: Allow this to return a list if mutliple scans match.
