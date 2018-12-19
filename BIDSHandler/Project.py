@@ -92,13 +92,6 @@ class Project():
             file_list.update(subject.contained_files())
         return file_list
 
-    def generate_map(self):
-        """Generate a map of the Project."""
-        root = ET.Element('Project', attrib={'ID': str(self._id)})
-        for subject in self.subjects:
-            root.append(subject.generate_map())
-        return root
-
     def subject(self, id_):
         """Return the Subject in this project with the corresponding ID."""
         try:
@@ -160,6 +153,13 @@ class Project():
                 columns=['participant_id', 'age', 'sex', 'group'])
         df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                   encoding='utf-8')
+
+    def _generate_map(self):
+        """Generate a map of the Project."""
+        root = ET.Element('Project', attrib={'ID': str(self._id)})
+        for subject in self.subjects:
+            root.append(subject._generate_map())
+        return root
 
 #region properties
 

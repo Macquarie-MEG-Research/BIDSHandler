@@ -111,13 +111,6 @@ class Session():
             file_list.update(scan.contained_files())
         return file_list
 
-    def generate_map(self):
-        """Generate a map of the Session."""
-        root = ET.Element('Session', attrib={'ID': str(self._id)})
-        for scan in self.scans:
-            root.append(scan.generate_map())
-        return root
-
     def scan(self, task=None, acq=None, run=None):
         # TODO: Allow this to return a list if mutliple scans match.
         # Consider None a wildcard.
@@ -179,6 +172,13 @@ class Session():
                               columns=['filename', 'acq_time'])
             df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                       encoding='utf-8')
+
+    def _generate_map(self):
+        """Generate a map of the Session."""
+        root = ET.Element('Session', attrib={'ID': str(self._id)})
+        for scan in self.scans:
+            root.append(scan._generate_map())
+        return root
 
 #region properties
 

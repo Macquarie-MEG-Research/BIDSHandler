@@ -79,16 +79,32 @@ class BIDSFolder():
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
 
-    def generate_map(self):
+    def generate_map(self, output_file=None):
         """
         Generate a map of the BIDS folder.
 
-        Returns a string representation which can be written to a file.
+        Parameters
+        ----------
+        output_file : str
+            Path to write the file to.
+            If not provided this will return the string representation.
+
+        Returns
+        -------
+        String representation of xml structure.
         """
         root = ET.Element('BIDSTree', attrib={'path': self.path})
         for project in self.projects:
-            root.append(project.generate_map())
-        return prettyprint_xml(ET.tostring(root, encoding='unicode'))
+            root.append(project._generate_map())
+        if output_file is None:
+            return prettyprint_xml(ET.tostring(root, encoding='unicode'))
+        dir_path = op.dirname(output_file)
+        if dir_path != '':
+            if not op.exists(dir_path):
+                os.makedirs(op.dirname(output_file))
+        with open(output_file, 'w') as file:
+            file.write(prettyprint_xml(ET.tostring(root,
+                                                   encoding='unicode')))
 
     def project(self, id_):
         """Return the Project corresponding to the provided id."""

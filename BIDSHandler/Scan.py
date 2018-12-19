@@ -34,10 +34,6 @@ class Scan():
                                        list(self.associated_files.values())))
         return file_list
 
-    def generate_map(self):
-        """Generate a map of the Scan."""
-        return ET.Element('Scan', attrib={'path': self.raw_file_relative})
-
 #region private methods
 
     def _assign_metadata(self):
@@ -70,6 +66,10 @@ class Scan():
     def _check(self):
         if self._sidecar is None:
             raise MappingError
+
+    def _generate_map(self):
+        """Generate a map of the Scan."""
+        return ET.Element('Scan', attrib={'path': self.raw_file_relative})
 
     def _get_params(self):
         """Find the scan parameters from the file name."""
