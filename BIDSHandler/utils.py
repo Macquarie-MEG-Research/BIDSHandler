@@ -52,8 +52,41 @@ def copyfiles(src_files, dst_files):
         try:
             shutil.copy(src_files[fnum], dst_files[fnum])
         except shutil.SameFileError:
-            # for now just skip files that are the same.
+            # For now just skip files that are the same.
             print('same file!!')
+
+
+def prettyprint_xml(xml_str):
+    """Take a flat string representation of xml data and pretty print it."""
+    curr_indent = 0
+    pointer = 0
+    return_data = []
+    while True:
+        start = xml_str.find('<', pointer)
+        end = xml_str.find('>', pointer)
+        try:
+            # Determine how the indentation should change.
+            if xml_str[end - 1] == '/' and xml_str[end + 2] != '/':
+                curr_indent = curr_indent
+            elif xml_str[end - 1] == '/' and xml_str[end + 2] == '/':
+                curr_indent -= 1
+            elif xml_str[end - 1] != '/' and xml_str[end + 2] == '/':
+                curr_indent -= 1
+            elif xml_str[end - 1] != '/' and xml_str[end + 2] != '/':
+                ret_str = xml_str[start: end + 1]
+                if ' ' not in ret_str and '=' not in ret_str:
+                    curr_indent = curr_indent
+                else:
+                    curr_indent += 1
+            return_data.append(xml_str[start: end + 1])
+            return_data.append('\n')
+            return_data.append(curr_indent * '\t')
+            pointer = end + 1
+        except IndexError:
+            return_data.append(xml_str[start: end + 1])
+            break
+
+    return ''.join(return_data)
 
 
 # This could possibly be a method for the classes? If they become subclassed

@@ -1,6 +1,7 @@
 import os.path as op
 from os import listdir
 import json
+import xml.etree.ElementTree as ET
 
 from .BIDSErrors import MappingError
 from .utils import (get_bids_params, realize_paths,
@@ -65,6 +66,10 @@ class Scan():
     def _check(self):
         if self._sidecar is None:
             raise MappingError
+
+    def _generate_map(self):
+        """Generate a map of the Scan."""
+        return ET.Element('Scan', attrib={'path': self.raw_file_relative})
 
     def _get_params(self):
         """Find the scan parameters from the file name."""

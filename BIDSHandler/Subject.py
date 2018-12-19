@@ -1,6 +1,7 @@
 import os
 import os.path as op
 from collections import OrderedDict
+import xml.etree.ElementTree as ET
 
 import pandas as pd
 
@@ -158,6 +159,18 @@ class Subject():
                 self.group = row.get('group', 'n/a')
                 break
         pass
+
+    def _generate_map(self):
+        """Generate a map of the Subject."""
+        attribs = {'ID': str(self._id), 'age': str(self.age), 'sex': self.sex,
+                   'group': self.group}
+        for key, value in list(attribs.items()):
+            if value == 'n/a':
+                attribs.pop(key)
+        root = ET.Element('Subject', attrib=attribs)
+        for session in self.sessions:
+            root.append(session._generate_map())
+        return root
 
 #region properties
 

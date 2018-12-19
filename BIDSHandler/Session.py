@@ -2,6 +2,8 @@ import os
 import os.path as op
 from collections import OrderedDict
 
+import xml.etree.ElementTree as ET
+
 import pandas as pd
 
 from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
@@ -170,6 +172,13 @@ class Session():
                               columns=['filename', 'acq_time'])
             df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                       encoding='utf-8')
+
+    def _generate_map(self):
+        """Generate a map of the Session."""
+        root = ET.Element('Session', attrib={'ID': str(self._id)})
+        for scan in self.scans:
+            root.append(scan._generate_map())
+        return root
 
 #region properties
 
