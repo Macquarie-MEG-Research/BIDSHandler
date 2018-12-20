@@ -2,13 +2,13 @@
 
 import pytest
 
-from BIDSHandler import BIDSFolder
+from BIDSHandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 
 
 def test_query():
-    folder = BIDSFolder(TESTPATH1)
+    folder = BIDSTree(TESTPATH1)
 
     # query some subject information
     assert len(folder.query('subject', 'age', '=', 4)) == 1

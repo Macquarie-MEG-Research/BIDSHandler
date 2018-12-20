@@ -12,7 +12,7 @@ from .utils import (copyfiles, realize_paths, prettyprint_xml, compare,
                     compare_times)
 
 
-class BIDSFolder():
+class BIDSTree():
     def __init__(self, fpath, initialize=True):
         self.path = fpath
         self._projects = dict()
@@ -23,15 +23,15 @@ class BIDSFolder():
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan, Session, Subject, Project or BIDSFolder to this
+        """Add another Scan, Session, Subject, Project or BIDSTree to this
         object.
 
         Parameters
         ----------
-        other : Instance of Scan, Session, Subject, Project or BIDSFolder
-            Object to be added to this BIDSFolder.
+        other : Instance of Scan, Session, Subject, Project or BIDSTree
+            Object to be added to this BIDSTree.
             The added object must already exist in the same context as this
-            object (except BIDSFolder objects).
+            object (except BIDSTree objects).
         copier : function
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
@@ -41,7 +41,7 @@ class BIDSFolder():
             This will default to using utils.copyfiles which simply implements
             shutil.copy and creates any directories that do not already exist.
         """
-        if isinstance(other, BIDSFolder):
+        if isinstance(other, BIDSTree):
             # merge all child projects in
             for project in other.projects:
                 self.add(project, copier)
@@ -49,7 +49,7 @@ class BIDSFolder():
             if other._id in self._projects:
                 self.project(other._id).add(other, copier)
             else:
-                new_project = Project._clone_into_bidsfolder(self, other)
+                new_project = Project._clone_into_bidstree(self, other)
                 # copy over the description and readme:
                 file_list = [other._description, other._readme]
                 fl_left = realize_paths(other, file_list)
@@ -66,8 +66,8 @@ class BIDSFolder():
             if other.project._id in self._projects:
                 self.project(other.project._id).add(other, copier)
             else:
-                new_project = Project._clone_into_bidsfolder(self,
-                                                             other.project)
+                new_project = Project._clone_into_bidstree(self,
+                                                           other.project)
                 # copy over the description and readme:
                 file_list = [other.project._description, other.project._readme]
                 fl_left = realize_paths(other.project, file_list)
@@ -78,12 +78,12 @@ class BIDSFolder():
                 new_project.add(other, copier)
                 self._projects[other.project._id] = new_project
         else:
-            raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
+            raise TypeError("Cannot add a {0} object to a BIDSTree".format(
                 other.__name__))
 
     def query(self, obj=None, token=None, condition=None, value=None):
         """
-        Query the BIDSFolder object and return the appropriate data.
+        Query the BIDSTree object and return the appropriate data.
 
         Parameters
         ----------
@@ -359,7 +359,7 @@ class BIDSFolder():
         return self.project(item)
 
     def __repr__(self):
-        return '<BIDSFolder, {0} project{1}, @ {2}>'.format(
+        return '<BIDSTree, {0} project{1}, @ {2}>'.format(
             len(self.projects),
             ('s' if len(self.projects) > 1 else ''),
             self.path)

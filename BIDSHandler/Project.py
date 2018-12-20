@@ -12,9 +12,9 @@ from .utils import copyfiles, realize_paths
 
 
 class Project():
-    def __init__(self, id_, bids_folder, initialize=True):
+    def __init__(self, id_, bids_tree, initialize=True):
         self._id = id_
-        self.bids_folder = bids_folder
+        self.bids_tree = bids_tree
         self._participants_tsv = None
         self._description = None
         self._readme = None
@@ -124,18 +124,18 @@ class Project():
             raise MappingError
 
     @staticmethod
-    def _clone_into_bidsfolder(bids_folder, other):
-        """Create a copy of the Project with a new parent BIDSFolder.
+    def _clone_into_bidstree(bids_tree, other):
+        """Create a copy of the Project with a new parent BIDSTree.
 
         Parameters
         ----------
-        bids_folder : Instance of BIDSFolder
-            New parent BIDSFolder.
+        bids_tree : Instance of BIDSTree
+            New parent BIDSTree.
         other : instance of Project
             Original Project instance to clone.
         """
-        os.makedirs(realize_paths(bids_folder, other.ID), exist_ok=True)
-        new_project = Project(other._id, bids_folder, initialize=False)
+        os.makedirs(realize_paths(bids_tree, other.ID), exist_ok=True)
+        new_project = Project(other._id, bids_tree, initialize=False)
         new_project._create_empty_participants_tsv()
         return new_project
 
@@ -182,7 +182,7 @@ class Project():
     @property
     def path(self):
         """Determine path location based on parent paths."""
-        return op.join(self.bids_folder.path, self.ID)
+        return op.join(self.bids_tree.path, self.ID)
 
     @property
     def readme(self):

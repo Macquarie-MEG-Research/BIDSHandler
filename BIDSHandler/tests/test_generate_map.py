@@ -6,7 +6,7 @@ import os.path as op
 import shutil
 import xml.etree.ElementTree as ET
 
-from BIDSHandler import BIDSFolder
+from BIDSHandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 
@@ -16,7 +16,7 @@ def test_generate_xml():
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder.
         shutil.copytree(TESTPATH1, op.join(tmp, 'BIDSTEST1'))
-        folder = BIDSFolder(op.join(tmp, 'BIDSTEST1'))
+        folder = BIDSTree(op.join(tmp, 'BIDSTEST1'))
         folder.generate_map(op.join(tmp, 'map.xml'))
 
         tree = ET.ElementTree()

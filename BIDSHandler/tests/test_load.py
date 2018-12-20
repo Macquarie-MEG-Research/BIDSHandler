@@ -5,7 +5,7 @@ import os.path as op
 import shutil
 #import pytest
 
-from BIDSHandler import BIDSFolder
+from BIDSHandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 TESTPATH2 = 'data/BIDSTEST2'
@@ -15,8 +15,8 @@ def test_containment():
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
-        src_bf = BIDSFolder(TESTPATH1)
-        dst_bf = BIDSFolder(op.join(tmp, 'BIDSTEST2'))
+        src_bf = BIDSTree(TESTPATH1)
+        dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
 
         proj = src_bf.project('test1')
         subj = proj.subject('1')
@@ -30,7 +30,7 @@ def test_containment():
 def test_print():
     # test printing the projects
     # (this is basically just to get the coverage up...)
-    src_bf = BIDSFolder(TESTPATH1)
+    src_bf = BIDSTree(TESTPATH1)
     proj = src_bf.project('test1')
     subj = proj.subject('1')
     sess = subj.session('1')

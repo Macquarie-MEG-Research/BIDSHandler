@@ -42,12 +42,12 @@ BIDSFOLDER
   └ README.txt
 ```
 
-We can load this by passing the folder path location to the `BDISFolder` object:
+We can load this by passing the folder path location to the `BIDSTree` object:
 
 ```python
-from BIDSHandler import BIDSFolder
+from BIDSHandler import BIDSTree
 
-folder = BIDSFolder('BIDSFOLDER')
+folder = BIDSTree('BIDSFOLDER')
 ```
 
 This will load the folder, then recurse over the sub-folders and find all projects, subjects, sessions and (MEG) scans.
@@ -105,10 +105,10 @@ BIDSFOLDER2
 
 We can load the folder as before:
 ```python
-folder2 = BIDSFolder('BIDSFOLDER2')
+folder2 = BIDSTree('BIDSFOLDER2')
 ```
 
-The data in this structure can be added to the previous `BIDSFolder` in a number of different ways:
+The data in this structure can be added to the previous `BIDSTree` in a number of different ways:
 ```python
 proj2 = folder2.project('PROJ02')
 sub3 = proj2.subject('03')
