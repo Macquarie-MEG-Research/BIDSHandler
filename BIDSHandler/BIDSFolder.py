@@ -101,7 +101,7 @@ class BIDSFolder():
             '=' for many properties, and using an inequality between strings
             will return values that may make no sense.
         condition : 'str'
-            One of ('<', '<=', '=', '!=', '=>', '>').
+            One of ('<', '<=', '=', '!=', '!!=' (none equal), '=>', '>').
             Used to perform comaprisons between the value provided and the
             values the data have.
         value : str | int | float
@@ -117,9 +117,9 @@ class BIDSFolder():
         #           'scans'    (number of scans)
         # each token will be handled separately
         if token in ('task', 'acquisition', 'run', 'proc', 'acq'):
-            # condition can *only* be '=' or '!='
-            if condition not in ('=', '!='):
-                raise ValueError('Condition can only be "=" or "!="')
+            # condition can *only* be '=', '!=' or '!!='
+            if condition not in ('=', '!=', '!!='):
+                raise ValueError('Condition can only be "=" or "!=", "!!="')
             return_objects = []
             if obj == 'project':
                 iter_obj = self.projects
@@ -133,11 +133,18 @@ class BIDSFolder():
                 raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
-                    for scan in ob.scans:
-                        if compare(scan.__getattribute__(token), condition,
-                                   value):
-                            return_objects.append(ob)
-                            break
+                    if condition != '!!=':
+                        for scan in ob.scans:
+                            if compare(scan.__getattribute__(token), condition,
+                                       value):
+                                return_objects.append(ob)
+                                break
+                    else:
+                        # Find the list of obj's that do have the value for the
+                        # token.
+                        has_objs = self.query(obj, token, '=', value)
+                        # Now find the inverse of this list.
+                        return_objects = list(set(iter_obj) - set(has_objs))
             else:
                 for scan in self.scans:
                     if compare(scan.__getattribute__(token), condition, value):

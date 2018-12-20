@@ -26,12 +26,12 @@ def test_query():
 
     # query some tasks
     assert len(folder.query('scan', 'task', '=', 'resting')) == 2
-    # currently this is read as "the subjects which contains tasks that are not
-    # 'resting'", as opposed to "the subjects which do not contain the task
-    # 'resting'".
-    # TODO: try and figure out what behaviour is preferred?
+    # ask if any of the subjects has *any* tasks that aren't 'resting'
     assert (folder.query('subject', 'task', '!=', 'resting')[0] ==
             folder.project('test1').subject('1'))
+    # ask if any of the subjects have not got a task called 'resting'
+    assert (folder.query('subject', 'task', '!!=', 'resting')[0] ==
+            folder.project('test1').subject('2'))
 
     # query the recording date
     ref_datetime = '2018-10-26T11:32:33'
