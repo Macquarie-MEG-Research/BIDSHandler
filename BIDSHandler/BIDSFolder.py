@@ -2,7 +2,6 @@ import os
 import os.path as op
 import xml.etree.ElementTree as ET
 from datetime import datetime
-import json
 
 from .Project import Project
 from .Subject import Subject
@@ -82,12 +81,15 @@ class BIDSFolder():
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
 
-    def query(self, token=None, condition=None, value=None, obj=None):
+    def query(self, obj=None, token=None, condition=None, value=None):
         """
         Query the BIDSFolder object and return the appropriate data.
 
         Parameters
         ----------
+        obj : str
+            The object type that should be returned.
+            This can be one of ('project', 'subject', 'session', 'scan')
         token : str
             The key to query for. This can be one of:
             ('task', 'acquisition', 'run', 'proc', 'age', 'sex', 'group',
@@ -99,24 +101,26 @@ class BIDSFolder():
             '=' for many properties, and using an inequality between strings
             will return values that may make no sense.
         condition : 'str'
-            One of ('<', '<=', '=', '=>', '>').
+            One of ('<', '<=', '=', '!=', '=>', '>').
             Used to perform comaprisons between the value provided and the
             values the data have.
         value : str | int | float
             The value the token has (or the value to compare using the
             `condition` argument)
-        obj : str
-            The object type that should be returned.
-            This can be one of ('project', 'subject', 'session', 'scan')
 
         Returns
         -------
         list of objects.
         """
+        # TODO: add 'sessions' (number of sessions)
+        #           'subjects' (number of subjects)
+        #           'scans'    (number of scans)
         # each token will be handled separately
         if token in ('task', 'acquisition', 'run', 'proc', 'acq'):
-            if condition != '=':
-                raise ValueError('Condition can only be "="')
+            # condition can *only* be '=' or '!='
+            if condition not in ('=', '!='):
+                raise ValueError('Condition can only be "=" or "!="')
+            return_objects = []
             if obj == 'project':
                 iter_obj = self.projects
             elif obj == 'subject':
@@ -125,16 +129,18 @@ class BIDSFolder():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
-            return_objects = []
+            else:
+                raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
                     for scan in ob.scans:
-                        if scan.__getattribute__(token) == value:
+                        if compare(scan.__getattribute__(token), condition,
+                                   value):
                             return_objects.append(ob)
                             break
             else:
                 for scan in self.scans:
-                    if scan.__getattribute__(token) == value:
+                    if compare(scan.__getattribute__(token), condition, value):
                         return_objects.append(scan)
             return return_objects
         elif token == 'age':
@@ -147,26 +153,27 @@ class BIDSFolder():
                 if subj.age is not None and subj.age != 'n/a':
                     if compare(subj.age, condition, value):
                         return_objects.append(subj)
+            return return_objects
         elif token == 'sex':
             # obj can *only* be subject
             if obj != 'subject':
                 raise ValueError('Can only return subject data when querying '
                                  'sex.')
-            # condition can *only* be '='
-            if condition != '=':
-                raise ValueError('Condition can only be "="')
+            # condition can *only* be '=' or '!='
+            if condition not in ('=', '!='):
+                raise ValueError('Condition can only be "=" or "!="')
             return [subject for subject in self.subjects if
-                    subject.sex == value]
+                    compare(subject.sex, condition, value)]
         elif token == 'group':
             # obj can *only* be subject
             if obj != 'subject':
                 raise ValueError('Can only return subject data when querying '
                                  'group.')
-            # condition can *only* be '='
-            if condition != '=':
-                raise ValueError('Condition can only be "="')
+            # condition can *only* be '=' or '!='
+            if condition not in ('=', '!='):
+                raise ValueError('Condition can only be "=" or "!="')
             return [subject for subject in self.subjects if
-                    subject.group == value]
+                    compare(subject.group, condition, value)]
         elif token == 'rec_date':
             # The dates all need to be converted to date time objects so that
             # comparisons can be determined correctly.
@@ -184,6 +191,8 @@ class BIDSFolder():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
+            else:
+                raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
                     for scan in ob.scans:
@@ -213,24 +222,22 @@ class BIDSFolder():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
+            else:
+                raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
                     for scan in ob.scans:
-                        with open(scan.sidecar, 'r') as sidecar:
-                            info = json.load(sidecar)
-                            sidecar_val = info.get(token, None)
-                            if sidecar_val is not None:
-                                if compare(sidecar_val, condition, value):
-                                    return_objects.append(ob)
-                                    break
-            else:
-                for scan in self.scans:
-                    with open(scan.sidecar, 'r') as sidecar:
-                        info = json.load(sidecar)
-                        sidecar_val = info.get(token, None)
+                        sidecar_val = scan.info.get(token, None)
                         if sidecar_val is not None:
                             if compare(sidecar_val, condition, value):
-                                return_objects.append(scan)
+                                return_objects.append(ob)
+                                break
+            else:
+                for scan in self.scans:
+                    sidecar_val = scan.info.get(token, None)
+                    if sidecar_val is not None:
+                        if compare(sidecar_val, condition, value):
+                            return_objects.append(scan)
             return return_objects
 
     def generate_map(self, output_file=None):

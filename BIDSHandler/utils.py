@@ -47,6 +47,10 @@ def compare(val1, conditional, val2):
         return val1 >= val2
     elif conditional == '>':
         return val1 > val2
+    elif conditional == '!=':
+        return val1 != val2
+    else:
+        raise ValueError("Invalid conditional {0} entered".format(conditional))
 
 
 def compare_times(time1, conditional, time2):
