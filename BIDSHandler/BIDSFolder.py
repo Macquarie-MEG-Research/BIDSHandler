@@ -1,13 +1,16 @@
 import os
 import os.path as op
 import xml.etree.ElementTree as ET
+from datetime import datetime
+import json
 
 from .Project import Project
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
 from .BIDSErrors import MappingError, NoProjectError
-from .utils import copyfiles, realize_paths, prettyprint_xml
+from .utils import (copyfiles, realize_paths, prettyprint_xml, compare,
+                    compare_times)
 
 
 class BIDSFolder():
@@ -78,6 +81,157 @@ class BIDSFolder():
         else:
             raise TypeError("Cannot add a {0} object to a BIDSFolder".format(
                 other.__name__))
+
+    def query(self, token=None, condition=None, value=None, obj=None):
+        """
+        Query the BIDSFolder object and return the appropriate data.
+
+        Parameters
+        ----------
+        token : str
+            The key to query for. This can be one of:
+            ('task', 'acquisition', 'run', 'proc', 'age', 'sex', 'group',
+             'rec_date',  ...)
+            As well as any key from the sidecar.json file.
+            Note: Care should be taken when doing comparisons with data in the
+            sidecar.json as incorrectly constructed queries can easily break.
+            For example, it doesn't make sense to use a condition other than
+            '=' for many properties, and using an inequality between strings
+            will return values that may make no sense.
+        condition : 'str'
+            One of ('<', '<=', '=', '=>', '>').
+            Used to perform comaprisons between the value provided and the
+            values the data have.
+        value : str | int | float
+            The value the token has (or the value to compare using the
+            `condition` argument)
+        obj : str
+            The object type that should be returned.
+            This can be one of ('project', 'subject', 'session', 'scan')
+
+        Returns
+        -------
+        list of objects.
+        """
+        # each token will be handled separately
+        if token in ('task', 'acquisition', 'run', 'proc', 'acq'):
+            if condition != '=':
+                raise ValueError('Condition can only be "="')
+            if obj == 'project':
+                iter_obj = self.projects
+            elif obj == 'subject':
+                iter_obj = self.subjects
+            elif obj == 'session':
+                iter_obj = self.sessions
+            elif obj == 'scan':
+                iter_obj = None
+            return_objects = []
+            if iter_obj is not None:
+                for ob in iter_obj:
+                    for scan in ob.scans:
+                        if scan.__getattribute__(token) == value:
+                            return_objects.append(ob)
+                            break
+            else:
+                for scan in self.scans:
+                    if scan.__getattribute__(token) == value:
+                        return_objects.append(scan)
+            return return_objects
+        elif token == 'age':
+            # obj can *only* be subject
+            if obj != 'subject':
+                raise ValueError('Can only return subject data when querying '
+                                 'age.')
+            return_objects = []
+            for subj in self.subjects:
+                if subj.age is not None and subj.age != 'n/a':
+                    if compare(subj.age, condition, value):
+                        return_objects.append(subj)
+        elif token == 'sex':
+            # obj can *only* be subject
+            if obj != 'subject':
+                raise ValueError('Can only return subject data when querying '
+                                 'sex.')
+            # condition can *only* be '='
+            if condition != '=':
+                raise ValueError('Condition can only be "="')
+            return [subject for subject in self.subjects if
+                    subject.sex == value]
+        elif token == 'group':
+            # obj can *only* be subject
+            if obj != 'subject':
+                raise ValueError('Can only return subject data when querying '
+                                 'group.')
+            # condition can *only* be '='
+            if condition != '=':
+                raise ValueError('Condition can only be "="')
+            return [subject for subject in self.subjects if
+                    subject.group == value]
+        elif token == 'rec_date':
+            # The dates all need to be converted to date time objects so that
+            # comparisons can be determined correctly.
+            try:
+                compare_date = datetime.strptime(value, "%Y-%m-%d")
+                compare_date = compare_date.date()
+            except ValueError:
+                compare_date = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
+            return_objects = []
+            if obj == 'project':
+                iter_obj = self.projects
+            elif obj == 'subject':
+                iter_obj = self.subjects
+            elif obj == 'session':
+                iter_obj = self.sessions
+            elif obj == 'scan':
+                iter_obj = None
+            if iter_obj is not None:
+                for ob in iter_obj:
+                    for scan in ob.scans:
+                        dt = scan.acq_time
+                        # convert to datetime object
+                        dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
+                        if compare_times(dt, condition, compare_date):
+                            return_objects.append(ob)
+                            break
+            else:
+                for scan in self.scans:
+                    dt = scan.acq_time
+                    # convert to datetime object
+                    dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
+                    if compare_times(dt, condition, compare_date):
+                        return_objects.append(scan)
+            return return_objects
+        else:
+            # We will assume any other value is a key in the sidecar.json
+            # to allow these values to be searched for.
+            return_objects = []
+            if obj == 'project':
+                iter_obj = self.projects
+            elif obj == 'subject':
+                iter_obj = self.subjects
+            elif obj == 'session':
+                iter_obj = self.sessions
+            elif obj == 'scan':
+                iter_obj = None
+            if iter_obj is not None:
+                for ob in iter_obj:
+                    for scan in ob.scans:
+                        with open(scan.sidecar, 'r') as sidecar:
+                            info = json.load(sidecar)
+                            sidecar_val = info.get(token, None)
+                            if sidecar_val is not None:
+                                if compare(sidecar_val, condition, value):
+                                    return_objects.append(ob)
+                                    break
+            else:
+                for scan in self.scans:
+                    with open(scan.sidecar, 'r') as sidecar:
+                        info = json.load(sidecar)
+                        sidecar_val = info.get(token, None)
+                        if sidecar_val is not None:
+                            if compare(sidecar_val, condition, value):
+                                return_objects.append(scan)
+            return return_objects
 
     def generate_map(self, output_file=None):
         """
@@ -157,6 +311,7 @@ class BIDSFolder():
         subject_list = []
         for project in self.projects:
             subject_list.extend(project.subjects)
+        return subject_list
 
 #region class methods
 

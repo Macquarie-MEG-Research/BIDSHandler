@@ -1,20 +1,9 @@
 import os.path as op
 import os
 import shutil
+from datetime import datetime, date
 
 import pandas as pd
-
-
-def get_bids_params(fname):
-    filename, ext = op.splitext(fname)
-    f = filename.split('_')
-    data = {'ext': ext}
-    for i in f:
-        if '-' in i:
-            data[i.split('-')[0]] = i.split('-')[1]
-        else:
-            data['file'] = i
-    return data
 
 
 def bids_params_are_subsets(params1, params2):
@@ -44,6 +33,44 @@ def combine_tsv(tsv, df, drop_column=None):
     orig_df.to_csv(tsv, sep='\t', index=False, na_rep='n/a', encoding='utf-8')
 
 
+def compare(val1, conditional, val2):
+    """Compare the two values using the specified conditional
+    ie. returns val1 (conditional) val2
+    """
+    if conditional == '<':
+        return val1 < val2
+    elif conditional in ('<=', '=<'):
+        return val1 <= val2
+    elif conditional in ('=', '=='):
+        return val1 == val2
+    elif conditional in ('=>', '>='):
+        return val1 >= val2
+    elif conditional == '>':
+        return val1 > val2
+
+
+def compare_times(time1, conditional, time2):
+    """
+    Compares two datetime objects to determine if they are the same.
+
+    This differs to normal comparison as it allows for comparison between
+    datetime.date objects and datetime.datetime objects.
+    Equality can thus be determine in such a way that it can be determined if
+    one specfic time on a day is on that day (by equating a date object to a 
+    datetime object).
+    """
+    if type(time1) == type(time2):
+        # Just do a normal compare.
+        return compare(time1, conditional, time2)
+    else:
+        if isinstance(time1, date) and isinstance(time2, datetime):
+            return compare(time1, conditional, time2.date())
+        elif isinstance(time1, datetime) and isinstance(time2, date):
+            return compare(time1.date(), conditional, time2)
+        else:
+            raise TypeError
+
+
 def copyfiles(src_files, dst_files):
     assert len(src_files) == len(dst_files)
     for fnum in range(len(src_files)):
@@ -54,6 +81,18 @@ def copyfiles(src_files, dst_files):
         except shutil.SameFileError:
             # For now just skip files that are the same.
             print('same file!!')
+
+
+def get_bids_params(fname):
+    filename, ext = op.splitext(fname)
+    f = filename.split('_')
+    data = {'ext': ext}
+    for i in f:
+        if '-' in i:
+            data[i.split('-')[0]] = i.split('-')[1]
+        else:
+            data['file'] = i
+    return data
 
 
 def prettyprint_xml(xml_str):

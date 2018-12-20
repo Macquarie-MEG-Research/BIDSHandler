@@ -76,7 +76,8 @@ class Scan():
         filename_data = get_bids_params(op.basename(self._raw_file))
         self.task = filename_data.get('task', None)
         self.run = filename_data.get('run', None)
-        self.acq = filename_data.get('acq', None)
+        self.acquisition = self.acq = filename_data.get('acq', None)
+        self.proc = filename_data.get('proc', None)
 
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
