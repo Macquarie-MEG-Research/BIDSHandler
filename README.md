@@ -17,6 +17,8 @@ A pre-built wheel may also be available in the releases tab, however in this ear
 
 ## Usage
 
+### Loading data
+
 Loading a BIDS folder is very simple.
 
 Imagine we have a BIDS folder with the following structure:
@@ -51,13 +53,16 @@ folder = BIDSTree('BIDSFOLDER')
 ```
 
 This will load the folder, then recurse over the sub-folders and find all projects, subjects, sessions and (MEG) scans.
-Each of these levels is an object itself, and they can be iterated over:
+
+### Looking at individual sub-components
+
+Each of the `BIDSTree`, `Project`, `Subject` and `Session` objects can be iterated over, to yield the child objects:
 
 ```python
 for project in folder.projects:
   print(project)
 # results:
-# Project ID: PROJ01
+# ID: PROJ01
 # Number of subjects: 2
 ```
 
@@ -67,12 +72,11 @@ We can also pick out individual projects, subjects, session or scans:
 sub2 = folder.project('PROJ01').subject('02')
 print(sub2)
 # results (with made up values):
-# sub-02
-# Info:
+# ID: sub-02
 # Age: 22
 # Gender: M
 # Group: Control
-# Sessions: 1
+# Number of Sessions: 1
 
 print(sub2.age)
 # 22
@@ -81,6 +85,8 @@ ses1 = sub2.session('01')
 print(ses1.scans_tsv)
 # <base file path>/BIDSFOLDER/PROJ01/sub-02/ses-01/sub-02_ses-01_scans.tsv
 ```
+
+### Adding/merging BIDS data
 
 As well as loading in BIDS folders to read the data from them, we can also manipulate the BIDS folders.
 This is particularly useful if BIDS data has to be merged if it is converted in multiple locations but all needs to be stored in the one location.
@@ -137,6 +143,35 @@ It is also possible to specify a custom copying function (default is minimally w
 folder.add(folder2, copier=some_other_copy_function)
 ```
 For more information and constraints on `copier` see the docstring for the `add` function.
+
+### Querying BIDS data
+
+One very useful function to be able to perform on any large dataset is to be able to pull out or find the data corresponding to a set of conditions you may have.
+`BIDSHandler` allows you to query data in a simple manner and extract a list of objects that you require.
+To understand how this works we can look at the function used:
+
+```python
+BIDSTree.query(obj, token, condition, value)
+```
+You can see more information by reading the docstring (`help(BIDSTree.query)`), however we can summarise the process and meanings here.
+ - `obj` is the name of the object type you want and can be one of `'project'`, `'subject'`, `'session'` or `'scan'`.
+ - `token` is the name of the data you want to compare. There is a list of possible values, or you can use any value that is used as a key in the sidecar.json file.
+ - `condition` is one of `('<', '<=', '=', '!=', '!!=', '=>', '>')` where `'!!='` here means `none equal`. This is distinctly different from `'!='` in that if you ask for the list of subjects that do not contain `task-resting` using `'!='` you will get the list of all subjects that contains tasks that aren't `task-resting`. `'!!='` will however return the list of subjects that have no `task-resting`'s.
+ - `value` is the value to check against.
+Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they do. We can see this by example:
+If we want to get a list of all subjects in the BIDSTree that are female we could do:
+
+```python
+folder2.query('subject', 'sex', '=', 'F')
+```
+If we let subjects 1 and 3 be female, then this would return the list of those two Subject objects.
+Similarly we could ask for all projects that contain recordings after a particular date:
+```python
+folder2.query('project', 'rec_date_', '>=', '2018-01-01')
+```
+When querying recording dates the date value *must* be in the format `YYYY-MM-DD` when specifying a particular date.
+
+The date can also be specified to the second if need be by using a date value of the format `"%Y-%m-%dT%H:%M:%S"` (the previous date format is `"%Y-%m-%d"`).
 
 ## Contributing
 

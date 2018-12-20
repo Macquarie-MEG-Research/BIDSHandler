@@ -81,7 +81,7 @@ class BIDSTree():
             raise TypeError("Cannot add a {0} object to a BIDSTree".format(
                 other.__name__))
 
-    def query(self, obj=None, token=None, condition=None, value=None):
+    def query(self, obj, token, condition, value):
         """
         Query the BIDSTree object and return the appropriate data.
 
