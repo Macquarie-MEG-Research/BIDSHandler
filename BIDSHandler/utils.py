@@ -63,7 +63,7 @@ def compare_times(time1, conditional, time2):
     This differs to normal comparison as it allows for comparison between
     datetime.date objects and datetime.datetime objects.
     Equality can thus be determine in such a way that it can be determined if
-    one specfic time on a day is on that day (by equating a date object to a 
+    one specfic time on a day is on that day (by equating a date object to a
     datetime object).
     """
     if type(time1) == type(time2):

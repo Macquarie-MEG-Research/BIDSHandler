@@ -101,6 +101,33 @@ class Scan():
 #region properties
 
     @property
+    def channels_tsv(self):
+        """Absolute path to the associated channels.tsv file."""
+        channels_path = self.associated_files.get('channels', None)
+        if channels_path is not None:
+            return realize_paths(self, channels_path)
+        else:
+            raise FileNotFoundError
+
+    @property
+    def coordsystem_json(self):
+        """Absolute path to the associated coordsystem.json file."""
+        coordsystem_path = self.associated_files.get('coordsystem', None)
+        if coordsystem_path is not None:
+            return realize_paths(self, coordsystem_path)
+        else:
+            raise FileNotFoundError
+
+    @property
+    def events_tsv(self):
+        """Absolute path to the associated events.tsv file."""
+        events_path = self.associated_files.get('events', None)
+        if events_path is not None:
+            return realize_paths(self, events_path)
+        else:
+            raise FileNotFoundError
+
+    @property
     def path(self):
         """Determine path location based on parent paths."""
         return op.join(self.session.path, self._path)
