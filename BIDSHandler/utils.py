@@ -47,7 +47,10 @@ def compare(val1, conditional, val2):
         return val1 >= val2
     elif conditional == '>':
         return val1 > val2
-    elif conditional == '!=':
+    elif conditional in ('!=', '!!='):
+        # Generally a `!!=` conditional will be caught by calling code to
+        # handle it correctly, however sometimes it makes sense to use it in
+        # the same way as the `!=` conditional.
         return val1 != val2
     else:
         raise ValueError("Invalid conditional {0} entered".format(conditional))

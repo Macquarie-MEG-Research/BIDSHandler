@@ -112,11 +112,41 @@ class BIDSTree():
         -------
         list of objects.
         """
-        # TODO: add 'sessions' (number of sessions)
-        #           'subjects' (number of subjects)
-        #           'scans'    (number of scans)
         # each token will be handled separately
-        if token in ('task', 'acquisition', 'run', 'proc', 'acq'):
+        if token == 'subjects':
+            # return projects with a certain number of subjects
+            if obj != 'project':
+                raise ValueError('Can only query the number of subjects for a '
+                                 'project.')
+            return [project for project in self.projects if
+                    compare(len(project.subjects), condition, value)]
+        elif token == 'sessions':
+            # return projects or subjects with a certain number of sessions
+            if obj == 'project':
+                return [project for project in self.projects if
+                        compare(len(project.sessions), condition, value)]
+            elif obj == 'subject':
+                return [subject for subject in self.subjects if
+                        compare(len(subject.sessions), condition, value)]
+            else:
+                raise ValueError('Can only query the number of sessions for a '
+                                 'project or subject.')
+        elif token == 'scans':
+            # return projects, subjects or sessions with a certain number of
+            # scans
+            if obj == 'project':
+                return [project for project in self.projects if
+                        compare(len(project.scans), condition, value)]
+            elif obj == 'subject':
+                return [subject for subject in self.subjects if
+                        compare(len(subject.scans), condition, value)]
+            elif obj == 'session':
+                return [session for session in self.sessions if
+                        compare(len(session.scans), condition, value)]
+            else:
+                raise ValueError('Can only query the number of scans for a '
+                                 'project, subject or session.')
+        elif token in ('task', 'acquisition', 'run', 'proc', 'acq'):
             # condition can *only* be '=', '!=' or '!!='
             if condition not in ('=', '!=', '!!='):
                 raise ValueError('Condition can only be "=" or "!=", "!!="')
