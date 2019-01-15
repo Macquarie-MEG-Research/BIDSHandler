@@ -76,7 +76,8 @@ class Scan():
         filename_data = get_bids_params(op.basename(self._raw_file))
         self.task = filename_data.get('task', None)
         self.run = filename_data.get('run', None)
-        self.acq = filename_data.get('acq', None)
+        self.acquisition = self.acq = filename_data.get('acq', None)
+        self.proc = filename_data.get('proc', None)
 
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
@@ -98,6 +99,33 @@ class Scan():
             self.info = json.load(sidecar)
 
 #region properties
+
+    @property
+    def channels_tsv(self):
+        """Absolute path to the associated channels.tsv file."""
+        channels_path = self.associated_files.get('channels', None)
+        if channels_path is not None:
+            return realize_paths(self, channels_path)
+        else:
+            raise FileNotFoundError
+
+    @property
+    def coordsystem_json(self):
+        """Absolute path to the associated coordsystem.json file."""
+        coordsystem_path = self.associated_files.get('coordsystem', None)
+        if coordsystem_path is not None:
+            return realize_paths(self, coordsystem_path)
+        else:
+            raise FileNotFoundError
+
+    @property
+    def events_tsv(self):
+        """Absolute path to the associated events.tsv file."""
+        events_path = self.associated_files.get('events', None)
+        if events_path is not None:
+            return realize_paths(self, events_path)
+        else:
+            raise FileNotFoundError
 
     @property
     def path(self):

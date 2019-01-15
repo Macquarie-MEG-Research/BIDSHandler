@@ -183,9 +183,9 @@ class Session():
 #region properties
 
     @property
-    def bids_folder(self):
-        """Parent BIDSFolder object."""
-        return self.project.bids_folder
+    def bids_tree(self):
+        """Parent BIDSTree object."""
+        return self.project.bids_tree
 
     @property
     def ID(self):

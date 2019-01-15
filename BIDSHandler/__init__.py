@@ -1,9 +1,9 @@
 """API for handling folders containing BIDS formatted data."""
 
-__version__ = '0.1.1'
+__version__ = '0.2.dev0'
 name = "BIDSHandler"  # noqa
 
-from .BIDSFolder import BIDSFolder  # noqa
+from .BIDSTree import BIDSTree  # noqa
 from .Project import Project  # noqa
 from .Subject import Subject  # noqa
 from .Session import Session  # noqa

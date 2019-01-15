@@ -5,7 +5,7 @@ import os.path as op
 import shutil
 import pytest
 
-from BIDSHandler import BIDSFolder, AssociationError
+from BIDSHandler import BIDSTree, AssociationError
 
 TESTPATH1 = 'data/BIDSTEST1'
 TESTPATH2 = 'data/BIDSTEST2'
@@ -17,8 +17,8 @@ def test_add_new_project_recursively():
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
-        src_bf = BIDSFolder(TESTPATH1)
-        dst_bf = BIDSFolder(op.join(tmp, 'BIDSTEST2'))
+        src_bf = BIDSTree(TESTPATH1)
+        dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
         dst_bf.add(src_bf.project('test2').subject('3').session('1').scan(
             task='resting', run='1'))
         # make sure the project was added
@@ -32,13 +32,13 @@ def test_add_new_project_recursively():
         assert op.exists(scans_tsv)
 
 
-def test_merge_bidsfolders():
+def test_merge_bidstrees():
     # completely merge one bids folder into another
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
-        src_bf = BIDSFolder(TESTPATH1)
-        dst_bf = BIDSFolder(op.join(tmp, 'BIDSTEST2'))
+        src_bf = BIDSTree(TESTPATH1)
+        dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
         dst_bf.add(src_bf)
         assert len(dst_bf.projects) == 2
         raw = dst_bf.project('test1').subject('2').session('1').scan(
@@ -46,10 +46,10 @@ def test_merge_bidsfolders():
         assert op.exists(raw)
 
 
-def test_bidsfolder_to_bidsfolder():
+def test_bidstree_to_bidstree():
     with tempfile.TemporaryDirectory() as tmp:
-        dest_bf = BIDSFolder(tmp, False)
-        src_bf = BIDSFolder(TESTPATH2)
+        dest_bf = BIDSTree(tmp, False)
+        src_bf = BIDSTree(TESTPATH2)
         dest_bf.add(src_bf)
         assert len(dest_bf.projects) == 1
         assert dest_bf.project('test1').subject('1').age == 2.0
@@ -60,8 +60,8 @@ def test_copy_errors():
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
-        src_bf = BIDSFolder(TESTPATH1)
-        dst_bf = BIDSFolder(op.join(tmp, 'BIDSTEST2'))
+        src_bf = BIDSTree(TESTPATH1)
+        dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
         # try add one project to another with different ID's
         # try and add an object you shouldn't do:
         proj = src_bf.project('test1')
