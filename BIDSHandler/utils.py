@@ -79,6 +79,21 @@ def compare_times(time1, conditional, time2):
 
 
 def copyfiles(src_files, dst_files):
+    """
+    Copy a list of files to a list of destinations.
+
+    Parameters
+    ----------
+    src_files : list of str's
+        List of source paths.
+    dst_files : list of str's
+        List of destination paths.
+    
+    Note:
+    -----
+    There is a one-to-one correlation between the src_files and dst_files
+    lists. Ie. src_files[i] will be copied to dst_files[i].
+    """
     assert len(src_files) == len(dst_files)
     for fnum in range(len(src_files)):
         if not op.exists(op.dirname(dst_files[fnum])):

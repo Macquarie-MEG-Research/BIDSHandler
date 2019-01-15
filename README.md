@@ -155,17 +155,31 @@ BIDSTree.query(obj, token, condition, value)
 ```
 You can see more information by reading the docstring (`help(BIDSTree.query)`), however we can summarise the process and meanings here.
  - `obj` is the name of the object type you want and can be one of `'project'`, `'subject'`, `'session'` or `'scan'`.
- - `token` is the name of the data you want to compare. There is a list of possible values, or you can use any value that is used as a key in the sidecar.json file.
- - `condition` is one of `('<', '<=', '=', '!=', '!!=', '=>', '>')` where `'!!='` here means `none equal`. This is distinctly different from `'!='` in that if you ask for the list of subjects that do not contain `task-resting` using `'!='` you will get the list of all subjects that contains tasks that aren't `task-resting`. `'!!='` will however return the list of subjects that have no `task-resting`'s.
+ - `token` is the name of the data you want to compare. This can be a value like `'task'`, `'group'`, or `'sessions'` for example, or you can use any value that is used as a key in the sidecar.json file.
+ To see the full list you can see the docstring by entering
+ ```python
+ from BIDSHandler import BIDSTree
+ help(BIDSTree.query)
+ ```
+ - `condition` is one of `('<', '<=', '=', '!=', '!!=', '=>', '>')` where `'!!='` here means `none equal`. This is distinctly different from `'!='` in that if you ask for the list of subjects that do not contain `'task'=='resting'` using `'!='` you will get the list of all subjects that contains tasks that aren't `'task'=='resting'`. `'!!='` will however return the list of subjects that have no instances of `'task'=='resting'`.
+ The `condition` must also be valid for the data type. So for example using a `condition` of `<` for a value that is a string will not return any meaningful result or may raise an error.
  - `value` is the value to check against.
-Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they do. We can see this by example:
-If we want to get a list of all subjects in the BIDSTree that are female we could do:
+ This value can either be the actual value in the file name, so for `token` = `'task'`, the value will be the string in `task-value`.
+ For `token`'s such as `age` it will be the age found in the participant.tsv.
+
+Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they do.
+
+#### Examples:
+
+*Task:* Find a list of all subjects that are Female.
 
 ```python
 folder2.query('subject', 'sex', '=', 'F')
 ```
 If we let subjects 1 and 3 be female, then this would return the list of those two Subject objects.
-Similarly we could ask for all projects that contain recordings after a particular date:
+
+*Task:* Find all the projects containing recordings after the 1st of January 2018:
+
 ```python
 folder2.query('project', 'rec_date_', '>=', '2018-01-01')
 ```
@@ -173,7 +187,14 @@ When querying recording dates the date value *must* be in the format `YYYY-MM-DD
 
 The date can also be specified to the second if need be by using a date value of the format `"%Y-%m-%dT%H:%M:%S"` (the previous date format is `"%Y-%m-%d"`).
 
+*Task:* Find all the subjects that do not have any resting state tasks:
+
+```python
+folder2.query('subject', 'task', '!!=', 'restingstate')
+```
+Where a key-value pair in the BIDS filename of `task-restingstate` corresponds to resting state data.
+
 ## Contributing
 
-BIDSHandler is still in very early stages, but contributions are more than welcome in the form of PR's.
+BIDSHandler is still in very early stages, but contributions are more than welcome in the form of PR's and by raising issues to discussion potential features.
 Ideally BIDSHandler would be able to handle any BIDS data from any modality such as MRI and EEG, but the current focus is on MEG data.
