@@ -8,11 +8,13 @@ import pandas as pd
 from .BIDSErrors import MappingError, NoSessionError, AssociationError
 from .Session import Session
 from .Scan import Scan
+from .QueryBase import QueryBase
 from .utils import copyfiles, realize_paths
 
 
-class Subject():
+class Subject(QueryBase):
     def __init__(self, id_, project, initialize=True):
+        super(Subject, self).__init__()
         self._id = id_
         self.project = project
         # Contained sessions
@@ -21,6 +23,8 @@ class Subject():
         self.age = 'n/a'
         self.sex = 'n/a'
         self.group = 'n/a'
+
+        self._child_types = ('session', 'scan')
 
         if initialize:
             self._load_subject_info()

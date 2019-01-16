@@ -10,6 +10,8 @@ TESTPATH1 = 'data/BIDSTEST1'
 def test_query():
     folder = BIDSTree(TESTPATH1)
 
+    # query a BIDSTree object
+
     # query some subject information
     assert len(folder.query('subject', 'age', '=', 4)) == 1
     assert len(folder.query('subject', 'age', '>', 2)) == 2
@@ -61,3 +63,20 @@ def test_query():
     assert len(folder.query('project', 'scans', '>', 4)) == 0
     assert len(folder.query('subject', 'scans', '<=', 2)) == 2
     assert len(folder.query('session', 'scans', '<', 2)) == 3
+
+    # query a Project object:
+
+    proj = folder.query('project', 'subjects', '=', 2)[0]
+    assert len(proj.query('subject', 'sessions', '=', 2)) == 1
+    assert len(proj.query('subject', 'group', '=', 'neurotypical')) == 1
+    assert len(proj.query('session', 'scans', '<=', 3)) == 3
+
+    # query a Subject object:
+
+    subj = proj.query('subject', 'sessions', '=', 2)[0]
+    assert len(subj.query('session', 'scans', '>=', 1)) == 2
+
+    # perform a compound query:
+
+    projs = folder.query('subject', 'age', '>', 2)
+    assert len(projs.query('scan', 'task', '=', 'resting')) == 1

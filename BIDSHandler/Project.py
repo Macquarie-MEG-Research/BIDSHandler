@@ -7,18 +7,22 @@ import xml.etree.ElementTree as ET
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
+from .QueryBase import QueryBase
 from .BIDSErrors import NoSubjectError, MappingError, AssociationError
 from .utils import copyfiles, realize_paths
 
 
-class Project():
+class Project(QueryBase):
     def __init__(self, id_, bids_tree, initialize=True):
+        super(Project, self).__init__()
         self._id = id_
         self.bids_tree = bids_tree
         self._participants_tsv = None
         self._description = None
         self._readme = None
         self._subjects = dict()
+
+        self._child_types = ('subject', 'session', 'scan')
 
         if initialize:
             self._add_subjects()
@@ -47,7 +51,7 @@ class Project():
         if isinstance(other, Project):
             # If the project has the same ID, take all the child subjects and
             # merge into this project.
-            if self.ID == other.ID:
+            if self._id == other._id:
                 for subject in other.subjects:
                     self.add(subject, copier)
             else:

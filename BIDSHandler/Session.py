@@ -9,9 +9,10 @@ import pandas as pd
 from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
 from .BIDSErrors import MappingError, NoScanError, AssociationError
 from .Scan import Scan
+from .QueryBase import QueryBase
 
 
-class Session():
+class Session(QueryBase):
     """Object to describe a session level folder.
 
     Parameters
@@ -27,11 +28,14 @@ class Session():
         Defaults to True.
     """
     def __init__(self, id_, subject, initialize=True):
+        super(Session, self).__init__()
         self._id = id_
         self.subject = subject
         self._scans_tsv = None
         self._scans = []
         self.recording_types = []
+
+        self._child_types = ('scan',)
 
         if initialize:
             self._add_scans()
@@ -95,7 +99,7 @@ class Session():
                     fl_right.append(op.join(self.path, other._path, fpath))
                 copier(fl_left, fl_right)
                 # Add the scan object to our scans list.
-                scan = Scan(other.raw_file_relative, other.acq_time, self)
+                scan = Scan(other.raw_file_relative, self, other.acq_time)
                 self._scans.append(scan)
             else:
                 raise AssociationError("scan", "project, subject and session")
@@ -139,7 +143,7 @@ class Session():
                     for i in range(len(scans)):
                         row = scans.iloc[i]
                         self._scans.append(
-                            Scan(row['filename'], row['acq_time'], self))
+                            Scan(row['filename'], self, row['acq_time']))
 
     def _check(self):
         if len(self._scans) == 0:
