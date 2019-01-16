@@ -261,17 +261,17 @@ class QueryBase():
 #region properties
 
     @property
-    def projects(self):
+    def projects(self):  # pragma: no cover
         return self._projects
 
     @property
-    def subjects(self):
+    def subjects(self):  # pragma: no cover
         return self._subjects
 
     @property
-    def sessions(self):
+    def sessions(self):  # pragma: no cover
         return self._sessions
 
     @property
-    def scans(self):
+    def scans(self):  # pragma: no cover
         return self._scans

@@ -71,6 +71,9 @@ def test_query():
     assert len(proj.query('subject', 'group', '=', 'neurotypical')) == 1
     assert len(proj.query('session', 'scans', '<=', 3)) == 3
 
+    with pytest.raises(ValueError, match='Invalid query'):
+        proj.query('project', 'subjects', '=', 1)
+
     # query a Subject object:
 
     subj = proj.query('subject', 'sessions', '=', 2)[0]
