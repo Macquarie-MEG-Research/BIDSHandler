@@ -8,11 +8,11 @@ import pandas as pd
 from .BIDSErrors import MappingError, NoSessionError, AssociationError
 from .Session import Session
 from .Scan import Scan
-from .QueryBase import QueryBase
+from .QueryMixin import QueryMixin
 from .utils import copyfiles, realize_paths
 
 
-class Subject(QueryBase):
+class Subject(QueryMixin):
     def __init__(self, id_, project, initialize=True):
         super(Subject, self).__init__()
         self._id = id_
@@ -24,7 +24,7 @@ class Subject(QueryBase):
         self.sex = 'n/a'
         self.group = 'n/a'
 
-        self._child_types = ('session', 'scan')
+        self._queryable_types = ('subject', 'session', 'scan')
 
         if initialize:
             self._load_subject_info()

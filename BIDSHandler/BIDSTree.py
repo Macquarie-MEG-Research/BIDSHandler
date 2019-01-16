@@ -6,18 +6,18 @@ from .Project import Project
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
-from .QueryBase import QueryBase
+from .QueryMixin import QueryMixin
 from .BIDSErrors import MappingError, NoProjectError
 from .utils import copyfiles, realize_paths, prettyprint_xml
 
 
-class BIDSTree(QueryBase):
+class BIDSTree(QueryMixin):
     def __init__(self, fpath, initialize=True):
         super(BIDSTree, self).__init__()
         self.path = fpath
         self._projects = dict()
 
-        self._child_types = ('project', 'subject', 'session', 'scan')
+        self._queryable_types = ('project', 'subject', 'session', 'scan')
 
         if initialize:
             self._add_projects()

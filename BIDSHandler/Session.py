@@ -9,10 +9,10 @@ import pandas as pd
 from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
 from .BIDSErrors import MappingError, NoScanError, AssociationError
 from .Scan import Scan
-from .QueryBase import QueryBase
+from .QueryMixin import QueryMixin
 
 
-class Session(QueryBase):
+class Session(QueryMixin):
     """Object to describe a session level folder.
 
     Parameters
@@ -35,7 +35,7 @@ class Session(QueryBase):
         self._scans = []
         self.recording_types = []
 
-        self._child_types = ('scan',)
+        self._queryable_types = ('session', 'scan')
 
         if initialize:
             self._add_scans()

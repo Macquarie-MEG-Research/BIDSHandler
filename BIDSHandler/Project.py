@@ -7,12 +7,12 @@ import xml.etree.ElementTree as ET
 from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
-from .QueryBase import QueryBase
+from .QueryMixin import QueryMixin
 from .BIDSErrors import NoSubjectError, MappingError, AssociationError
 from .utils import copyfiles, realize_paths
 
 
-class Project(QueryBase):
+class Project(QueryMixin):
     def __init__(self, id_, bids_tree, initialize=True):
         super(Project, self).__init__()
         self._id = id_
@@ -22,7 +22,7 @@ class Project(QueryBase):
         self._readme = None
         self._subjects = dict()
 
-        self._child_types = ('subject', 'session', 'scan')
+        self._queryable_types = ('project', 'subject', 'session', 'scan')
 
         if initialize:
             self._add_subjects()

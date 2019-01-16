@@ -154,7 +154,7 @@ To understand how this works we can look at the function used:
 BIDSTree.query(obj, token, condition, value)
 ```
 You can see more information by reading the docstring (`help(BIDSTree.query)`), however we can summarise the process and meanings here.
- - `obj` is the name of the object type you want and can be one of `'project'`, `'subject'`, `'session'` or `'scan'`.
+ - `obj` is the name of the object type you want and can be one of `'project'`, `'subject'`, `'session'` or `'scan'`. The object name must be the of the same level as the object you are querying or lower.
  - `token` is the name of the data you want to compare. This can be a value like `'task'`, `'group'`, or `'sessions'` for example, or you can use any value that is used as a key in the sidecar.json file.
  To see the full list you can see the docstring by entering
  ```python
@@ -167,7 +167,12 @@ You can see more information by reading the docstring (`help(BIDSTree.query)`), 
  This value can either be the actual value in the file name, so for `token` = `'task'`, the value will be the string in `task-value`.
  For `token`'s such as `age` it will be the age found in the participant.tsv.
 
-Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they do.
+Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they ask.
+
+All BIDS objects except the `Scans` object can be queried (ie. `BIDSTree`, `Project`, `Subject`, and `Session`), and only queries which make sense can be made on these objects. For example the question *"what are all the projects in this session that have one subject"* obviously makes no sense and will raise an error.
+
+Queries can also be componded to allow for multiple queries to be chained.
+This is possible because the object that the `query` function returns is actually a `QueryList` object which has all the functionality of a normal python list, however it also has a `query` method which can be called to apply a query to every member of the list.
 
 #### Examples:
 
@@ -193,6 +198,14 @@ The date can also be specified to the second if need be by using a date value of
 folder2.query('subject', 'task', '!!=', 'restingstate')
 ```
 Where a key-value pair in the BIDS filename of `task-restingstate` corresponds to resting state data.
+
+*Task:* Find all the subjects that are female and that have 1 session:
+First we will find all the subjects that are female, then we will find all the subjects in this list that have only one session.
+
+```python
+subjects = folder.query('subject', 'sex', '=', 'F')
+subjects.query('subject', 'sessions', '=', 1)
+```
 
 ## Contributing
 

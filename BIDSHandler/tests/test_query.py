@@ -71,15 +71,19 @@ def test_query():
     assert len(proj.query('subject', 'group', '=', 'neurotypical')) == 1
     assert len(proj.query('session', 'scans', '<=', 3)) == 3
 
-    with pytest.raises(ValueError, match='Invalid query'):
-        proj.query('project', 'subjects', '=', 1)
-
     # query a Subject object:
 
     subj = proj.query('subject', 'sessions', '=', 2)[0]
     assert len(subj.query('session', 'scans', '>=', 1)) == 2
 
+    with pytest.raises(ValueError, match='Invalid query'):
+        subj.query('project', 'subjects', '=', 1)
+
     # perform a compound query:
 
     projs = folder.query('subject', 'age', '>', 2)
     assert len(projs.query('scan', 'task', '=', 'resting')) == 1
+
+    subjs = folder.query('subject', 'sex', '=', 'F')
+    assert (subjs.query('subject', 'sessions', '=', 1)[0] ==
+            folder.project('test2').subject('3'))

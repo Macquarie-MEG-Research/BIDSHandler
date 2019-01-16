@@ -4,19 +4,12 @@ from .utils import compare, compare_times
 from .QueryList import QueryList
 
 
-class QueryBase():
+class QueryMixin():
     """Provides query functionality to the various BIDS classes.
 
-    This class has no functionality on its own and can only be used
-    as a sub-class
+    This Mix-in class has no functionality on its own and can only be used
+    as a sub-class.
     """
-    def __init__(self):
-        # set the various parameters
-        self._projects = dict()
-        self._subjects = dict()
-        self._sessions = dict()
-        self._scans = dict()
-        self._child_types = tuple()
 
 #region public methods
 
@@ -254,24 +247,30 @@ class QueryBase():
         obj : str
             This can be one of ('project', 'subject', 'session', 'scan')
         """
-        if obj in self._child_types:
+        if obj in self._queryable_types:
             return True
         return False
 
 #region properties
 
     @property
-    def projects(self):  # pragma: no cover
-        return self._projects
+    def projects(self):
+        return [self]
 
     @property
-    def subjects(self):  # pragma: no cover
-        return self._subjects
+    def subjects(self):
+        return [self]
 
     @property
-    def sessions(self):  # pragma: no cover
-        return self._sessions
+    def sessions(self):
+        return [self]
 
     @property
-    def scans(self):  # pragma: no cover
-        return self._scans
+    def scans(self):
+        return [self]
+
+#region class methods
+
+    def __contains__(self, other):  # pragma: no cover
+        # to stop pylint complaining...
+        pass
