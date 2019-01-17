@@ -79,11 +79,24 @@ def test_query():
     with pytest.raises(ValueError, match='Invalid query'):
         subj.query('project', 'subjects', '=', 1)
 
+    # query a Session object:
+    sess = subj.query('session', 'scans', '>', 1)[0]
+    assert len(sess.query('scan', 'task', '=', 'resting')) == 1
+
     # perform a compound query:
 
-    projs = folder.query('subject', 'age', '>', 2)
-    assert len(projs.query('scan', 'task', '=', 'resting')) == 1
+    subjs = folder.query('subject', 'age', '>', 2)
+    assert len(subjs.query('scan', 'task', '=', 'resting')) == 1
+
+    projs = folder.query('project', 'subjects', '>', 1)
+    assert (projs.query('project', 'sessions', '=', 3)[0] ==
+            folder.project('test1'))
 
     subjs = folder.query('subject', 'sex', '=', 'F')
     assert (subjs.query('subject', 'sessions', '=', 1)[0] ==
             folder.project('test2').subject('3'))
+
+    sesss = folder.query('session', 'scans', '=', 1)
+    assert len(sesss) == 3
+    assert (sesss.query('session', 'TaskName', '=', 'resting')[0] ==
+            folder.project('test2').subject('3').session('1'))

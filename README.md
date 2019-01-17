@@ -203,7 +203,7 @@ Where a key-value pair in the BIDS filename of `task-restingstate` corresponds t
 First we will find all the subjects that are female, then we will find all the subjects in this list that have only one session.
 
 ```python
-subjects = folder.query('subject', 'sex', '=', 'F')
+subjects = folder2.query('subject', 'sex', '=', 'F')
 subjects.query('subject', 'sessions', '=', 1)
 ```
 
