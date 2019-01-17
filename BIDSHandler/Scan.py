@@ -9,10 +9,26 @@ from .utils import (get_bids_params, realize_paths,
 
 
 class Scan():
-    def __init__(self, fpath, acq_time, session):
+    """ Object to contain all the information relating to a scan
+
+    Parameters
+    ----------
+    fpath : str
+        The path to the raw scan file.
+    session : Session object
+        The parent Session object this Scan belongs to.
+    acq_time : str
+        (Optional)
+        The acquisition time of the scan.
+    scan_params : dict
+        (Optional)
+        A dictionary containing any number of other scan parameters.
+    """
+    def __init__(self, fpath, session, acq_time=None, **scan_params):
         self._path = splitall(fpath)[0]
         self._raw_file = '\\'.join(splitall(fpath)[1:])
         self.acq_time = acq_time
+        self.scan_params = scan_params
         self.session = session
         self._get_params()
         self._sidecar = None
@@ -64,6 +80,8 @@ class Scan():
         self._check()
 
     def _check(self):
+        # TODO: this isn't required for mri data...
+        # or the data may be somewhere else?? (parent directory...?)
         if self._sidecar is None:
             raise MappingError
 
