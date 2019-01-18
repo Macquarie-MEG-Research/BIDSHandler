@@ -19,16 +19,6 @@ def test_query():
     assert len(folder.query('subject', 'sex', '=', 'M')) == 1
     assert len(folder.query('subject', 'sex', '!=', 'M')) == 2
     assert len(folder.query('subject', 'group', '=', 'autistic')) == 2
-    with pytest.raises(ValueError, match='subject data'):
-        folder.query('project', 'age', '=', '4')
-    with pytest.raises(ValueError, match='subject data'):
-        folder.query('session', 'sex', '=', 'M')
-    with pytest.raises(ValueError, match='subject data'):
-        folder.query('scan', 'group', '=', 'autistic')
-    with pytest.raises(ValueError, match='Condition'):
-        folder.query('subject', 'sex', '<', 'M')
-    with pytest.raises(ValueError, match='Condition'):
-        folder.query('subject', 'group', '>', 'test')
 
     # query some tasks
     assert len(folder.query('scan', 'task', '=', 'resting')) == 2

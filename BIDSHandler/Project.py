@@ -149,12 +149,8 @@ class Project(QueryMixin):
         full_path = realize_paths(self, self._participants_tsv)
         if not op.exists(full_path):
             df = pd.DataFrame(
-                OrderedDict([
-                    ('participant_id', []),
-                    ('age', []),
-                    ('sex', []),
-                    ('group', [])]),
-                columns=['participant_id', 'age', 'sex', 'group'])
+                OrderedDict([('participant_id', [])]),
+                columns=['participant_id'])
         df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                   encoding='utf-8')
 
@@ -171,17 +167,26 @@ class Project(QueryMixin):
     def description(self):
         if self._description is not None:
             return realize_paths(self, self._description)
-        raise FileNotFoundError
+        return None
 
     @property
     def ID(self):
         return str(self._id)
 
     @property
+    def inheritable_files(self):
+        files = []
+        for fname in os.listdir(self.path):
+            abs_path = realize_paths(self, fname)
+            if op.isfile(abs_path):
+                files.append(abs_path)
+        return files
+
+    @property
     def participants_tsv(self):
         if self._participants_tsv is not None:
             return realize_paths(self, self._participants_tsv)
-        raise FileNotFoundError
+        return None
 
     @property
     def path(self):
@@ -192,7 +197,7 @@ class Project(QueryMixin):
     def readme(self):
         if self._readme is not None:
             return realize_paths(self, self._readme)
-        raise FileNotFoundError
+        return None
 
     @property
     def sessions(self):
@@ -233,9 +238,8 @@ class Project(QueryMixin):
                 if other in subject:
                     return True
             return False
-        else:
-            raise TypeError("Can only determine if a Scan, Session or Subject "
-                            "is contained.")
+        raise TypeError("Can only determine if a Scan, Session or Subject is"
+                        "contained.")
 
     def __iter__(self):
         return iter(self._subjects.values())

@@ -143,37 +143,6 @@ class QueryMixin():
                 for scan in self.scans:
                     if compare(scan.__getattribute__(token), condition, value):
                         return_data.append(scan)
-        elif token == 'age':
-            # obj can *only* be subject
-            if obj != 'subject':
-                raise ValueError('Can only return subject data when querying '
-                                 'age.')
-            for subj in self.subjects:
-                if subj.age is not None and subj.age != 'n/a':
-                    if compare(subj.age, condition, value):
-                        return_data.append(subj)
-        elif token == 'sex':
-            # obj can *only* be subject
-            if obj != 'subject':
-                raise ValueError('Can only return subject data when querying '
-                                 'sex.')
-            # condition can *only* be '=' or '!='
-            if condition not in ('=', '!='):
-                raise ValueError('Condition can only be "=" or "!="')
-            data = [subject for subject in self.subjects if
-                    compare(subject.sex, condition, value)]
-            return_data.extend(data)
-        elif token == 'group':
-            # obj can *only* be subject
-            if obj != 'subject':
-                raise ValueError('Can only return subject data when querying '
-                                 'group.')
-            # condition can *only* be '=' or '!='
-            if condition not in ('=', '!='):
-                raise ValueError('Condition can only be "=" or "!="')
-            data = [subject for subject in self.subjects if
-                    compare(subject.group, condition, value)]
-            return_data.extend(data)
         elif token == 'rec_date':
             # The dates all need to be converted to date time objects so that
             # comparisons can be determined correctly.
@@ -221,6 +190,18 @@ class QueryMixin():
                 iter_obj = None
             else:
                 raise ValueError('Invalid obj specified')
+            if obj == 'subject':
+                # Try and find the specified value as a key in
+                # Subject.subject_data
+                for ob in iter_obj:
+                    data = ob.subject_data.get(token, None)
+                    if data is not None:
+                        if compare(data, condition, value):
+                            return_data.append(ob)
+            # If we happened to have found data then return it.
+            # Otherwise continue.
+            if len(return_data) != 0:
+                return return_data
             if iter_obj is not None:
                 for ob in iter_obj:
                     for scan in ob.scans:
