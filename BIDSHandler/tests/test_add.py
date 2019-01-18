@@ -33,7 +33,7 @@ def test_add_new_project_recursively():
 
 
 def test_merge_bidstrees():
-    # completely merge one bids folder into another
+    # Test completely merging one BIDS folder into another.
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
@@ -47,16 +47,17 @@ def test_merge_bidstrees():
 
 
 def test_bidstree_to_bidstree():
+    # Test writing one BIDSTree object to a new empty BIDSTree location.
     with tempfile.TemporaryDirectory() as tmp:
         dest_bf = BIDSTree(tmp, False)
         src_bf = BIDSTree(TESTPATH2)
         dest_bf.add(src_bf)
         assert len(dest_bf.projects) == 1
-        assert dest_bf.project('test1').subject('1').age == 2.0
+        assert dest_bf.project('test1').subject('1').subject_data['age'] == 2.0
 
 
 def test_copy_errors():
-    # test trying to copy the wrong things into the wrong places
+    # Test trying to copy the wrong things into the wrong places.
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))

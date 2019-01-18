@@ -7,6 +7,10 @@ from .BIDSErrors import MappingError
 from .utils import (get_bids_params, realize_paths,
                     bids_params_are_subsets, splitall)
 
+_SIDECAR_MAP = {'meg': 'meg',
+                'fmap': 'phasediff',
+                'func': 'bold'}
+
 
 class Scan():
     """ Object to contain all the information relating to a scan
@@ -24,14 +28,15 @@ class Scan():
         (Optional)
         A dictionary containing any number of other scan parameters.
     """
-    def __init__(self, fpath, session, acq_time=None, **scan_params):
+    def __init__(self, fpath, session, **scan_params):
         self._path = splitall(fpath)[0]
         self._raw_file = '\\'.join(splitall(fpath)[1:])
-        self.acq_time = acq_time
+        self.acq_time = scan_params.pop('acq_time', None)
         self.scan_params = scan_params
         self.session = session
         self._get_params()
         self._sidecar = None
+
         self.associated_files = dict()
         self._assign_metadata()
         # Load information from the sidecar.
@@ -53,13 +58,15 @@ class Scan():
 #region private methods
 
     def _assign_metadata(self):
+        # TODO: move some of this logic to the self._find_sidecar function...
         """Scan folder for associated metadata files."""
         filename_data = get_bids_params(op.basename(self._raw_file))
         for fname in listdir(self.path):
             bids_params = get_bids_params(fname)
             part = bids_params.pop('part', None)
             if bids_params_are_subsets(filename_data, bids_params):
-                if (bids_params['file'] == self._path and
+                if (bids_params['file'] == _SIDECAR_MAP.get(self._path,
+                                                            None) and
                         bids_params['ext'] == '.json'):
                     self._sidecar = fname
                 else:
@@ -76,14 +83,29 @@ class Scan():
                                 # are lots of parts for some reason...
                                 key = str(bids_params['file']) + '_' + part
                                 self.associated_files[key] = fname
+        # If we have no sidecar file associated from the local folder, go over
+        # the files that this folder inherit
+        if self._sidecar is None:
+            filename_data = get_bids_params(op.basename(self._raw_file))
+            for fname in self.session.inheritable_files:
+                bids_params = get_bids_params(op.basename(fname))
+                if bids_params_are_subsets(filename_data, bids_params):
+                    if bids_params['ext'] == '.json':
+                        if bids_params['file'] == _SIDECAR_MAP.get(self._path,
+                                                                   None):
+                            self._sidecar = op.relpath(fname, self.path)
+        # If there is still no sidecar file then it probably doesn't have one.
 
-        self._check()
+        #self._check()
 
     def _check(self):
-        # TODO: this isn't required for mri data...
-        # or the data may be somewhere else?? (parent directory...?)
         if self._sidecar is None:
-            raise MappingError
+            raise MappingError("No sidecar file found for {0}.".format(
+                self.path))
+
+    def _find_sidecar(self):
+        """Find the sidecar file associated with the current file."""
+        pass
 
     def _generate_map(self):
         """Generate a map of the Scan."""
@@ -99,7 +121,7 @@ class Scan():
 
     def _load_extras(self):
         """Load any extra files on a manufacturer-by-manufacturer basis."""
-        if self.info['Manufacturer'] == 'KIT/Yokogawa':
+        if self.info.get('Manufacturer', None) == 'KIT/Yokogawa':
             # Need to load the marker files.
             # These will be in the same folder as the raw data.
             filename_data = get_bids_params(op.basename(self._raw_file))
@@ -113,8 +135,9 @@ class Scan():
 
     def _load_info(self):
         """Read the sidecar.json and load the information into self.info"""
-        with open(self.sidecar, 'r') as sidecar:
-            self.info = json.load(sidecar)
+        if self._sidecar is not None:
+            with open(self.sidecar, 'r') as sidecar:
+                self.info = json.load(sidecar)
 
 #region properties
 
@@ -168,7 +191,9 @@ class Scan():
     @property
     def sidecar(self):
         """Absolute path of associated sidecar file."""
-        return realize_paths(self, self._sidecar)
+        if self._sidecar is not None:
+            return realize_paths(self, self._sidecar)
+        return None
 
     @property
     def subject(self):

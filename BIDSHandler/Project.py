@@ -144,6 +144,7 @@ class Project(QueryMixin):
         return new_project
 
     def _create_empty_participants_tsv(self):
+        # TODO: make generic
         """Create an empty participants.tsv file for this project."""
         self._participants_tsv = 'participants.tsv'
         full_path = realize_paths(self, self._participants_tsv)
@@ -176,6 +177,15 @@ class Project(QueryMixin):
     @property
     def ID(self):
         return str(self._id)
+
+    @property
+    def inheritable_files(self):
+        files = []
+        for fname in os.listdir(self.path):
+            abs_path = realize_paths(self, fname)
+            if op.isfile(abs_path):
+                files.append(abs_path)
+        return files
 
     @property
     def participants_tsv(self):

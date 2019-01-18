@@ -7,7 +7,7 @@ from .Subject import Subject
 from .Session import Session
 from .Scan import Scan
 from .QueryMixin import QueryMixin
-from .BIDSErrors import MappingError, NoProjectError
+from .BIDSErrors import NoProjectError
 from .utils import copyfiles, realize_paths, prettyprint_xml
 
 
@@ -123,13 +123,10 @@ class BIDSTree(QueryMixin):
     def _add_projects(self):
         """Add all the projects in the folder to the BIDS folder."""
         projects = dict()
-        try:
-            for f in os.listdir(self.path):
-                full_path = op.join(self.path, f)
-                if op.isdir(full_path):
-                    projects[f] = Project(f, self)
-        except MappingError:
-            self._projects = dict()
+        for f in os.listdir(self.path):
+            full_path = op.join(self.path, f)
+            if op.isdir(full_path):
+                projects[f] = Project(f, self)
         self._projects = projects
 
 #region properties

@@ -9,6 +9,7 @@ from BIDSHandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 TESTPATH2 = 'data/BIDSTEST2'
+TESTPATH3 = 'data/bids-examples'
 
 
 def test_containment():
@@ -25,3 +26,9 @@ def test_containment():
         assert subj in dst_bf.project('test1')
         assert sess in dst_bf.project('test1').subject('1')
         assert scan in dst_bf.project('test1').subject('1').session('1')
+
+
+def test_large_dataset():
+    # Test loading the bids-example dataset
+    tree = BIDSTree(TESTPATH3)
+    assert len(tree.projects) == 29

@@ -20,9 +20,9 @@ class Subject(QueryMixin):
         # Contained sessions
         self._sessions = dict()
 
-        self.age = 'n/a'
-        self.sex = 'n/a'
-        self.group = 'n/a'
+        # All the various information about the subject from the
+        # participants.tsv file.
+        self.subject_data = OrderedDict()
 
         self._queryable_types = ('subject', 'session', 'scan')
 
@@ -106,17 +106,22 @@ class Subject(QueryMixin):
 #region private methods
 
     def _add_sessions(self):
-        # TODO: allow the session to be determined when there is only one, and
-        # it's not a folder with 'ses' in the name.
         for fname in os.listdir(self.path):
             full_path = op.join(self.path, fname)
             if op.isdir(full_path) and 'ses' in fname:
                 ses_id = fname.split('-')[1]
                 self._sessions[ses_id] = Session(ses_id, self)
+        # If we haven't found any sub-folders with 'ses' in their name try and
+        # assume that the current folder is in fact the session folder (ie.
+        # only one session).
+        if len(self._sessions) == 0:
+            self._sessions['01'] = Session('01', self, no_folder=True)
 
     def _check(self):
         if len(self._sessions) == 0:
-            raise MappingError
+            raise MappingError(
+                'Subject {0} in project {1} has no sessions'.format(
+                    self.ID, self.project.ID))
 
     @staticmethod
     def _clone_into_project(project, other):
@@ -136,13 +141,13 @@ class Subject(QueryMixin):
 
         # Merge the subject data into the participants.tsv file.
         df = pd.read_csv(project.participants_tsv, sep='\t')
+        # TODO: fix to be able to handle any arbitrary merging?
+        data = [('participant_id', [other.ID])]
+        for key, value in other.subject_data.items():
+            data.append((key, [value]))
         other_sub_df = pd.DataFrame(
-            OrderedDict([
-                ('participant_id', [other.ID]),
-                ('age', [other.age]),
-                ('sex', [other.sex]),
-                ('group', [other.group])]),
-            columns=['participant_id', 'age', 'sex', 'group'])
+            OrderedDict(data),
+            columns=['participant_id', *other.subject_data.keys()])
         df = df.append(other_sub_df)
         df.to_csv(project.participants_tsv, sep='\t', index=False,
                   na_rep='n/a', encoding='utf-8')
@@ -153,22 +158,27 @@ class Subject(QueryMixin):
     def _load_subject_info(self):
         participant_path = op.join(op.dirname(self.path), 'participants.tsv')
         if not op.exists(participant_path):
-            raise MappingError
+            return
         participants = pd.read_csv(participant_path, sep='\t')
-        for i in range(len(participants)):
-            row = participants.iloc[i]
-            if row['participant_id'] == self.ID:
-                self.age = row.get('age', 'n/a')
-                self.sex = row.get('sex', 'n/a')
-                self.group = row.get('group', 'n/a')
-                break
-        pass
+        column_names = set(participants.columns.values)
+        if 'participant_id' not in column_names:
+            # temporary error... This means the file is bad.
+            raise MappingError
+        column_names.remove('participant_id')
+        row = participants.loc[participants['participant_id'] == self.ID]
+        for col_name in column_names:
+            val = row.get(col_name)
+            if val is not None:
+                self.subject_data[col_name] = val.item()
+            else:
+                self.subject_data[col_name] = "n/a"
 
     def _generate_map(self):
         """Generate a map of the Subject."""
-        attribs = {'ID': str(self._id), 'age': str(self.age), 'sex': self.sex,
-                   'group': self.group}
-        for key, value in list(attribs.items()):
+        attribs = {'ID': str(self._id)}
+        attribs.update(zip(self.subject_data.keys(),
+                           [str(x) for x in self.subject_data.values()]))
+        for key, value in attribs.items():
             if value == 'n/a':
                 attribs.pop(key)
         root = ET.Element('Subject', attrib=attribs)
@@ -187,6 +197,15 @@ class Subject(QueryMixin):
     def ID(self):
         """ID with 'sub' prefix."""
         return 'sub-{0}'.format(self._id)
+
+    @property
+    def inheritable_files(self):
+        files = self.project.inheritable_files
+        for fname in os.listdir(self.path):
+            abs_path = realize_paths(self, fname)
+            if op.isfile(abs_path):
+                files.append(abs_path)
+        return files
 
     @property
     def path(self):
@@ -246,8 +265,7 @@ class Subject(QueryMixin):
     def __str__(self):
         output = []
         output.append('ID: {0}'.format(self.ID))
-        output.append('Age: {0}'.format(self.age))
-        output.append('Gender: {0}'.format(self.sex))
-        output.append('Group: {0}'.format(self.group))
+        for key, value in self.subject_data.items():
+            output.append('{0}: {1}'.format(key.title(), value))
         output.append('Number of Sessions: {0}'.format(len(self.sessions)))
         return '\n'.join(output)
