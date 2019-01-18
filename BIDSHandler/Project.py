@@ -172,7 +172,7 @@ class Project(QueryMixin):
     def description(self):
         if self._description is not None:
             return realize_paths(self, self._description)
-        raise FileNotFoundError
+        return None
 
     @property
     def ID(self):
@@ -191,7 +191,7 @@ class Project(QueryMixin):
     def participants_tsv(self):
         if self._participants_tsv is not None:
             return realize_paths(self, self._participants_tsv)
-        raise FileNotFoundError
+        return None
 
     @property
     def path(self):
@@ -202,7 +202,7 @@ class Project(QueryMixin):
     def readme(self):
         if self._readme is not None:
             return realize_paths(self, self._readme)
-        raise FileNotFoundError
+        return None
 
     @property
     def sessions(self):

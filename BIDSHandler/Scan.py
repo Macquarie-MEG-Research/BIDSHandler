@@ -147,8 +147,7 @@ class Scan():
         channels_path = self.associated_files.get('channels', None)
         if channels_path is not None:
             return realize_paths(self, channels_path)
-        else:
-            raise FileNotFoundError
+        return None
 
     @property
     def coordsystem_json(self):
@@ -156,8 +155,7 @@ class Scan():
         coordsystem_path = self.associated_files.get('coordsystem', None)
         if coordsystem_path is not None:
             return realize_paths(self, coordsystem_path)
-        else:
-            raise FileNotFoundError
+        return None
 
     @property
     def events_tsv(self):
@@ -165,8 +163,7 @@ class Scan():
         events_path = self.associated_files.get('events', None)
         if events_path is not None:
             return realize_paths(self, events_path)
-        else:
-            raise FileNotFoundError
+        return None
 
     @property
     def path(self):
