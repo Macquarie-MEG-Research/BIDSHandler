@@ -213,9 +213,8 @@ class Session(QueryMixin):
         self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
         full_path = realize_paths(self, self._scans_tsv)
         if not op.exists(full_path):
-            df = pd.DataFrame(OrderedDict([('filename', []),
-                                           ('acq_time', [])]),
-                              columns=['filename', 'acq_time'])
+            df = pd.DataFrame(OrderedDict([('filename', [])]),
+                              columns=['filename'])
             df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                       encoding='utf-8')
 
@@ -279,10 +278,12 @@ class Session(QueryMixin):
         other : Instance of Scan
             Object to test whether it is contained in this Session.
         """
-        for scan in self._scans:
-            if scan == other:
-                return True
-        return False
+        if isinstance(other, Scan):
+            for scan in self._scans:
+                if scan == other:
+                    return True
+            return False
+        raise TypeError("Can only determine if a Scan is contained.")
 
     def __iter__(self):
         return iter(self._scans)

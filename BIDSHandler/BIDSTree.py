@@ -178,9 +178,8 @@ class BIDSTree(QueryMixin):
                 if other in project:
                     return True
             return False
-        else:
-            raise TypeError("Can only determine if a Scan, Session or Subject "
-                            "is contained.")
+        raise TypeError("Can only determine if a Scan, Session or Subject is"
+                        "contained.")
 
     def __iter__(self):
         return iter(self.projects)

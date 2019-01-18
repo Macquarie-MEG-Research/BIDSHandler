@@ -144,18 +144,13 @@ class Project(QueryMixin):
         return new_project
 
     def _create_empty_participants_tsv(self):
-        # TODO: make generic
         """Create an empty participants.tsv file for this project."""
         self._participants_tsv = 'participants.tsv'
         full_path = realize_paths(self, self._participants_tsv)
         if not op.exists(full_path):
             df = pd.DataFrame(
-                OrderedDict([
-                    ('participant_id', []),
-                    ('age', []),
-                    ('sex', []),
-                    ('group', [])]),
-                columns=['participant_id', 'age', 'sex', 'group'])
+                OrderedDict([('participant_id', [])]),
+                columns=['participant_id'])
         df.to_csv(full_path, sep='\t', index=False, na_rep='n/a',
                   encoding='utf-8')
 
@@ -243,9 +238,8 @@ class Project(QueryMixin):
                 if other in subject:
                     return True
             return False
-        else:
-            raise TypeError("Can only determine if a Scan, Session or Subject "
-                            "is contained.")
+        raise TypeError("Can only determine if a Scan, Session or Subject is"
+                        "contained.")
 
     def __iter__(self):
         return iter(self._subjects.values())

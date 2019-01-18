@@ -27,7 +27,7 @@ def bids_params_are_subsets(params1, params2):
 def combine_tsv(tsv, df, drop_column=None):
     """Merge a df into a tsv file"""
     orig_df = pd.read_csv(tsv, sep='\t')
-    orig_df = orig_df.append(df)
+    orig_df = orig_df.append(df, sort=False)
     if drop_column is not None:
         orig_df.drop_duplicates(subset=drop_column, keep='last', inplace=True)
     orig_df.to_csv(tsv, sep='\t', index=False, na_rep='n/a', encoding='utf-8')
@@ -88,7 +88,7 @@ def copyfiles(src_files, dst_files):
         List of source paths.
     dst_files : list of str's
         List of destination paths.
-    
+
     Note:
     -----
     There is a one-to-one correlation between the src_files and dst_files
@@ -167,9 +167,9 @@ def realize_paths(obj, rel_paths):
     if isinstance(rel_paths, (list, set)):
         ret_paths = []
         for fpath in rel_paths:
-            ret_paths.append(op.join(obj.path, fpath))
+            ret_paths.append(op.normpath(op.join(obj.path, fpath)))
         return ret_paths
-    return op.join(obj.path, rel_paths)
+    return op.normpath(op.join(obj.path, rel_paths))
 
 
 def splitall(path):

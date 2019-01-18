@@ -3,7 +3,6 @@ from os import listdir
 import json
 import xml.etree.ElementTree as ET
 
-from .BIDSErrors import MappingError
 from .utils import (get_bids_params, realize_paths,
                     bids_params_are_subsets, splitall)
 
@@ -58,8 +57,7 @@ class Scan():
 #region private methods
 
     def _assign_metadata(self):
-        # TODO: move some of this logic to the self._find_sidecar function...
-        """Scan folder for associated metadata files."""
+        """Associate any files that are related to this raw file."""
         filename_data = get_bids_params(op.basename(self._raw_file))
         for fname in listdir(self.path):
             bids_params = get_bids_params(fname)
@@ -94,18 +92,10 @@ class Scan():
                         if bids_params['file'] == _SIDECAR_MAP.get(self._path,
                                                                    None):
                             self._sidecar = op.relpath(fname, self.path)
+                        else:
+                            self.associated_files[bids_params['file']] = \
+                                op.relpath(fname, self.path)
         # If there is still no sidecar file then it probably doesn't have one.
-
-        #self._check()
-
-    def _check(self):
-        if self._sidecar is None:
-            raise MappingError("No sidecar file found for {0}.".format(
-                self.path))
-
-    def _find_sidecar(self):
-        """Find the sidecar file associated with the current file."""
-        pass
 
     def _generate_map(self):
         """Generate a map of the Scan."""

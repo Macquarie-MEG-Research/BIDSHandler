@@ -148,7 +148,7 @@ class Subject(QueryMixin):
         other_sub_df = pd.DataFrame(
             OrderedDict(data),
             columns=['participant_id', *other.subject_data.keys()])
-        df = df.append(other_sub_df)
+        df = df.append(other_sub_df, sort=False)
         df.to_csv(project.participants_tsv, sep='\t', index=False,
                   na_rep='n/a', encoding='utf-8')
         # can now safely get the subject info
@@ -242,9 +242,8 @@ class Subject(QueryMixin):
                 if other in session:
                     return True
             return False
-        else:
-            raise TypeError("Can only determine if Scans or Sessions are "
-                            "contained.")
+        raise TypeError("Can only determine if Scans or Sessions are "
+                        "contained.")
 
     def __iter__(self):
         return iter(self._sessions.values())
