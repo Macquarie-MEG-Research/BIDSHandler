@@ -64,6 +64,8 @@ def test_containment():
         with pytest.raises(NoScanError):
             scan = sess.scan(task='fake')
 
+        assert len(dst_bf['test1'].contained_files()) == 10
+
 
 def test_large_dataset():
     # Test loading the bids-example dataset

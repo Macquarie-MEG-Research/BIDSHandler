@@ -12,20 +12,17 @@ _SIDECAR_MAP = {'meg': 'meg',
 
 
 class Scan():
-    """ Object to contain all the information relating to a scan
+    """Scan-level object.
 
     Parameters
     ----------
     fpath : str
         The path to the raw scan file.
-    session : Session object
-        The parent Session object this Scan belongs to.
-    acq_time : str
-        (Optional)
-        The acquisition time of the scan.
-    scan_params : dict
-        (Optional)
-        A dictionary containing any number of other scan parameters.
+    session : BIDSHandler.Session
+        Parent Session object containing this Scan.
+    scan_params : dict, optional
+        A dictionary containing any number of other scan parameters specified
+        by scans.tsv.
     """
     def __init__(self, fpath, session, **scan_params):
         self._path = splitall(fpath)[0]
@@ -47,7 +44,14 @@ class Scan():
 #region public methods
 
     def contained_files(self):
-        """Get the list of contained files."""
+        """Get the list of contained files.
+
+        Returns
+        -------
+        file_list : list
+            List with paths to all contained files relating to the BIDS
+            structure.
+        """
         file_list = set()
         file_list.add(self.sidecar)
         file_list.update(realize_paths(self,
@@ -98,7 +102,13 @@ class Scan():
         # If there is still no sidecar file then it probably doesn't have one.
 
     def _generate_map(self):
-        """Generate a map of the Scan."""
+        """Generate a map of the Subject.
+
+        Returns
+        -------
+        ET.Element
+            Xml element containing subject information.
+        """
         return ET.Element('Scan', attrib={'path': self.raw_file_relative})
 
     def _get_params(self):
@@ -190,9 +200,16 @@ class Scan():
 #region class methods
 
     def __eq__(self, other):
+        """Implements self == other
+
+        Returns True if each instance has the same set of parameters
+        """
+        if not isinstance(other, Scan):
+            raise TypeError("Can only compare two Scan objects.")
         return ((self.acq == other.acq) &
                 (self.task == other.task) &
                 (self.run == other.run) &
+                (self.proc == other.proc) &
                 (self.session._id == other.session._id) &
                 (self.subject._id == other.subject._id) &
                 (self.project._id == other.project._id))

@@ -253,5 +253,4 @@ class QueryMixin():
 #region class methods
 
     def __contains__(self, other):  # pragma: no cover
-        # to stop pylint complaining...
         pass

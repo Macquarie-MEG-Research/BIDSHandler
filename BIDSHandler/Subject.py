@@ -13,6 +13,17 @@ from .utils import copyfiles, realize_paths
 
 
 class Subject(QueryMixin):
+    """Subject-level object.
+
+    Parameters
+    ----------
+    id_ : str
+        Id of the subject. This is the sequence of characters after `'sub-'`.
+    project : BIDSHandler.Project
+        Parent Project object containing this Subject.
+    itialize : bool, optional
+        Whether to parse the folder and load any child structures.
+    """
     def __init__(self, id_, project, initialize=True):
         super(Subject, self).__init__()
         self._id = id_
@@ -42,7 +53,7 @@ class Subject(QueryMixin):
             Object to be added to this Subject.
             The added object must already exist in the same context as this
             object.
-        copier : function
+        copier : function, optional
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
             `function(src_files: list, dst_files: list)`
@@ -87,14 +98,32 @@ class Subject(QueryMixin):
                 type(other).__name__))
 
     def contained_files(self):
-        """Get the list of contained files."""
+        """Get the list of contained files.
+
+        Returns
+        -------
+        file_list : list
+            List with paths to all contained files relating to the BIDS
+            structure.
+        """
         file_list = set()
         for session in self.sessions:
             file_list.update(session.contained_files())
         return file_list
 
     def session(self, id_):
-        """Return the Session corresponding to the provided id."""
+        """Return the Session corresponding to the provided id.
+
+        Parameters
+        ----------
+        id_ : str
+            Id of the session to return. This doesn't need the `'ses'` prefix.
+
+        Returns
+        -------
+        BIDSHandler.Session
+            Contained Session with the specified `id_`.
+        """
         try:
             return self._sessions[str(id_)]
         except KeyError:
@@ -106,6 +135,7 @@ class Subject(QueryMixin):
 #region private methods
 
     def _add_sessions(self):
+        """Add all the sessions in the folder to the Subject."""
         for fname in os.listdir(self.path):
             full_path = op.join(self.path, fname)
             if op.isdir(full_path) and 'ses' in fname:
@@ -118,10 +148,10 @@ class Subject(QueryMixin):
             self._sessions['01'] = Session('01', self, no_folder=True)
 
     def _check(self):
+        """Check that there is at least one included session."""
         if len(self._sessions) == 0:
-            raise MappingError(
-                'Subject {0} in project {1} has no sessions'.format(
-                    self.ID, self.project.ID))
+            raise MappingError("No sessions found in {0}/{1}.".format(
+                self.project.ID, self.ID))
 
     @staticmethod
     def _clone_into_project(project, other):
@@ -129,10 +159,16 @@ class Subject(QueryMixin):
 
         Parameters
         ----------
-        project : Instance of Project
+        project : BIDSHandler.Project
             New parent Project.
-        other : instance of Subject
+        other : BIDSHandler.Subject
             Original Subject instance to clone.
+
+        Returns
+        -------
+        new_subject : BIDSHandler.Subject
+            New uninitialized Subject cloned from `other` to be a child of
+            `project`.
         """
         os.makedirs(realize_paths(project, other.ID), exist_ok=True)
 
@@ -141,7 +177,6 @@ class Subject(QueryMixin):
 
         # Merge the subject data into the participants.tsv file.
         df = pd.read_csv(project.participants_tsv, sep='\t')
-        # TODO: fix to be able to handle any arbitrary merging?
         data = [('participant_id', [other.ID])]
         for key, value in other.subject_data.items():
             data.append((key, [value]))
@@ -174,7 +209,13 @@ class Subject(QueryMixin):
                 self.subject_data[col_name] = "n/a"
 
     def _generate_map(self):
-        """Generate a map of the Subject."""
+        """Generate a map of the Subject.
+
+        Returns
+        -------
+        root : ET.Element
+            Xml element containing subject information.
+        """
         attribs = {'ID': str(self._id)}
         attribs.update(zip(self.subject_data.keys(),
                            [str(x) for x in self.subject_data.values()]))
@@ -200,6 +241,7 @@ class Subject(QueryMixin):
 
     @property
     def inheritable_files(self):
+        """List of files that are able to be inherited by child objects."""
         files = self.project.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = realize_paths(self, fname)
@@ -234,6 +276,11 @@ class Subject(QueryMixin):
         ----------
         other : Instance of Scan or Session
             Object to check whether it is contained in this Subject.
+
+        Returns
+        -------
+        bool
+            Returns True if the object is contained within this Subject.
         """
         if isinstance(other, Session):
             return other._id in self._sessions

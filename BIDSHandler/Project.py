@@ -13,6 +13,17 @@ from .utils import copyfiles, realize_paths
 
 
 class Project(QueryMixin):
+    """Project-level object.
+
+    Parameters
+    ----------
+    id_ : str
+        Id of the project. This is the name of the folder containing the data.
+    bids_tree : BIDSHandler.BIDSTree
+        Parent BIDSTree object containing this Project.
+    itialize : bool, optional
+        Whether to parse the folder and load any child structures.
+    """
     def __init__(self, id_, bids_tree, initialize=True):
         super(Project, self).__init__()
         self._id = id_
@@ -39,7 +50,7 @@ class Project(QueryMixin):
             Object to be added to this Project.
             The added object must already exist in the same context as this
             object.
-        copier : function
+        copier : function, optional
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
             `function(src_files: list, dst_files: list)`
@@ -87,7 +98,14 @@ class Project(QueryMixin):
                 type(other).__name__))
 
     def contained_files(self):
-        """Get the list of contained files."""
+        """Get the list of contained files.
+
+        Returns
+        -------
+        file_list : list
+            List with paths to all contained files relating to the BIDS
+            structure.
+        """
         file_list = set()
         file_list.add(self.participants_tsv)
         file_list.add(self.readme)
@@ -97,7 +115,18 @@ class Project(QueryMixin):
         return file_list
 
     def subject(self, id_):
-        """Return the Subject in this project with the corresponding ID."""
+        """Return the Subject in this project with the corresponding ID.
+
+        Parameters
+        ----------
+        id_ : str
+            Id of the subject to return.
+
+        Returns
+        -------
+        BIDSHandler.Subject
+            Contained Subject with the specified `id_`.
+        """
         try:
             return self._subjects[str(id_)]
         except KeyError:
@@ -133,10 +162,16 @@ class Project(QueryMixin):
 
         Parameters
         ----------
-        bids_tree : Instance of BIDSTree
+        bids_tree : BIDSHandler.BIDSTree
             New parent BIDSTree.
-        other : instance of Project
+        other : BIDSHandler.Project
             Original Project instance to clone.
+
+        Returns
+        -------
+        new_project : BIDSHandler.Project
+            New uninitialized Project cloned from `other` to be a child of
+            `bids_tree`.
         """
         os.makedirs(realize_paths(bids_tree, other.ID), exist_ok=True)
         new_project = Project(other._id, bids_tree, initialize=False)
@@ -155,7 +190,13 @@ class Project(QueryMixin):
                   encoding='utf-8')
 
     def _generate_map(self):
-        """Generate a map of the Project."""
+        """Generate a map of the Project.
+
+        Returns
+        -------
+        root : ET.Element
+            Xml element containing project information.
+        """
         root = ET.Element('Project', attrib={'ID': str(self._id)})
         for subject in self.subjects:
             root.append(subject._generate_map())
@@ -175,6 +216,7 @@ class Project(QueryMixin):
 
     @property
     def inheritable_files(self):
+        """List of files that are able to be inherited by child objects."""
         files = []
         for fname in os.listdir(self.path):
             abs_path = realize_paths(self, fname)
@@ -230,6 +272,11 @@ class Project(QueryMixin):
         ----------
         other : Instance of Scan, Session or Subject
             Object to check whether it is contained in this Project.
+
+        Returns
+        -------
+        bool
+            Returns True if the object is contained within this Project.
         """
         if isinstance(other, Subject):
             return other._id in self._subjects

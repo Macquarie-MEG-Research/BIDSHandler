@@ -16,20 +16,17 @@ _RAW_FILETYPES = ('.nii', '.bdf', '.con', '.sqd')   # TODO: add more...
 
 
 class Session(QueryMixin):
-    """Object to describe a session level folder.
+    """Session-level object.
 
     Parameters
     ----------
-    id_ : int | str
-        The session id.
-        The id by itself can be accessed by `._id`, and the id with the `ses`
-        prefix can be accessed by the more common `.ID`.
-    subject : Instance of Subject
-        Parent Subject object.
-    initialize : bool
-        Whether or not to load the session folder's data.
-        Defaults to True.
-    no_folder : bool
+    id_ : str
+        Id of the session. This is the sequence of characters after `'ses-'`.
+    subject : BIDSHandler.Subject
+        Parent Subject object containing this Session.
+    itialize : bool, optional
+        Whether to parse the folder and load any child structures.
+    no_folder : bool, optional
         Whether or not the session is contained within a `ses-XX` folder.
         For experiments with multiple sessions each folder will correspond to
         a Session object, however if there is only a single session this can
@@ -62,7 +59,7 @@ class Session(QueryMixin):
             Object to be added to this Session.
             The added object must already exist in the same context as this
             object.
-        copier : function
+        copier : function, optional
             A function to facilitate the copying of any applicable data.
             This function must have the call signature
             `function(src_files: list, dst_files: list)`
@@ -119,7 +116,14 @@ class Session(QueryMixin):
                 type(other).__name__))
 
     def contained_files(self):
-        """Get the list of contained files."""
+        """Get the list of contained files.
+
+        Returns
+        -------
+        file_list : list
+            List with paths to all contained files relating to the BIDS
+            structure.
+        """
         file_list = set()
         file_list.add(realize_paths(self, self._scans_tsv))
         for scan in self.scans:
@@ -188,8 +192,10 @@ class Session(QueryMixin):
                                     Scan(op.join(rec_type, fname), self))
 
     def _check(self):
+        """Check that there is at least one included scan."""
         if len(self._scans) == 0:
-            raise MappingError
+            raise MappingError("No scans found in {0}/{1}/{2}.".format(
+                self.project.ID, self.subject.ID, self.ID))
 
     @staticmethod
     def _clone_into_subject(subject, other):
@@ -197,10 +203,16 @@ class Session(QueryMixin):
 
         Parameters
         ----------
-        subjecty : Instance of Subject
+        subjecty : BIDSHandler.Subject
             New parent Subject.
-        other : instance of Session
+        other : BIDSHandler.Session
             Original Session instance to clone.
+
+        Returns
+        -------
+        new_session : BIDSHandler.Session
+            New uninitialized Session cloned from `other` to be a child of
+            `subject`.
         """
         os.makedirs(realize_paths(subject, other.ID), exist_ok=True)
         # Create a new empty session object.
@@ -219,7 +231,13 @@ class Session(QueryMixin):
                       encoding='utf-8')
 
     def _generate_map(self):
-        """Generate a map of the Session."""
+        """Generate a map of the Session.
+
+        Returns
+        -------
+        root : ET.Element
+            Xml element containing session information.
+        """
         root = ET.Element('Session', attrib={'ID': str(self._id)})
         for scan in self.scans:
             root.append(scan._generate_map())
@@ -239,6 +257,7 @@ class Session(QueryMixin):
 
     @property
     def inheritable_files(self):
+        """List of files that are able to be inherited by child objects."""
         files = self.subject.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = realize_paths(self, fname)
@@ -277,6 +296,11 @@ class Session(QueryMixin):
         ----------
         other : Instance of Scan
             Object to test whether it is contained in this Session.
+
+        Returns
+        -------
+        bool
+            Returns True if the object is contained within this Session.
         """
         if isinstance(other, Scan):
             for scan in self._scans:
