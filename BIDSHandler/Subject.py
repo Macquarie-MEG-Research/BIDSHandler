@@ -204,7 +204,9 @@ class Subject(QueryMixin):
         for col_name in column_names:
             val = row.get(col_name)
             if val is not None:
-                self.subject_data[col_name] = val.item()
+                if not val.empty:
+                    # Ignore empty rows.
+                    self.subject_data[col_name] = val.item()
             else:
                 self.subject_data[col_name] = "n/a"
 
