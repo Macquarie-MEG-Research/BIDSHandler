@@ -1,5 +1,5 @@
 # BIDSHandler
-API for loading and processing BIDS-compatible folders.
+A simple way to manage and manipulate BIDS compatible data.
 
 ## Installation
 

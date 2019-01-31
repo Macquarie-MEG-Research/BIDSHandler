@@ -142,6 +142,11 @@ class Scan():
 #region properties
 
     @property
+    def bids_tree(self):
+        """Parent BIDSTree object."""
+        return self.project.bids_tree
+
+    @property
     def channels_tsv(self):
         """Absolute path to the associated channels.tsv file."""
         channels_path = self.associated_files.get('channels', None)
