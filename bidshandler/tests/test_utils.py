@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 
-from BIDSHandler.utils import (get_bids_params, bids_params_are_subsets,
+from bidshandler.utils import (get_bids_params, bids_params_are_subsets,
                                compare, compare_times)
 
 

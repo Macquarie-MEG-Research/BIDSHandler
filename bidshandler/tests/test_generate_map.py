@@ -6,7 +6,7 @@ import os.path as op
 import shutil
 import xml.etree.ElementTree as ET
 
-from BIDSHandler import BIDSTree
+from bidshandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 

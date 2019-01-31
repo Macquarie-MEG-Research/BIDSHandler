@@ -5,7 +5,7 @@ import os.path as op
 import shutil
 import pytest
 
-from BIDSHandler import (BIDSTree, NoSessionError, NoSubjectError,
+from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
 
 TESTPATH1 = 'data\\BIDSTEST1'

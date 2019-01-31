@@ -5,7 +5,7 @@ import os.path as op
 import shutil
 import pytest
 
-from BIDSHandler import BIDSTree, AssociationError
+from bidshandler import BIDSTree, AssociationError
 
 TESTPATH1 = 'data/BIDSTEST1'
 TESTPATH2 = 'data/BIDSTEST2'

@@ -2,7 +2,7 @@
 
 import pytest
 
-from BIDSHandler import BIDSTree
+from bidshandler import BIDSTree
 
 TESTPATH1 = 'data/BIDSTEST1'
 
