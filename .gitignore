@@ -107,4 +107,4 @@ venv.bak/
 .vscode/
 
 # test data
-BIDSHandler/tests/data/
+temp/tests/data/

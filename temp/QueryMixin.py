@@ -123,8 +123,6 @@ class QueryMixin():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
-            else:
-                raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
                     if condition != '!!=':
@@ -159,8 +157,6 @@ class QueryMixin():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
-            else:
-                raise ValueError('Invalid obj specified')
             if iter_obj is not None:
                 for ob in iter_obj:
                     for scan in ob.scans:
@@ -188,8 +184,6 @@ class QueryMixin():
                 iter_obj = self.sessions
             elif obj == 'scan':
                 iter_obj = None
-            else:
-                raise ValueError('Invalid obj specified')
             if obj == 'subject':
                 # Try and find the specified value as a key in
                 # Subject.subject_data

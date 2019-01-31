@@ -54,6 +54,13 @@ def test_query():
     assert len(folder.query('subject', 'scans', '<=', 2)) == 2
     assert len(folder.query('session', 'scans', '<', 2)) == 3
 
+    with pytest.raises(ValueError):
+        folder.query('subject', 'subjects', '=', 2)
+    with pytest.raises(ValueError):
+        folder.query('session', 'sessions', '=', 1)
+    with pytest.raises(ValueError):
+        folder.query('scan', 'scans', '=', 1)
+
     # query a Project object:
 
     proj = folder.query('project', 'subjects', '=', 2)[0]

@@ -17,7 +17,6 @@ setuptools.setup(
     include_package_data=True,
     download_url=DOWNLOAD_URL,
     packages=setuptools.find_packages(),
-    install_requires=['pandas'],
     license="MIT",
     platform="any",
     classifiers=[
