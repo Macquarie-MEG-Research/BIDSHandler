@@ -80,6 +80,10 @@ def test_query():
     sess = subj.query('session', 'scans', '>', 1)[0]
     assert len(sess.query('scan', 'task', '=', 'resting')) == 1
 
+    # query a scan object:
+    scan = sess.query('scan', 'task', '=', 'resting')[0]
+    assert len(scan.query('scan', 'MEGChannelCount', '=', 160)) == 1
+
     # perform a compound query:
 
     subjs = folder.query('subject', 'age', '>', 2)

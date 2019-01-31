@@ -2,6 +2,7 @@ import os.path as op
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
+from .QueryMixin import QueryMixin
 
 from .utils import (get_bids_params, realize_paths,
                     bids_params_are_subsets, splitall)
@@ -11,7 +12,7 @@ _SIDECAR_MAP = {'meg': 'meg',
                 'func': 'bold'}
 
 
-class Scan():
+class Scan(QueryMixin):
     """Scan-level object.
 
     Parameters
@@ -25,6 +26,7 @@ class Scan():
         by scans.tsv.
     """
     def __init__(self, fpath, session, **scan_params):
+        super(Scan, self).__init__()
         self._path = splitall(fpath)[0]
         self._raw_file = '\\'.join(splitall(fpath)[1:])
         self.acq_time = scan_params.pop('acq_time', None)
@@ -32,6 +34,8 @@ class Scan():
         self.session = session
         self._get_params()
         self._sidecar = None
+
+        self._queryable_types = ('scan',)
 
         self.associated_files = dict()
         self._assign_metadata()

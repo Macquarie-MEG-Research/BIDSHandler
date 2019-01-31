@@ -230,15 +230,33 @@ class QueryMixin():
 
     @property
     def projects(self):
-        return [self]
+        from .Project import Project
+        if isinstance(self, Project):
+            return [self]
+        else:
+            raise AttributeError(
+                "'{0}' object has no attribute 'projects'".format(
+                    self.__class__.__name__))
 
     @property
     def subjects(self):
-        return [self]
+        from .Subject import Subject
+        if isinstance(self, Subject):
+            return [self]
+        else:
+            raise AttributeError(
+                "'{0}' object has no attribute 'subjects'".format(
+                    self.__class__.__name__))
 
     @property
     def sessions(self):
-        return [self]
+        from .Session import Session
+        if isinstance(self, Session):
+            return [self]
+        else:
+            raise AttributeError(
+                "'{0}' object has no attribute 'sessions'".format(
+                    self.__class__.__name__))
 
     @property
     def scans(self):

@@ -66,6 +66,15 @@ def test_containment():
 
         assert len(dst_bf['test1'].contained_files()) == 10
 
+        # Check that some inherited properties correctly aren't defined for
+        # objects they shouldn't be
+        with pytest.raises(AttributeError):
+            _ = subj.projects
+        with pytest.raises(AttributeError):
+            _ = sess.subjects
+        with pytest.raises(AttributeError):
+            _ = scan.sessions
+
 
 def test_large_dataset():
     # Test loading the bids-example dataset
