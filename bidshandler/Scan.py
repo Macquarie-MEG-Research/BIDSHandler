@@ -13,13 +13,13 @@ _SIDECAR_MAP = {'meg': 'meg',
 
 
 class Scan(QueryMixin):
-    """Scan-level object.
+    """Scan-level object
 
     Parameters
     ----------
     fpath : str
         The path to the raw scan file.
-    session : BIDSHandler.Session
+    session : Instance of :class:`bidshandler.Session`
         Parent Session object containing this Scan.
     scan_params : dict, optional
         A dictionary containing any number of other scan parameters specified
@@ -110,7 +110,7 @@ class Scan(QueryMixin):
 
         Returns
         -------
-        ET.Element
+        :py:class:`xml.etree.ElementTree.Element`
             Xml element containing subject information.
         """
         return ET.Element('Scan', attrib={'path': self.raw_file_relative})
@@ -147,7 +147,7 @@ class Scan(QueryMixin):
 
     @property
     def bids_tree(self):
-        """Parent BIDSTree object."""
+        """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
 
     @property
@@ -181,7 +181,7 @@ class Scan(QueryMixin):
 
     @property
     def project(self):
-        """Parent Project object."""
+        """Parent :class:`bidshandler.Project` object."""
         return self.subject.project
 
     @property
@@ -203,7 +203,7 @@ class Scan(QueryMixin):
 
     @property
     def subject(self):
-        """Parent Subject object."""
+        """Parent :class:`bidshandler.Subject` object."""
         return self.session.subject
 
 #region class methods

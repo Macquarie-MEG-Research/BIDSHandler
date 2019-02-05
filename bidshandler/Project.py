@@ -13,15 +13,15 @@ from .utils import copyfiles, realize_paths
 
 
 class Project(QueryMixin):
-    """Project-level object.
+    """Project-level object
 
     Parameters
     ----------
     id_ : str
         Id of the project. This is the name of the folder containing the data.
-    bids_tree : BIDSHandler.BIDSTree
+    bids_tree : :class:`bidshandler.BIDSTree`
         Parent BIDSTree object containing this Project.
-    itialize : bool, optional
+    initialize : bool, optional
         Whether to parse the folder and load any child structures.
     """
     def __init__(self, id_, bids_tree, initialize=True):
@@ -42,11 +42,13 @@ class Project(QueryMixin):
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan, Session, Subject or Project to this object.
+        """.. # noqa
+
+        Add another Scan, Session, Subject or Project to this object.
 
         Parameters
         ----------
-        other : Instance of Scan, Session, Subject or Project
+        other : Instance of :class:`bidshandler.Scan`, :class:`bidshandler.Session`, :class:`bidshandler.Subject` or :class:`bidshandler.Project`
             Object to be added to this Project.
             The added object must already exist in the same context as this
             object.
@@ -57,7 +59,8 @@ class Project(QueryMixin):
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy and creates any directories that do not already exist.
+            :py:func:`shutil.copy` and creates any directories that do not
+            already exist.
         """
         if isinstance(other, Project):
             # If the project has the same ID, take all the child subjects and
@@ -124,7 +127,7 @@ class Project(QueryMixin):
 
         Returns
         -------
-        BIDSHandler.Subject
+        :class:`bidshandler.Subject`
             Contained Subject with the specified `id_`.
         """
         try:
@@ -162,14 +165,14 @@ class Project(QueryMixin):
 
         Parameters
         ----------
-        bids_tree : BIDSHandler.BIDSTree
+        bids_tree : :class:`bidshandler.BIDSTree`
             New parent BIDSTree.
-        other : BIDSHandler.Project
+        other : :class:`BIDSHandler.Project`
             Original Project instance to clone.
 
         Returns
         -------
-        new_project : BIDSHandler.Project
+        new_project : :class:`bidshandler.Project`
             New uninitialized Project cloned from `other` to be a child of
             `bids_tree`.
         """
@@ -194,7 +197,7 @@ class Project(QueryMixin):
 
         Returns
         -------
-        root : ET.Element
+        root : :py:class:`xml.etree.ElementTree.Element`
             Xml element containing project information.
         """
         root = ET.Element('Project', attrib={'ID': str(self._id)})
@@ -206,12 +209,14 @@ class Project(QueryMixin):
 
     @property
     def description(self):
+        """Real path to the associated description if there is one."""
         if self._description is not None:
             return realize_paths(self, self._description)
         return None
 
     @property
     def ID(self):
+        """ID of the Project."""
         return str(self._id)
 
     @property
@@ -226,6 +231,7 @@ class Project(QueryMixin):
 
     @property
     def participants_tsv(self):
+        """Real path to the associated participants.tsv if there is one."""
         if self._participants_tsv is not None:
             return realize_paths(self, self._participants_tsv)
         return None
@@ -237,6 +243,7 @@ class Project(QueryMixin):
 
     @property
     def readme(self):
+        """Real path to the associated README.txt if there is one."""
         if self._readme is not None:
             return realize_paths(self, self._readme)
         return None
@@ -265,12 +272,13 @@ class Project(QueryMixin):
 #region class methods
 
     def __contains__(self, other):
-        """Determine if the Project contains a certain Scan, Session or
-        Project.
+        """.. # noqa
+
+        Determine if the Project contains a certain Scan, Session or Project.
 
         Parameters
         ----------
-        other : Instance of Scan, Session or Subject
+        other : Instance of :class:`bidshandler.Scan`, :class:`bidshandler.Session` or :class:`bidshandler.Subject`
             Object to check whether it is contained in this Project.
 
         Returns
