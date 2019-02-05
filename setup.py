@@ -4,6 +4,7 @@ VERSION = "0.2"
 
 DESCRIPTION = "Simple way to manage and manipulate BIDS compatible data"
 DOWNLOAD_URL = "https://github.com/Macquarie-MEG-Research/BIDSHandler"
+DOC_URL = "https://macquarie-meg-research.github.io/BIDSHandler/"
 LONG_DESCRIPTION = open('README.md').read()
 
 setuptools.setup(
@@ -24,4 +25,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    project_urls={"Documentation": DOC_URL}
 )
