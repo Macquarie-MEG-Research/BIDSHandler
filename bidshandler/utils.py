@@ -5,6 +5,8 @@ from datetime import datetime, date
 
 import pandas as pd
 
+# TODO: make all private
+
 
 def bids_params_are_subsets(params1, params2):
     """

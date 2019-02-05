@@ -22,9 +22,9 @@ class Session(QueryMixin):
     ----------
     id_ : str
         Id of the session. This is the sequence of characters after `'ses-'`.
-    subject : BIDSHandler.Subject
+    subject : :class:`bidshandler.Subject`
         Parent Subject object containing this Session.
-    itialize : bool, optional
+    initialize : bool, optional
         Whether to parse the folder and load any child structures.
     no_folder : bool, optional
         Whether or not the session is contained within a `ses-XX` folder.
@@ -51,11 +51,13 @@ class Session(QueryMixin):
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan or Session to this object.
+        """.. # noqa
+
+        Add another Scan or Session to this object.
 
         Parameters
         ----------
-        other : Instance of Scan or Session
+        other : Instance of :class:`bidshandler.Scan` or :class:`bidshandler.Session`
             Object to be added to this Session.
             The added object must already exist in the same context as this
             object.
@@ -66,7 +68,8 @@ class Session(QueryMixin):
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy and creates any directories that do not already exist.
+            :py:func:`shutil.copy` and creates any directories that do not
+            already exist.
         """
         if isinstance(other, Session):
             if self._id == other._id:
@@ -133,6 +136,22 @@ class Session(QueryMixin):
     def scan(self, task=None, acq=None, run=None):
         # TODO: Allow this to return a list if mutliple scans match.
         # Consider None a wildcard.
+        """Return the contained Scan corresponding to the provided values
+
+        Parameters
+        ----------
+        task : str
+            Value of `task` in the BIDS filename.
+        acq : str
+            Value of `acq` in the BIDS filename.
+        run : str
+            Value of `run` in the BIDS filename.
+
+        Returns
+        -------
+        scan : :class:`bidshandler.Scan`
+            Scan object.
+        """
         for scan in self.scans:
             if (scan.task == task and scan.acq == acq and scan.run == run):
                 return scan
@@ -203,14 +222,14 @@ class Session(QueryMixin):
 
         Parameters
         ----------
-        subjecty : BIDSHandler.Subject
+        subject : :class:`bidshandler.Subject`
             New parent Subject.
-        other : BIDSHandler.Session
+        other : :class:`BIDSHandler.Session`
             Original Session instance to clone.
 
         Returns
         -------
-        new_session : BIDSHandler.Session
+        new_session : :class:`bidshandler.Session`
             New uninitialized Session cloned from `other` to be a child of
             `subject`.
         """
@@ -235,7 +254,7 @@ class Session(QueryMixin):
 
         Returns
         -------
-        root : ET.Element
+        root : :py:class:`xml.etree.ElementTree.Element`
             Xml element containing session information.
         """
         root = ET.Element('Session', attrib={'ID': str(self._id)})
@@ -247,7 +266,7 @@ class Session(QueryMixin):
 
     @property
     def bids_tree(self):
-        """Parent BIDSTree object."""
+        """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
 
     @property
@@ -274,7 +293,7 @@ class Session(QueryMixin):
 
     @property
     def project(self):
-        """Parent Project object."""
+        """Parent :class:`bidshandler.Project` object."""
         return self.subject.project
 
     @property
@@ -294,7 +313,7 @@ class Session(QueryMixin):
 
         Parameters
         ----------
-        other : Instance of Scan
+        other : :class:`bidshandler.Scan`
             Object to test whether it is contained in this Session.
 
         Returns

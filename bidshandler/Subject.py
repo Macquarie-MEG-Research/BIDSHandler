@@ -19,9 +19,9 @@ class Subject(QueryMixin):
     ----------
     id_ : str
         Id of the subject. This is the sequence of characters after `'sub-'`.
-    project : BIDSHandler.Project
+    project : :class:`bidshandler.Project`
         Parent Project object containing this Subject.
-    itialize : bool, optional
+    initialize : bool, optional
         Whether to parse the folder and load any child structures.
     """
     def __init__(self, id_, project, initialize=True):
@@ -45,11 +45,13 @@ class Subject(QueryMixin):
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan, Session or Subject to this object.
+        """.. # noqa
+
+        Add another Scan, Session or Subject to this object.
 
         Parameters
         ----------
-        other : Instance of Scan, Session or Subject
+        other : Instance of :class:`bidshandler.Scan`, :class:`bidshandler.Session` or :class:`bidshandler.Subject`
             Object to be added to this Subject.
             The added object must already exist in the same context as this
             object.
@@ -60,7 +62,8 @@ class Subject(QueryMixin):
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy and creates any directories that do not already exist.
+            :py:func:`shutil.copy` and creates any directories that do not
+            already exist.
         """
         if isinstance(other, Subject):
             # If the subject has the same ID, take all the child sessions and
@@ -121,7 +124,7 @@ class Subject(QueryMixin):
 
         Returns
         -------
-        BIDSHandler.Session
+        :class:`bidshandler.Session`
             Contained Session with the specified `id_`.
         """
         try:
@@ -159,14 +162,14 @@ class Subject(QueryMixin):
 
         Parameters
         ----------
-        project : BIDSHandler.Project
+        project : :class:`bidshandler.Project`
             New parent Project.
-        other : BIDSHandler.Subject
+        other : :class:`bidshandler.Subject`
             Original Subject instance to clone.
 
         Returns
         -------
-        new_subject : BIDSHandler.Subject
+        new_subject : :class:`bidshandler.Subject`
             New uninitialized Subject cloned from `other` to be a child of
             `project`.
         """
@@ -215,7 +218,7 @@ class Subject(QueryMixin):
 
         Returns
         -------
-        root : ET.Element
+        root : :py:class:`xml.etree.ElementTree.Element`
             Xml element containing subject information.
         """
         attribs = {'ID': str(self._id)}
@@ -233,7 +236,7 @@ class Subject(QueryMixin):
 
     @property
     def bids_tree(self):
-        """Parent BIDSTree object."""
+        """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
 
     @property
@@ -272,11 +275,13 @@ class Subject(QueryMixin):
 #region class methods
 
     def __contains__(self, other):
-        """Determine if the Subject contains a certain Scan or Session.
+        """.. # noqa
+
+        Determine if the Subject contains a certain Scan or Session.
 
         Parameters
         ----------
-        other : Instance of Scan or Session
+        other : Instance of :class:`bidshandler.Scan` or :class:`bidshandler.Session`
             Object to check whether it is contained in this Subject.
 
         Returns

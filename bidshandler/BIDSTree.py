@@ -12,6 +12,16 @@ from .utils import copyfiles, realize_paths, prettyprint_xml
 
 
 class BIDSTree(QueryMixin):
+    """Highest BIDS archive level containing all the various projects
+
+    Parameters
+    ----------
+    fpath : str or path-like object
+        File path containing all the project folders organised using the BIDS
+        specification.
+    initialize : bool, optional
+        Whether to parse the folder and load any child structures.
+    """
     def __init__(self, fpath, initialize=True):
         super(BIDSTree, self).__init__()
         self.path = fpath
@@ -25,12 +35,14 @@ class BIDSTree(QueryMixin):
 #region public methods
 
     def add(self, other, copier=copyfiles):
-        """Add another Scan, Session, Subject, Project or BIDSTree to this
+        """.. # noqa
+
+        Add another Scan, Session, Subject, Project or BIDSTree to this
         object.
 
         Parameters
         ----------
-        other : Instance of Scan, Session, Subject, Project or BIDSTree
+        other : Instance of :class:`bidshandler.Scan`, :class:`bidshandler.Session`, :class:`bidshandler.Subject`, :class:`bidshandler.Project` or :class:`bidshandler.BIDSTree`
             Object to be added to this BIDSTree.
             The added object must already exist in the same context as this
             object (except BIDSTree objects).
@@ -41,7 +53,8 @@ class BIDSTree(QueryMixin):
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
             This will default to using utils.copyfiles which simply implements
-            shutil.copy and creates any directories that do not already exist.
+            :py:func:`shutil.copy` and creates any directories that do not
+            already exist.
         """
         if isinstance(other, BIDSTree):
             # merge all child projects in
@@ -95,7 +108,8 @@ class BIDSTree(QueryMixin):
 
         Returns
         -------
-        String representation of xml structure.
+        str
+            String representation of xml structure.
         """
         root = ET.Element('BIDSTree', attrib={'path': self.path})
         for project in self.projects:
@@ -163,12 +177,14 @@ class BIDSTree(QueryMixin):
 #region class methods
 
     def __contains__(self, other):
-        """Determine if the Subject contains a certain Scan, Session, Subject
+        """.. # noqa
+
+        Determine if the Subject contains a certain Scan, Session, Subject
         or Project.
 
         Parameters
         ----------
-        other : Instance of Scan, Session, Subject or Project
+        other : Instance of :class:`bidshandler.Scan`, :class:`bidshandler.Session`, :class:`bidshandler.Subject` or :class:`bidshandler.Project`
             Object to check whether it is contained in this BIDS folder.
         """
         if isinstance(other, Project):

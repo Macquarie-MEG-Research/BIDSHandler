@@ -2,6 +2,7 @@ import os.path as op
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
+from .QueryMixin import QueryMixin
 
 from .utils import (get_bids_params, realize_paths,
                     bids_params_are_subsets, splitall)
@@ -11,20 +12,21 @@ _SIDECAR_MAP = {'meg': 'meg',
                 'func': 'bold'}
 
 
-class Scan():
-    """Scan-level object.
+class Scan(QueryMixin):
+    """Scan-level object
 
     Parameters
     ----------
     fpath : str
         The path to the raw scan file.
-    session : BIDSHandler.Session
+    session : Instance of :class:`bidshandler.Session`
         Parent Session object containing this Scan.
     scan_params : dict, optional
         A dictionary containing any number of other scan parameters specified
         by scans.tsv.
     """
     def __init__(self, fpath, session, **scan_params):
+        super(Scan, self).__init__()
         self._path = splitall(fpath)[0]
         self._raw_file = '\\'.join(splitall(fpath)[1:])
         self.acq_time = scan_params.pop('acq_time', None)
@@ -32,6 +34,8 @@ class Scan():
         self.session = session
         self._get_params()
         self._sidecar = None
+
+        self._queryable_types = ('scan',)
 
         self.associated_files = dict()
         self._assign_metadata()
@@ -106,7 +110,7 @@ class Scan():
 
         Returns
         -------
-        ET.Element
+        :py:class:`xml.etree.ElementTree.Element`
             Xml element containing subject information.
         """
         return ET.Element('Scan', attrib={'path': self.raw_file_relative})
@@ -143,7 +147,7 @@ class Scan():
 
     @property
     def bids_tree(self):
-        """Parent BIDSTree object."""
+        """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
 
     @property
@@ -177,7 +181,7 @@ class Scan():
 
     @property
     def project(self):
-        """Parent Project object."""
+        """Parent :class:`bidshandler.Project` object."""
         return self.subject.project
 
     @property
@@ -199,7 +203,7 @@ class Scan():
 
     @property
     def subject(self):
-        """Parent Subject object."""
+        """Parent :class:`bidshandler.Subject` object."""
         return self.session.subject
 
 #region class methods
