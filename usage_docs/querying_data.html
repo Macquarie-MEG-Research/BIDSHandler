@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Querying BIDS data &mdash; BIDSHandler v0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Manipulating BIDS data" href="manipulating_data.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BIDSHandler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="loading_data.html">Loading BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loading_data.html#loading">Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manipulating_data.html">Manipulating BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="manipulating_data.html#adding-merging-bids-data">Adding/merging BIDS data</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Querying BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BIDSHandler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../usage.html">Using BIDSHandler</a> &raquo;</li>
+        
+      <li>Querying BIDS data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage_docs/querying_data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+      
+        <a href="manipulating_data.html" class="btn btn-neutral" title="Manipulating BIDS data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="querying-bids-data">
+<h1>Querying BIDS data<a class="headerlink" href="#querying-bids-data" title="Permalink to this headline">¶</a></h1>
+<p>One very useful function to be able to perform on any large dataset is to be able to pull out or find the data corresponding to a set of conditions you may have.
+<cite>BIDSHandler</cite> allows you to query data in a simple manner and extract a list of objects that you require.
+To understand how this works we can look at the function used:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">BIDSTree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the full details on allowed values etc see <a class="reference internal" href="../generated/bidshandler.QueryMixin.html#bidshandler.QueryMixin.QueryMixin.query" title="bidshandler.QueryMixin.QueryMixin.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin.query()</span></code></a>.
+We will however summarise the process and meanings here.</p>
+<ul>
+<li><p class="first"><cite>obj</cite> is the name of the object type you want and can be one of <cite>‘project’</cite>, <cite>‘subject’</cite>, <cite>‘session’</cite> or <cite>‘scan’</cite>. The object name must be the of the same level as the object you are querying or lower.</p>
+</li>
+<li><dl class="first docutils">
+<dt><cite>token</cite> is the name of the data you want to compare. This can be a value like <cite>‘task’</cite>, <cite>‘group’</cite>, or <cite>‘sessions’</cite> for example, or you can use any value that is used as a key in the sidecar.json file.</dt>
+<dd><p class="first">To see the full list you can see the docstring by entering</p>
+<div class="code python last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">BIDSHandler</span> <span class="k">import</span> <span class="n">BIDSTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">BIDSTree</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>condition</cite> is one of <cite>(‘&lt;’, ‘&lt;=’, ‘=’, ‘!=’, ‘!!=’, ‘=&gt;’, ‘&gt;’)</cite> where <cite>‘!!=’</cite> here means <cite>none equal</cite>. This is distinctly different from <cite>‘!=’</cite> in that if you ask for the list of subjects that do not contain <cite>‘task’==’resting’</cite> using <cite>‘!=’</cite> you will get the list of all subjects that contains tasks that aren’t <cite>‘task’==’resting’</cite>. <cite>‘!!=’</cite> will however return the list of subjects that have no instances of <cite>‘task’==’resting’</cite>.</dt>
+<dd><p class="first last">The <cite>condition</cite> must also be valid for the data type. So for example using a <cite>condition</cite> of <cite>&lt;</cite> for a value that is a string will not return any meaningful result or may raise an error.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>value</cite> is the value to check against.</dt>
+<dd><p class="first last">This value can either be the actual value in the file name, so for <cite>token</cite> = <cite>‘task’</cite>, the value will be the string in <cite>task-value</cite>.
+For <cite>token</cite>’s such as <cite>age</cite> it will be the age found in the participant.tsv.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Because of the structure of the arguments, it is quite simple to construct queries, as well as read what it is expected that they ask.</p>
+<p>All BIDS objects can be queried, and only queries which make sense can be made on these objects. For example the question “what are all the projects in this session that have one subject” obviously makes no sense and will raise an error.</p>
+<p>Queries can also be componded to allow for multiple queries to be chained.
+This is possible because the object that the <cite>query</cite> function returns is actually a <cite>QueryList</cite> object which has all the functionality of a normal python list, however it also has a <cite>query</cite> method which can be called to apply a query to every member of the list.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Task:</strong> Find a list of all subjects that are Female.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">folder2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we let subjects 1 and 3 be female, then this would return the list of those two Subject objects.</p>
+<p><strong>Task:</strong> Find all the projects containing recordings after the 1st of January 2018:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">folder2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;rec_date_&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-01-01&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When querying recording dates the date value <em>must</em> be in the format <cite>YYYY-MM-DD</cite> when specifying a particular date.</p>
+<p>The date can also be specified to the second if need be by using a date value of the format <cite>“%Y-%m-%dT%H:%M:%S”</cite> (the previous date format is <cite>“%Y-%m-%d”</cite>).</p>
+<p><strong>Task:</strong> Find all the subjects that do not have any resting state tasks:</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">folder2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;!!=&#39;</span><span class="p">,</span> <span class="s1">&#39;restingstate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where a key-value pair in the BIDS filename of <cite>task-restingstate</cite> corresponds to resting state data.</p>
+<p><em>Task:</em> Find all the subjects that are female and that have 1 session:
+First we will find all the subjects that are female, then we will find all the subjects in this list that have only one session.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">subjects</span> <span class="o">=</span> <span class="n">folder2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subjects</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;sessions&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Matt Sanderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

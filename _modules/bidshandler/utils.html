@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bidshandler.utils &mdash; BIDSHandler v0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BIDSHandler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Using BIDSHandler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/loading_data.html">Loading BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/loading_data.html#loading">Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/manipulating_data.html">Manipulating BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/manipulating_data.html#adding-merging-bids-data">Adding/merging BIDS data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/querying_data.html">Querying BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BIDSHandler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>bidshandler.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bidshandler.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">date</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># TODO: make all private</span>
+
+
+<div class="viewcode-block" id="bids_params_are_subsets"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.bids_params_are_subsets">[docs]</a><span class="k">def</span> <span class="nf">bids_params_are_subsets</span><span class="p">(</span><span class="n">params1</span><span class="p">,</span> <span class="n">params2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Equivalent to asking if params1 ⊇ params2.</span>
+<span class="sd">    Ie. returns true if set(params2) is a subset of set(params1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">param1_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">params1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">param2_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">params2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;ext&#39;</span><span class="p">]:</span>
+        <span class="n">param1_keys</span> <span class="o">=</span> <span class="n">param1_keys</span> <span class="o">-</span> <span class="p">{</span><span class="n">key</span><span class="p">}</span>
+        <span class="n">param2_keys</span> <span class="o">=</span> <span class="n">param2_keys</span> <span class="o">-</span> <span class="p">{</span><span class="n">key</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">param1_keys</span> <span class="o">&gt;=</span> <span class="n">param2_keys</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">param2_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">params2</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">params1</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="combine_tsv"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.combine_tsv">[docs]</a><span class="k">def</span> <span class="nf">combine_tsv</span><span class="p">(</span><span class="n">tsv</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">drop_column</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merge a df into a tsv file&quot;&quot;&quot;</span>
+    <span class="n">orig_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tsv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">orig_df</span> <span class="o">=</span> <span class="n">orig_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">drop_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">orig_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">drop_column</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">orig_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">tsv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;n/a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compare"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.compare">[docs]</a><span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">val2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compare the two values using the specified conditional</span>
+<span class="sd">    ie. returns val1 (conditional) val2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conditional</span> <span class="o">==</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">&lt;</span> <span class="n">val2</span>
+    <span class="k">elif</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;=&lt;&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">&lt;=</span> <span class="n">val2</span>
+    <span class="k">elif</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">==</span> <span class="n">val2</span>
+    <span class="k">elif</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;=&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">&gt;=</span> <span class="n">val2</span>
+    <span class="k">elif</span> <span class="n">conditional</span> <span class="o">==</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">&gt;</span> <span class="n">val2</span>
+    <span class="k">elif</span> <span class="n">conditional</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="s1">&#39;!!=&#39;</span><span class="p">):</span>
+        <span class="c1"># Generally a `!!=` conditional will be caught by calling code to</span>
+        <span class="c1"># handle it correctly, however sometimes it makes sense to use it in</span>
+        <span class="c1"># the same way as the `!=` conditional.</span>
+        <span class="k">return</span> <span class="n">val1</span> <span class="o">!=</span> <span class="n">val2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid conditional </span><span class="si">{0}</span><span class="s2"> entered&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conditional</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="compare_times"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.compare_times">[docs]</a><span class="k">def</span> <span class="nf">compare_times</span><span class="p">(</span><span class="n">time1</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">time2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compares two datetime objects to determine if they are the same.</span>
+
+<span class="sd">    This differs to normal comparison as it allows for comparison between</span>
+<span class="sd">    datetime.date objects and datetime.datetime objects.</span>
+<span class="sd">    Equality can thus be determine in such a way that it can be determined if</span>
+<span class="sd">    one specfic time on a day is on that day (by equating a date object to a</span>
+<span class="sd">    datetime object).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">time1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">time2</span><span class="p">):</span>
+        <span class="c1"># Just do a normal compare.</span>
+        <span class="k">return</span> <span class="n">compare</span><span class="p">(</span><span class="n">time1</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">time2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time1</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time2</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">compare</span><span class="p">(</span><span class="n">time1</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">time2</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time1</span><span class="p">,</span> <span class="n">datetime</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time2</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">compare</span><span class="p">(</span><span class="n">time1</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">time2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span></div>
+
+
+<div class="viewcode-block" id="copyfiles"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.copyfiles">[docs]</a><span class="k">def</span> <span class="nf">copyfiles</span><span class="p">(</span><span class="n">src_files</span><span class="p">,</span> <span class="n">dst_files</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copy a list of files to a list of destinations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src_files : list of str&#39;s</span>
+<span class="sd">        List of source paths.</span>
+<span class="sd">    dst_files : list of str&#39;s</span>
+<span class="sd">        List of destination paths.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">    -----</span>
+<span class="sd">    There is a one-to-one correlation between the src_files and dst_files</span>
+<span class="sd">    lists. Ie. src_files[i] will be copied to dst_files[i].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_files</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dst_files</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fnum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">src_files</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dst_files</span><span class="p">[</span><span class="n">fnum</span><span class="p">])):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dst_files</span><span class="p">[</span><span class="n">fnum</span><span class="p">]),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src_files</span><span class="p">[</span><span class="n">fnum</span><span class="p">],</span> <span class="n">dst_files</span><span class="p">[</span><span class="n">fnum</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">shutil</span><span class="o">.</span><span class="n">SameFileError</span><span class="p">:</span>
+            <span class="c1"># For now just skip files that are the same.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;same file!!&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_bids_params"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.get_bids_params">[docs]</a><span class="k">def</span> <span class="nf">get_bids_params</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">filename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ext&#39;</span><span class="p">:</span> <span class="n">ext</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="prettyprint_xml"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.prettyprint_xml">[docs]</a><span class="k">def</span> <span class="nf">prettyprint_xml</span><span class="p">(</span><span class="n">xml_str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a flat string representation of xml data and pretty print it.&quot;&quot;&quot;</span>
+    <span class="n">curr_indent</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">pointer</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">return_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">xml_str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="n">pointer</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">xml_str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">pointer</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Determine how the indentation should change.</span>
+            <span class="k">if</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span> <span class="ow">and</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="n">curr_indent</span> <span class="o">=</span> <span class="n">curr_indent</span>
+            <span class="k">elif</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span> <span class="ow">and</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="n">curr_indent</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span> <span class="ow">and</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="n">curr_indent</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span> <span class="ow">and</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">end</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+                <span class="n">ret_str</span> <span class="o">=</span> <span class="n">xml_str</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39; &#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ret_str</span> <span class="ow">and</span> <span class="s1">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ret_str</span><span class="p">:</span>
+                    <span class="n">curr_indent</span> <span class="o">=</span> <span class="n">curr_indent</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">curr_indent</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">return_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xml_str</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">return_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">return_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_indent</span> <span class="o">*</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">pointer</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">return_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xml_str</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">return_data</span><span class="p">)</span></div>
+
+
+<span class="c1"># This could possibly be a method for the classes? If they become subclassed</span>
+<span class="c1"># it would only need to be defined for the base class.</span>
+<span class="c1"># this could also be a decorator taking the instance of the class as an arg</span>
+<div class="viewcode-block" id="realize_paths"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.realize_paths">[docs]</a><span class="k">def</span> <span class="nf">realize_paths</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">rel_paths</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the actual path to a file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : Instance of Project, Subject, Session or Scan</span>
+<span class="sd">        The object the path will be found relative to.</span>
+<span class="sd">    rel_path : str</span>
+<span class="sd">        Relative path from an object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rel_paths</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
+        <span class="n">ret_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">rel_paths</span><span class="p">:</span>
+            <span class="n">ret_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">fpath</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">ret_paths</span>
+    <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">rel_paths</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="splitall"><a class="viewcode-back" href="../../generated/bidshandler.utils.html#bidshandler.utils.splitall">[docs]</a><span class="k">def</span> <span class="nf">splitall</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="c1"># credit: Trent Mick:</span>
+    <span class="c1"># https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html</span>
+    <span class="n">allparts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">path</span><span class="p">:</span>  <span class="c1"># sentinel for absolute paths</span>
+            <span class="n">allparts</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">path</span><span class="p">:</span>  <span class="c1"># sentinel for relative paths</span>
+            <span class="n">allparts</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">allparts</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">allparts</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Matt Sanderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'v0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

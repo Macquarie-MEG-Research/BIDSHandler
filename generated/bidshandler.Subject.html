@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bidshandler.Subject module &mdash; BIDSHandler v0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bidshandler.Session module" href="bidshandler.Session.html" />
+    <link rel="prev" title="bidshandler.Project module" href="bidshandler.Project.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BIDSHandler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.Subject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/loading_data.html">Loading BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/loading_data.html#loading">Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/manipulating_data.html">Manipulating BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/manipulating_data.html#adding-merging-bids-data">Adding/merging BIDS data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/querying_data.html">Querying BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BIDSHandler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+      <li>bidshandler.Subject module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/bidshandler.Subject.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="bidshandler.Session.html" class="btn btn-neutral float-right" title="bidshandler.Session module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bidshandler.Project.html" class="btn btn-neutral" title="bidshandler.Project module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bidshandler.Subject">
+<span id="bidshandler-subject-module"></span><h1>bidshandler.Subject module<a class="headerlink" href="#module-bidshandler.Subject" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="bidshandler.Subject.Subject">
+<em class="property">class </em><code class="descclassname">bidshandler.Subject.</code><code class="descname">Subject</code><span class="sig-paren">(</span><em>id_</em>, <em>project</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="bidshandler.QueryMixin.html#bidshandler.QueryMixin.QueryMixin" title="bidshandler.QueryMixin.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin</span></code></a></p>
+<p>Subject-level object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Id of the subject. This is the sequence of characters after <cite>‘sub-‘</cite>.</li>
+<li><strong>project</strong> (<a class="reference internal" href="bidshandler.Project.html#module-bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a>) – Parent Project object containing this Subject.</li>
+<li><strong>initialize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to parse the folder and load any child structures.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.ID">
+<code class="descname">ID</code><a class="headerlink" href="#bidshandler.Subject.Subject.ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>ID with ‘sub’ prefix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Subject.Subject.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>copier=&lt;function copyfiles&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add another Scan, Session or Subject to this object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#module-bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#module-bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a> or <a class="reference internal" href="#module-bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>) – Object to be added to this Subject.
+The added object must already exist in the same context as this
+object.</li>
+<li><strong>copier</strong> (<em>function</em><em>, </em><em>optional</em>) – A function to facilitate the copying of any applicable data.
+This function must have the call signature
+<cite>function(src_files: list, dst_files: list)</cite>
+Where src_files is the list of files to be moved and dst_files is
+the list of corresponding destinations.
+This will default to using utils.copyfiles which simply implements
+<a class="reference external" href="https://docs.python.org/3/library/shutil.html#shutil.copy" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shutil.copy()</span></code></a> and creates any directories that do not
+already exist.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.bids_tree">
+<code class="descname">bids_tree</code><a class="headerlink" href="#bidshandler.Subject.Subject.bids_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parent <a class="reference internal" href="bidshandler.BIDSTree.html#module-bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Subject.Subject.contained_files">
+<code class="descname">contained_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.contained_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.contained_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of contained files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>file_list</strong> – List with paths to all contained files relating to the BIDS
+structure.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.inheritable_files">
+<code class="descname">inheritable_files</code><a class="headerlink" href="#bidshandler.Subject.Subject.inheritable_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of files that are able to be inherited by child objects.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.path">
+<code class="descname">path</code><a class="headerlink" href="#bidshandler.Subject.Subject.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine path location based on parent paths.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.projects">
+<code class="descname">projects</code><a class="headerlink" href="#bidshandler.Subject.Subject.projects" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained projects or self if the object itself is a Project</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Subject.Subject.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.Subject.Subject.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query the BIDS object and return the appropriate data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The object type that should be returned.
+This can be one of (‘project’, ‘subject’, ‘session’, ‘scan’)</li>
+<li><strong>token</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – <p>The key to query for. This can be a value from the following list:</p>
+<ul>
+<li><strong>task</strong>: Corresponds to the <cite>task</cite> key in the BIDS filename.</li>
+<li><strong>acquisition</strong> or <strong>acq</strong>: Corresponds to the <cite>acq</cite> key in the
+BIDS filename.</li>
+<li><strong>run</strong>: Corresponds to the <cite>run</cite> key in the BIDS filename.</li>
+<li><strong>proc</strong>: Corresponds to the <cite>proc</cite> key in the BIDS filename.</li>
+<li><strong>age</strong>: Corresponds to the age of the participant.
+[Only available for <cite>obj=’subject’</cite>]</li>
+<li><strong>sex</strong>: Corresponds to the gender of the participant.
+[Only available for <cite>obj=’subject’</cite>]</li>
+<li><strong>group</strong>: Corresponds to the group of the participant.
+[Only available for <cite>obj=’subject’</cite>]</li>
+<li><strong>rec_date</strong>: Corresponds to the time and date of the recording.
+The value can either be formatted like “%Y-%m-%d”
+(ie. YYYY-MM-DD) to specify a single day, or it can be
+specified to the second by formatting it using the format
+string “%Y-%m-%dT%H:%M:%S” (ie. YYYY-MM-DDTHH:mm:ss).</li>
+<li><strong>subjects</strong>: Corresponds to the number of subjects contained.
+[Only available for <cite>obj=’project’</cite>]</li>
+<li><strong>sessions</strong>: Corresponds to the number of sessions contained.
+[Only available for <cite>obj=’project’</cite> or <cite>‘subject’</cite>]</li>
+<li><strong>scans</strong>: Corresponds to the number of scans contained.
+[Only available for <cite>obj=’project’</cite>, <cite>‘subject’</cite> or
+<cite>‘session’</cite>]</li>
+<li>Any other token will be considered to be a key in the
+sidecar.json file.</li>
+</ul>
+</li>
+<li><strong>condition</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – One of (‘&lt;’, ‘&lt;=’, ‘=’, ‘!=’, ‘!!=’ (none equal), ‘=&gt;’, ‘&gt;’).
+Used to perform comaprisons between the value provided and the
+values the data have.
+The ‘!!=’ operator here is used to distinguish between the case of
+when you want to determine if something contains something that
+isn’t the value you specify, and whether something doesn’t contain
+the value specified.
+This operator is currently only supported for the tokens <cite>‘task’</cite>,
+<cite>‘acquisition’</cite>/<cite>’acq’, `’run’</cite> and <cite>‘proc’</cite>.</li>
+<li><strong>value</strong> (<em>str | int | float</em>) – The value the token has (or the value to compare using the
+<cite>condition</cite> argument).
+The value provided must match exactly if the equality operator is
+used, and must have a type appropriate for comparison if an
+inequality operator is used.
+Currently regex is not supported, but this may come in the future.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.QueryList.html#module-bidshandler.QueryList" title="bidshandler.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.scans">
+<code class="descname">scans</code><a class="headerlink" href="#bidshandler.Subject.Subject.scans" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained Scans.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Subject.Subject.session">
+<code class="descname">session</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Session corresponding to the provided id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Id of the session to return. This doesn’t need the <cite>‘ses’</cite> prefix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Contained Session with the specified <cite>id_</cite>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="bidshandler.Session.html#module-bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.sessions">
+<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.Subject.Subject.sessions" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained Sessions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Subject.Subject.subjects">
+<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.Subject.Subject.subjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained subjects or self if the object itself is a Subject</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Matt Sanderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

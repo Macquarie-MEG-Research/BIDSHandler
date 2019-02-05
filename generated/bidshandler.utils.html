@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bidshandler.utils module &mdash; BIDSHandler v0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BIDSHandler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Subject.html">bidshandler.Subject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/loading_data.html">Loading BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/loading_data.html#loading">Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/manipulating_data.html">Manipulating BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/manipulating_data.html#adding-merging-bids-data">Adding/merging BIDS data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage_docs/querying_data.html">Querying BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BIDSHandler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>bidshandler.utils module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/bidshandler.utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bidshandler.utils">
+<span id="bidshandler-utils-module"></span><h1>bidshandler.utils module<a class="headerlink" href="#module-bidshandler.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="bidshandler.utils.bids_params_are_subsets">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">bids_params_are_subsets</code><span class="sig-paren">(</span><em>params1</em>, <em>params2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#bids_params_are_subsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.bids_params_are_subsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent to asking if params1 ⊇ params2.
+Ie. returns true if set(params2) is a subset of set(params1).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.combine_tsv">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">combine_tsv</code><span class="sig-paren">(</span><em>tsv</em>, <em>df</em>, <em>drop_column=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#combine_tsv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.combine_tsv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge a df into a tsv file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.compare">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">compare</code><span class="sig-paren">(</span><em>val1</em>, <em>conditional</em>, <em>val2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare the two values using the specified conditional
+ie. returns val1 (conditional) val2</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.compare_times">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">compare_times</code><span class="sig-paren">(</span><em>time1</em>, <em>conditional</em>, <em>time2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#compare_times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.compare_times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two datetime objects to determine if they are the same.</p>
+<p>This differs to normal comparison as it allows for comparison between
+datetime.date objects and datetime.datetime objects.
+Equality can thus be determine in such a way that it can be determined if
+one specfic time on a day is on that day (by equating a date object to a
+datetime object).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.copyfiles">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">copyfiles</code><span class="sig-paren">(</span><em>src_files</em>, <em>dst_files</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#copyfiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.copyfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a list of files to a list of destinations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>src_files</strong> (<em>list of str's</em>) – List of source paths.</li>
+<li><strong>dst_files</strong> (<em>list of str's</em>) – List of destination paths.</li>
+<li><strong>Note</strong> – </li>
+<li><strong>-----</strong> – </li>
+<li><strong>is a one-to-one correlation between the src_files and dst_files</strong> (<em>There</em>) – </li>
+<li><strong>Ie. src_files</strong><strong>[</strong><strong>i</strong><strong>] </strong><strong>will be copied to dst_files</strong><strong>[</strong><strong>i</strong><strong>]</strong><strong></strong> (<em>lists.</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.get_bids_params">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">get_bids_params</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#get_bids_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.get_bids_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.prettyprint_xml">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">prettyprint_xml</code><span class="sig-paren">(</span><em>xml_str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#prettyprint_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.prettyprint_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a flat string representation of xml data and pretty print it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.realize_paths">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">realize_paths</code><span class="sig-paren">(</span><em>obj</em>, <em>rel_paths</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#realize_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.realize_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the actual path to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>Instance of Project</em><em>, </em><a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject.Subject" title="bidshandler.Subject.Subject"><em>Subject</em></a><em>, </em><a class="reference internal" href="bidshandler.Session.html#bidshandler.Session.Session" title="bidshandler.Session.Session"><em>Session</em></a><em> or </em><a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan.Scan" title="bidshandler.Scan.Scan"><em>Scan</em></a>) – The object the path will be found relative to.</li>
+<li><strong>rel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Relative path from an object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bidshandler.utils.splitall">
+<code class="descclassname">bidshandler.utils.</code><code class="descname">splitall</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/utils.html#splitall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.utils.splitall" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Matt Sanderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

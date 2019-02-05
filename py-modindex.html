@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>BIDSHandler Documentation &mdash; BIDSHandler v0.2 documentation</title>
+  <title>Python Module Index &mdash; BIDSHandler v0.2 documentation</title>
   
 
   
@@ -28,7 +28,9 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Documentation" href="api.html" /> 
+ 
+
+
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -47,7 +49,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> BIDSHandler
+            <a href="index.html" class="icon icon-home"> BIDSHandler
           
 
           
@@ -122,7 +124,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">BIDSHandler</a>
+          <a href="index.html">BIDSHandler</a>
         
       </nav>
 
@@ -151,84 +153,86 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>BIDSHandler Documentation</li>
+      <li>Python Module Index</li>
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
   </ul>
 
   
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-  </div>
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="bidshandler-documentation">
-<h1>BIDSHandler Documentation<a class="headerlink" href="#bidshandler-documentation" title="Permalink to this headline">¶</a></h1>
-<p>BIDSHandler: A simple way to manage and manipulate BIDS compatible data.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Using BIDSHandler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage_docs/loading_data.html">Loading BIDS data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage_docs/manipulating_data.html">Manipulating BIDS data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage_docs/querying_data.html">Querying BIDS data</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p><cite>BIDSHandler</cite> requires only one dependency which can be easily installed using <cite>pip</cite>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install pandas
-</pre></div>
-</div>
-<p>To install <cite>BIDSHandler</cite> you can then enter in a terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install BIDSHandler
-</pre></div>
-</div>
-<p>Entering <cite>import bidshandler</cite> in a python console should not raise an error which indicates that <cite>BIDSHandler</cite> has been installed correctly.</p>
-</div>
-<div class="section" id="basic-usage">
-<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
-<p><cite>BIDSHandler</cite> has 5 primary objects; <cite>BIDSTree</cite>, <cite>Project</cite>, <cite>Subject</cite>, <cite>Session</cite> and <cite>Scan</cite>, corresponding to different levels within a BIDS archive folder structure.
-Generally data will be loaded into a <cite>BIDSTree</cite> object and the child objects are automatically generated. From there it is easy to query and manipulate the BIDS data.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bidshandler</span> <span class="k">as</span> <span class="nn">bh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">bh</span><span class="o">.</span><span class="n">BIDSTree</span><span class="p">(</span><span class="s1">&#39;folder&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">projects</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># list of Project objects contained in the BIDSTree</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">subjects</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># list of Subject objects contained in the BIDSTree</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># etc.</span>
-</pre></div>
-</div>
-</div>
+
+   <h1>Python Module Index</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-b"><strong>b</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-b"><td></td><td>
+       <strong>b</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-1" style="display: none" alt="-" /></td>
+       <td>
+       <a href="generated/bidshandler.html#module-bidshandler"><code class="xref">bidshandler</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.BIDSErrors.html#module-bidshandler.BIDSErrors"><code class="xref">bidshandler.BIDSErrors</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.BIDSTree.html#module-bidshandler.BIDSTree"><code class="xref">bidshandler.BIDSTree</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.Project.html#module-bidshandler.Project"><code class="xref">bidshandler.Project</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.QueryList.html#module-bidshandler.QueryList"><code class="xref">bidshandler.QueryList</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.QueryMixin.html#module-bidshandler.QueryMixin"><code class="xref">bidshandler.QueryMixin</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.Scan.html#module-bidshandler.Scan"><code class="xref">bidshandler.Scan</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.Session.html#module-bidshandler.Session"><code class="xref">bidshandler.Session</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.Subject.html#module-bidshandler.Subject"><code class="xref">bidshandler.Subject</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="generated/bidshandler.utils.html#module-bidshandler.utils"><code class="xref">bidshandler.utils</code></a></td><td>
+       <em></em></td></tr>
+   </table>
 
 
            </div>

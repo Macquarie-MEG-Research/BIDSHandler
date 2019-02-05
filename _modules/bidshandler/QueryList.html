@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bidshandler.QueryList &mdash; BIDSHandler v0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BIDSHandler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Using BIDSHandler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/loading_data.html">Loading BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/loading_data.html#loading">Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/manipulating_data.html">Manipulating BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/manipulating_data.html#adding-merging-bids-data">Adding/merging BIDS data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_docs/querying_data.html">Querying BIDS data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BIDSHandler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>bidshandler.QueryList</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bidshandler.QueryList</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="QueryList"><a class="viewcode-back" href="../../generated/bidshandler.QueryList.html#bidshandler.QueryList.QueryList">[docs]</a><span></span><span class="k">class</span> <span class="nc">QueryList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List wrapper class to allow the list of return objects from a query to</span>
+<span class="sd">    itself be queried.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">iterable</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QueryList</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">iterable</span><span class="p">)</span>
+
+<span class="c1">#region public methods</span>
+
+<div class="viewcode-block" id="QueryList.query"><a class="viewcode-back" href="../../generated/bidshandler.QueryList.html#bidshandler.QueryList.QueryList.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query the BIDS object and return the appropriate data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : str</span>
+<span class="sd">            The object type that should be returned.</span>
+<span class="sd">            This can be one of (&#39;project&#39;, &#39;subject&#39;, &#39;session&#39;, &#39;scan&#39;)</span>
+<span class="sd">        token : str</span>
+<span class="sd">            The key to query for. This can be a value from the following list:</span>
+
+<span class="sd">            - **task**: Corresponds to the `task` key in the BIDS filename.</span>
+<span class="sd">            - **acquisition** or **acq**: Corresponds to the `acq` key in the</span>
+<span class="sd">              BIDS filename.</span>
+<span class="sd">            - **run**: Corresponds to the `run` key in the BIDS filename.</span>
+<span class="sd">            - **proc**: Corresponds to the `proc` key in the BIDS filename.</span>
+<span class="sd">            - **age**: Corresponds to the age of the participant.</span>
+<span class="sd">              [Only available for `obj=&#39;subject&#39;`]</span>
+<span class="sd">            - **sex**: Corresponds to the gender of the participant.</span>
+<span class="sd">              [Only available for `obj=&#39;subject&#39;`]</span>
+<span class="sd">            - **group**: Corresponds to the group of the participant.</span>
+<span class="sd">              [Only available for `obj=&#39;subject&#39;`]</span>
+<span class="sd">            - **rec_date**: Corresponds to the time and date of the recording.</span>
+<span class="sd">              The value can either be formatted like &quot;%Y-%m-%d&quot;</span>
+<span class="sd">              (ie. YYYY-MM-DD) to specify a single day, or it can be</span>
+<span class="sd">              specified to the second by formatting it using the format</span>
+<span class="sd">              string &quot;%Y-%m-%dT%H:%M:%S&quot; (ie. YYYY-MM-DDTHH:mm:ss).</span>
+<span class="sd">            - **subjects**: Corresponds to the number of subjects contained.</span>
+<span class="sd">              [Only available for `obj=&#39;project&#39;`]</span>
+<span class="sd">            - **sessions**: Corresponds to the number of sessions contained.</span>
+<span class="sd">              [Only available for `obj=&#39;project&#39;` or `&#39;subject&#39;`]</span>
+<span class="sd">            - **scans**: Corresponds to the number of scans contained.</span>
+<span class="sd">              [Only available for `obj=&#39;project&#39;`, `&#39;subject&#39;` or</span>
+<span class="sd">              `&#39;session&#39;`]</span>
+<span class="sd">            - Any other token will be considered to be a key in the</span>
+<span class="sd">              sidecar.json file.</span>
+<span class="sd">        condition : str</span>
+<span class="sd">            One of (&#39;&lt;&#39;, &#39;&lt;=&#39;, &#39;=&#39;, &#39;!=&#39;, &#39;!!=&#39; (none equal), &#39;=&gt;&#39;, &#39;&gt;&#39;).</span>
+<span class="sd">            Used to perform comaprisons between the value provided and the</span>
+<span class="sd">            values the data have.</span>
+<span class="sd">            The &#39;!!=&#39; operator here is used to distinguish between the case of</span>
+<span class="sd">            when you want to determine if something contains something that</span>
+<span class="sd">            isn&#39;t the value you specify, and whether something doesn&#39;t contain</span>
+<span class="sd">            the value specified.</span>
+<span class="sd">            This operator is currently only supported for the tokens `&#39;task&#39;`,</span>
+<span class="sd">            `&#39;acquisition&#39;`/`&#39;acq&#39;, `&#39;run&#39;` and `&#39;proc&#39;`.</span>
+<span class="sd">        value : str | int | float</span>
+<span class="sd">            The value the token has (or the value to compare using the</span>
+<span class="sd">            `condition` argument)</span>
+<span class="sd">            The value provided must match exactly if the equality operator is</span>
+<span class="sd">            used, and must have a type appropriate for comparison if an</span>
+<span class="sd">            inequality operator is used.</span>
+<span class="sd">            Currently regex is not supported, but this may come in the future.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        return_data : :py:class:`bidshandler.QueryList`</span>
+<span class="sd">            List of objects that satisfy the provided query conditions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">return_data</span> <span class="o">=</span> <span class="n">QueryList</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">BIDSobj</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">return_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">BIDSobj</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">return_data</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Matt Sanderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'v0.2',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
