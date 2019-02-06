@@ -8,7 +8,7 @@ from .Session import Session
 from .Scan import Scan
 from .QueryMixin import QueryMixin
 from .BIDSErrors import NoProjectError
-from .utils import copyfiles, realize_paths, prettyprint_xml
+from .utils import _copyfiles, _realize_paths, _prettyprint_xml
 
 
 class BIDSTree(QueryMixin):
@@ -34,7 +34,7 @@ class BIDSTree(QueryMixin):
 
 #region public methods
 
-    def add(self, other, copier=copyfiles):
+    def add(self, other, copier=_copyfiles):
         """.. # noqa
 
         Add another Scan, Session, Subject, Project or BIDSTree to this
@@ -52,7 +52,7 @@ class BIDSTree(QueryMixin):
             `function(src_files: list, dst_files: list)`
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
-            This will default to using utils.copyfiles which simply implements
+            This will default to using utils._copyfiles which simply implements
             :py:func:`shutil.copy` and creates any directories that do not
             already exist.
         """
@@ -67,8 +67,8 @@ class BIDSTree(QueryMixin):
                 new_project = Project._clone_into_bidstree(self, other)
                 # copy over the description and readme:
                 file_list = [other._description, other._readme]
-                fl_left = realize_paths(other, file_list)
-                fl_right = realize_paths(new_project, file_list)
+                fl_left = _realize_paths(other, file_list)
+                fl_right = _realize_paths(new_project, file_list)
                 copier(fl_left, fl_right)
                 new_project._description = other._description
                 new_project._readme = other._readme
@@ -85,8 +85,8 @@ class BIDSTree(QueryMixin):
                                                            other.project)
                 # copy over the description and readme:
                 file_list = [other.project._description, other.project._readme]
-                fl_left = realize_paths(other.project, file_list)
-                fl_right = realize_paths(new_project, file_list)
+                fl_left = _realize_paths(other.project, file_list)
+                fl_right = _realize_paths(new_project, file_list)
                 copier(fl_left, fl_right)
                 new_project._description = other.project._description
                 new_project._readme = other.project._readme
@@ -115,14 +115,14 @@ class BIDSTree(QueryMixin):
         for project in self.projects:
             root.append(project._generate_map())
         if output_file is None:
-            return prettyprint_xml(ET.tostring(root, encoding='unicode'))
+            return _prettyprint_xml(ET.tostring(root, encoding='unicode'))
         dir_path = op.dirname(output_file)
         if dir_path != '':
             if not op.exists(dir_path):
                 os.makedirs(op.dirname(output_file))
         with open(output_file, 'w') as file:
-            file.write(prettyprint_xml(ET.tostring(root,
-                                                   encoding='unicode')))
+            file.write(_prettyprint_xml(ET.tostring(root,
+                                                    encoding='unicode')))
 
     def project(self, id_):
         """Return the Project corresponding to the provided id."""

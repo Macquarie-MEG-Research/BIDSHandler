@@ -4,8 +4,8 @@ import json
 import xml.etree.ElementTree as ET
 from .QueryMixin import QueryMixin
 
-from .utils import (get_bids_params, realize_paths,
-                    bids_params_are_subsets, splitall)
+from .utils import (_get_bids_params, _realize_paths,
+                    _bids_params_are_subsets, _splitall)
 
 _SIDECAR_MAP = {'meg': 'meg',
                 'fmap': 'phasediff',
@@ -27,8 +27,8 @@ class Scan(QueryMixin):
     """
     def __init__(self, fpath, session, **scan_params):
         super(Scan, self).__init__()
-        self._path = splitall(fpath)[0]
-        self._raw_file = '\\'.join(splitall(fpath)[1:])
+        self._path = _splitall(fpath)[0]
+        self._raw_file = '\\'.join(_splitall(fpath)[1:])
         self.acq_time = scan_params.pop('acq_time', None)
         self.scan_params = scan_params
         self.session = session
@@ -58,26 +58,26 @@ class Scan(QueryMixin):
         """
         file_list = set()
         file_list.add(self.sidecar)
-        file_list.update(realize_paths(self,
-                                       list(self.associated_files.values())))
+        file_list.update(_realize_paths(self,
+                                        list(self.associated_files.values())))
         return file_list
 
 #region private methods
 
     def _assign_metadata(self):
         """Associate any files that are related to this raw file."""
-        filename_data = get_bids_params(op.basename(self._raw_file))
+        filename_data = _get_bids_params(op.basename(self._raw_file))
         for fname in listdir(self.path):
-            bids_params = get_bids_params(fname)
+            bids_params = _get_bids_params(fname)
             part = bids_params.pop('part', None)
-            if bids_params_are_subsets(filename_data, bids_params):
+            if _bids_params_are_subsets(filename_data, bids_params):
                 if (bids_params['file'] == _SIDECAR_MAP.get(self._path,
                                                             None) and
                         bids_params['ext'] == '.json'):
                     self._sidecar = fname
                 else:
                     # TODO: this will not work for .ds folders...
-                    if not op.isdir(realize_paths(self, fname)):
+                    if not op.isdir(_realize_paths(self, fname)):
                         if part is None:
                             self.associated_files[bids_params['file']] = fname
                         else:
@@ -92,10 +92,10 @@ class Scan(QueryMixin):
         # If we have no sidecar file associated from the local folder, go over
         # the files that this folder inherit
         if self._sidecar is None:
-            filename_data = get_bids_params(op.basename(self._raw_file))
+            filename_data = _get_bids_params(op.basename(self._raw_file))
             for fname in self.session.inheritable_files:
-                bids_params = get_bids_params(op.basename(fname))
-                if bids_params_are_subsets(filename_data, bids_params):
+                bids_params = _get_bids_params(op.basename(fname))
+                if _bids_params_are_subsets(filename_data, bids_params):
                     if bids_params['ext'] == '.json':
                         if bids_params['file'] == _SIDECAR_MAP.get(self._path,
                                                                    None):
@@ -117,7 +117,7 @@ class Scan(QueryMixin):
 
     def _get_params(self):
         """Find the scan parameters from the file name."""
-        filename_data = get_bids_params(op.basename(self._raw_file))
+        filename_data = _get_bids_params(op.basename(self._raw_file))
         self.task = filename_data.get('task', None)
         self.run = filename_data.get('run', None)
         self.acquisition = self.acq = filename_data.get('acq', None)
@@ -128,11 +128,11 @@ class Scan(QueryMixin):
         if self.info.get('Manufacturer', None) == 'KIT/Yokogawa':
             # Need to load the marker files.
             # These will be in the same folder as the raw data.
-            filename_data = get_bids_params(op.basename(self._raw_file))
+            filename_data = _get_bids_params(op.basename(self._raw_file))
             raw_folder = op.dirname(self._raw_file)
             for fname in listdir(op.join(self.path, raw_folder)):
-                bids_params = get_bids_params(fname)
-                if bids_params_are_subsets(filename_data, bids_params):
+                bids_params = _get_bids_params(fname)
+                if _bids_params_are_subsets(filename_data, bids_params):
                     if bids_params['file'] == 'markers':
                         self.associated_files['markers'] = op.join(raw_folder,
                                                                    fname)
@@ -155,7 +155,7 @@ class Scan(QueryMixin):
         """Absolute path to the associated channels.tsv file."""
         channels_path = self.associated_files.get('channels', None)
         if channels_path is not None:
-            return realize_paths(self, channels_path)
+            return _realize_paths(self, channels_path)
         return None
 
     @property
@@ -163,7 +163,7 @@ class Scan(QueryMixin):
         """Absolute path to the associated coordsystem.json file."""
         coordsystem_path = self.associated_files.get('coordsystem', None)
         if coordsystem_path is not None:
-            return realize_paths(self, coordsystem_path)
+            return _realize_paths(self, coordsystem_path)
         return None
 
     @property
@@ -171,7 +171,7 @@ class Scan(QueryMixin):
         """Absolute path to the associated events.tsv file."""
         events_path = self.associated_files.get('events', None)
         if events_path is not None:
-            return realize_paths(self, events_path)
+            return _realize_paths(self, events_path)
         return None
 
     @property
@@ -187,7 +187,7 @@ class Scan(QueryMixin):
     @property
     def raw_file(self):
         """Absolute path of associated raw file."""
-        return realize_paths(self, self._raw_file)
+        return _realize_paths(self, self._raw_file)
 
     @property
     def raw_file_relative(self):
@@ -198,7 +198,7 @@ class Scan(QueryMixin):
     def sidecar(self):
         """Absolute path of associated sidecar file."""
         if self._sidecar is not None:
-            return realize_paths(self, self._sidecar)
+            return _realize_paths(self, self._sidecar)
         return None
 
     @property

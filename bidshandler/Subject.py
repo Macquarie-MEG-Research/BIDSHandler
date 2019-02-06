@@ -9,7 +9,7 @@ from .BIDSErrors import MappingError, NoSessionError, AssociationError
 from .Session import Session
 from .Scan import Scan
 from .QueryMixin import QueryMixin
-from .utils import copyfiles, realize_paths
+from .utils import _copyfiles, _realize_paths
 
 
 class Subject(QueryMixin):
@@ -44,7 +44,7 @@ class Subject(QueryMixin):
 
 #region public methods
 
-    def add(self, other, copier=copyfiles):
+    def add(self, other, copier=_copyfiles):
         """.. # noqa
 
         Add another Scan, Session or Subject to this object.
@@ -61,7 +61,7 @@ class Subject(QueryMixin):
             `function(src_files: list, dst_files: list)`
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
-            This will default to using utils.copyfiles which simply implements
+            This will default to using utils._copyfiles which simply implements
             :py:func:`shutil.copy` and creates any directories that do not
             already exist.
         """
@@ -173,7 +173,7 @@ class Subject(QueryMixin):
             New uninitialized Subject cloned from `other` to be a child of
             `project`.
         """
-        os.makedirs(realize_paths(project, other.ID), exist_ok=True)
+        os.makedirs(_realize_paths(project, other.ID), exist_ok=True)
 
         # Create a new empty subject object.
         new_subject = Subject(other._id, project, initialize=False)
@@ -249,7 +249,7 @@ class Subject(QueryMixin):
         """List of files that are able to be inherited by child objects."""
         files = self.project.inheritable_files
         for fname in os.listdir(self.path):
-            abs_path = realize_paths(self, fname)
+            abs_path = _realize_paths(self, fname)
             if op.isfile(abs_path):
                 files.append(abs_path)
         return files

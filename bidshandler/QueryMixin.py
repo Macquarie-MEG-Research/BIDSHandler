@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from .utils import compare, compare_times
+from .utils import _compare, _compare_times
 from .QueryList import QueryList
 
 
@@ -83,16 +83,16 @@ class QueryMixin():
                 raise ValueError('Can only query the number of subjects for a '
                                  'project.')
             data = [project for project in self.projects if
-                    compare(len(project.subjects), condition, value)]
+                    _compare(len(project.subjects), condition, value)]
             return_data.extend(data)
         elif token == 'sessions':
             # return projects or subjects with a certain number of sessions
             if obj == 'project':
                 data = [project for project in self.projects if
-                        compare(len(project.sessions), condition, value)]
+                        _compare(len(project.sessions), condition, value)]
             elif obj == 'subject':
                 data = [subject for subject in self.subjects if
-                        compare(len(subject.sessions), condition, value)]
+                        _compare(len(subject.sessions), condition, value)]
             else:
                 raise ValueError('Can only query the number of sessions for a '
                                  'project or subject.')
@@ -102,13 +102,13 @@ class QueryMixin():
             # scans
             if obj == 'project':
                 data = [project for project in self.projects if
-                        compare(len(project.scans), condition, value)]
+                        _compare(len(project.scans), condition, value)]
             elif obj == 'subject':
                 data = [subject for subject in self.subjects if
-                        compare(len(subject.scans), condition, value)]
+                        _compare(len(subject.scans), condition, value)]
             elif obj == 'session':
                 data = [session for session in self.sessions if
-                        compare(len(session.scans), condition, value)]
+                        _compare(len(session.scans), condition, value)]
             else:
                 raise ValueError('Can only query the number of scans for a '
                                  'project, subject or session.')
@@ -129,7 +129,7 @@ class QueryMixin():
                 for ob in iter_obj:
                     if condition != '!!=':
                         for scan in ob.scans:
-                            if compare(scan.__getattribute__(token), condition,
+                            if _compare(scan.__getattribute__(token), condition,
                                        value):
                                 return_data.append(ob)
                                 break
@@ -141,16 +141,16 @@ class QueryMixin():
                         return_data.extend(list(set(iter_obj) - set(has_objs)))
             else:
                 for scan in self.scans:
-                    if compare(scan.__getattribute__(token), condition, value):
+                    if _compare(scan.__getattribute__(token), condition, value):
                         return_data.append(scan)
         elif token == 'rec_date':
             # The dates all need to be converted to date time objects so that
             # comparisons can be determined correctly.
             try:
-                compare_date = datetime.strptime(value, "%Y-%m-%d")
-                compare_date = compare_date.date()
+                _compare_date = datetime.strptime(value, "%Y-%m-%d")
+                _compare_date = _compare_date.date()
             except ValueError:
-                compare_date = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
+                _compare_date = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
             if obj == 'project':
                 iter_obj = self.projects
             elif obj == 'subject':
@@ -165,7 +165,7 @@ class QueryMixin():
                         dt = scan.acq_time
                         # convert to datetime object
                         dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-                        if compare_times(dt, condition, compare_date):
+                        if _compare_times(dt, condition, _compare_date):
                             return_data.append(ob)
                             break
             else:
@@ -173,7 +173,7 @@ class QueryMixin():
                     dt = scan.acq_time
                     # convert to datetime object
                     dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-                    if compare_times(dt, condition, compare_date):
+                    if _compare_times(dt, condition, _compare_date):
                         return_data.append(scan)
         else:
             # We will assume any other value is a key in the sidecar.json
@@ -192,7 +192,7 @@ class QueryMixin():
                 for ob in iter_obj:
                     data = ob.subject_data.get(token, None)
                     if data is not None:
-                        if compare(data, condition, value):
+                        if _compare(data, condition, value):
                             return_data.append(ob)
             # If we happened to have found data then return it.
             # Otherwise continue.
@@ -203,14 +203,14 @@ class QueryMixin():
                     for scan in ob.scans:
                         sidecar_val = scan.info.get(token, None)
                         if sidecar_val is not None:
-                            if compare(sidecar_val, condition, value):
+                            if _compare(sidecar_val, condition, value):
                                 return_data.append(ob)
                                 break
             else:
                 for scan in self.scans:
                     sidecar_val = scan.info.get(token, None)
                     if sidecar_val is not None:
-                        if compare(sidecar_val, condition, value):
+                        if _compare(sidecar_val, condition, value):
                             return_data.append(scan)
         return return_data
 

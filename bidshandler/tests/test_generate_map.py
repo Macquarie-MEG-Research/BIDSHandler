@@ -7,8 +7,9 @@ import shutil
 import xml.etree.ElementTree as ET
 
 from bidshandler import BIDSTree
+from bidshandler.constants import test_path
 
-TESTPATH1 = 'data/BIDSTEST1'
+TESTPATH1 = op.join(test_path(), 'BIDSTEST1')
 
 
 def test_generate_xml():

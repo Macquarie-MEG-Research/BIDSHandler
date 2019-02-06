@@ -2,13 +2,65 @@ import os.path as op
 import os
 import shutil
 from datetime import datetime, date
+import zipfile
+import urllib.request
+import tempfile
 
 import pandas as pd
 
-# TODO: make all private
+from .constants import test_path
 
 
-def bids_params_are_subsets(params1, params2):
+#region public functions
+
+def download_test_data(overwrite=True):
+    """ Download the BIDS-standard test data to the test folder.
+
+    Parameters
+    ----------
+    overwrite : bool
+        Whether to overwrite previous test data.
+        If True this will remove the previous test_data folder and write a
+        new one.
+    """
+    test_data_root = test_path()
+
+    if op.exists(test_data_root):
+        if overwrite:
+            shutil.rmtree(test_data_root)
+        else:
+            raise FileExistsError
+
+    bids_test_data_url = 'https://github.com/bids-standard/bids-examples/archive/master.zip'  # noqa
+    bh_test_data_url = 'https://github.com/Macquarie-MEG-Research/BIDSHandler/archive/test_data.zip'  # noqa
+    with tempfile.TemporaryDirectory() as tmp:
+        # download all the bids-standard test data and move
+        print('Downloading bids-standard data')
+        zip_dst = op.join(tmp, 'master.zip')
+        urllib.request.urlretrieve(bids_test_data_url, zip_dst)
+        zf = zipfile.ZipFile(zip_dst)
+        print('Extracting bids-standard data')
+        zf.extractall(tmp)
+        zf.close()
+        shutil.copytree(op.join(tmp, 'bids-examples-master'),
+                        op.join(test_data_root, 'bids-examples'))
+        # download the bidshandler test data also
+        print('Downloading BIDSHandler data')
+        zip_dst = op.join(tmp, 'test_data.zip')
+        urllib.request.urlretrieve(bh_test_data_url, zip_dst)
+        zf = zipfile.ZipFile(zip_dst)
+        print('Extracting BIDSHandler data')
+        zf.extractall(tmp)
+        zf.close()
+        data_folder = op.join(tmp, 'BIDSHandler-test_data', 'data')
+        for fname in os.listdir(data_folder):
+            shutil.copytree(op.join(data_folder, fname),
+                            op.join(test_data_root, fname))
+
+
+#region private functions
+
+def _bids_params_are_subsets(params1, params2):
     """
     Equivalent to asking if params1 ⊇ params2.
     Ie. returns true if set(params2) is a subset of set(params1).
@@ -26,7 +78,7 @@ def bids_params_are_subsets(params1, params2):
     return False
 
 
-def combine_tsv(tsv, df, drop_column=None):
+def _combine_tsv(tsv, df, drop_column=None):
     """Merge a df into a tsv file"""
     orig_df = pd.read_csv(tsv, sep='\t')
     orig_df = orig_df.append(df, sort=False)
@@ -35,7 +87,7 @@ def combine_tsv(tsv, df, drop_column=None):
     orig_df.to_csv(tsv, sep='\t', index=False, na_rep='n/a', encoding='utf-8')
 
 
-def compare(val1, conditional, val2):
+def _compare(val1, conditional, val2):
     """Compare the two values using the specified conditional
     ie. returns val1 (conditional) val2
     """
@@ -58,7 +110,7 @@ def compare(val1, conditional, val2):
         raise ValueError("Invalid conditional {0} entered".format(conditional))
 
 
-def compare_times(time1, conditional, time2):
+def _compare_times(time1, conditional, time2):
     """
     Compares two datetime objects to determine if they are the same.
 
@@ -70,17 +122,17 @@ def compare_times(time1, conditional, time2):
     """
     if type(time1) == type(time2):
         # Just do a normal compare.
-        return compare(time1, conditional, time2)
+        return _compare(time1, conditional, time2)
     else:
         if isinstance(time1, date) and isinstance(time2, datetime):
-            return compare(time1, conditional, time2.date())
+            return _compare(time1, conditional, time2.date())
         elif isinstance(time1, datetime) and isinstance(time2, date):
-            return compare(time1.date(), conditional, time2)
+            return _compare(time1.date(), conditional, time2)
         else:
             raise TypeError
 
 
-def copyfiles(src_files, dst_files):
+def _copyfiles(src_files, dst_files):
     """
     Copy a list of files to a list of destinations.
 
@@ -107,7 +159,7 @@ def copyfiles(src_files, dst_files):
             print('same file!!')
 
 
-def get_bids_params(fname):
+def _get_bids_params(fname):
     filename, ext = op.splitext(fname)
     f = filename.split('_')
     data = {'ext': ext}
@@ -119,7 +171,7 @@ def get_bids_params(fname):
     return data
 
 
-def prettyprint_xml(xml_str):
+def _prettyprint_xml(xml_str):
     """Take a flat string representation of xml data and pretty print it."""
     curr_indent = 0
     pointer = 0
@@ -155,7 +207,7 @@ def prettyprint_xml(xml_str):
 # This could possibly be a method for the classes? If they become subclassed
 # it would only need to be defined for the base class.
 # this could also be a decorator taking the instance of the class as an arg
-def realize_paths(obj, rel_paths):
+def _realize_paths(obj, rel_paths):
     """Returns the actual path to a file.
 
     Parameters
@@ -174,7 +226,7 @@ def realize_paths(obj, rel_paths):
     return op.normpath(op.join(obj.path, rel_paths))
 
 
-def splitall(path):
+def _splitall(path):
     # credit: Trent Mick:
     # https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
     allparts = []
