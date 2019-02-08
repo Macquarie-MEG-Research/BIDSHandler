@@ -13,7 +13,7 @@ from .constants import test_path
 
 #region public functions
 
-def download_test_data(overwrite=True):
+def download_test_data(overwrite=True, dst=None):
     """ Download the BIDS-standard test data to the test folder.
 
     Parameters
@@ -22,8 +22,14 @@ def download_test_data(overwrite=True):
         Whether to overwrite previous test data.
         If True this will remove the previous test_data folder and write a
         new one.
+    dst : str or path-like object
+        Specific path to download test data to. This is only for debugging/
+        testing purposes.
     """
-    test_data_root = test_path()
+    if dst is None:
+        test_data_root = test_path()
+    else:
+        test_data_root = dst
 
     if op.exists(test_data_root):
         if overwrite:

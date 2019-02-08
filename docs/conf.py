@@ -29,6 +29,19 @@ version = '0.2'
 release = 'v0.2'
 
 
+def trim_docstring_with_noqa(app, what, name, obj, options, lines):
+    if isinstance(lines, list) and len(lines) > 0:
+        if lines[0] == '.. # noqa':
+            del lines[0]
+
+
+def setup(app):
+    app.connect(
+        'autodoc-process-docstring',
+        trim_docstring_with_noqa,
+    )
+
+
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -48,6 +61,14 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx'
 ]
+
+autodoc_default_options = {
+    'member-order': 'bysource',
+    'undoc-members': None,
+    'show-inheritance': True,
+    'inherited-members': True,
+    'exclude-members': '__init__',
+}
 
 # generate autosummary even if no references
 autosummary_generate = True

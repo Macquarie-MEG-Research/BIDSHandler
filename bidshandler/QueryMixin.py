@@ -129,8 +129,8 @@ class QueryMixin():
                 for ob in iter_obj:
                     if condition != '!!=':
                         for scan in ob.scans:
-                            if _compare(scan.__getattribute__(token), condition,
-                                       value):
+                            if _compare(scan.__getattribute__(token),
+                                        condition, value):
                                 return_data.append(ob)
                                 break
                     else:
@@ -141,7 +141,8 @@ class QueryMixin():
                         return_data.extend(list(set(iter_obj) - set(has_objs)))
             else:
                 for scan in self.scans:
-                    if _compare(scan.__getattribute__(token), condition, value):
+                    if _compare(scan.__getattribute__(token), condition,
+                                value):
                         return_data.append(scan)
         elif token == 'rec_date':
             # The dates all need to be converted to date time objects so that

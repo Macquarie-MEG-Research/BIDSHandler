@@ -1,5 +1,7 @@
 import pytest
 from datetime import datetime
+import tempfile
+import os.path as op
 
 from bidshandler.utils import (_get_bids_params, _bids_params_are_subsets,
                                _compare, _compare_times, download_test_data)
@@ -7,9 +9,11 @@ from bidshandler.utils import (_get_bids_params, _bids_params_are_subsets,
 
 def test_download_test_data():
     # test the downloading of test data
-    download_test_data()
-    with pytest.raises(FileExistsError):
-        download_test_data(overwrite=False)
+    with tempfile.TemporaryDirectory() as tmp:
+        output_path = op.join(tmp, 'bidshandler_test_data')
+        download_test_data(dst=output_path)
+        with pytest.raises(FileExistsError):
+            download_test_data(overwrite=False, dst=output_path)
 
 
 def test_bids_params():
