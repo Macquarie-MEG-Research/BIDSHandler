@@ -5,10 +5,10 @@ import xml.etree.ElementTree as ET
 
 import pandas as pd
 
-from .BIDSErrors import MappingError, NoSessionError, AssociationError
-from .Session import Session
-from .Scan import Scan
-from .QueryMixin import QueryMixin
+from .bidserrors import MappingError, NoSessionError, AssociationError
+from .session import Session
+from .scan import Scan
+from .querymixin import QueryMixin
 from .utils import _copyfiles, _realize_paths
 
 

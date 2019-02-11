@@ -2,12 +2,12 @@ import os
 import os.path as op
 import xml.etree.ElementTree as ET
 
-from .Project import Project
-from .Subject import Subject
-from .Session import Session
-from .Scan import Scan
-from .QueryMixin import QueryMixin
-from .BIDSErrors import NoProjectError
+from .project import Project
+from .subject import Subject
+from .session import Session
+from .scan import Scan
+from .querymixin import QueryMixin
+from .bidserrors import NoProjectError
 from .utils import _copyfiles, _realize_paths, _prettyprint_xml
 
 

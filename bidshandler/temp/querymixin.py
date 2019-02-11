@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from .utils import _compare, _compare_times
-from .QueryList import QueryList
+from .querylist import QueryList
 
 
 class QueryMixin():
@@ -236,7 +236,7 @@ class QueryMixin():
         """
         List of contained projects or self if the object itself is a Project
         """
-        from .Project import Project
+        from .project import Project
         if isinstance(self, Project):
             return [self]
         else:
@@ -249,7 +249,7 @@ class QueryMixin():
         """
         List of contained subjects or self if the object itself is a Subject
         """
-        from .Subject import Subject
+        from .subject import Subject
         if isinstance(self, Subject):
             return [self]
         else:
@@ -262,7 +262,7 @@ class QueryMixin():
         """
         List of contained sessions or self if the object itself is a Session
         """
-        from .Session import Session
+        from .session import Session
         if isinstance(self, Session):
             return [self]
         else:

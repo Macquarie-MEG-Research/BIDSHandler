@@ -7,9 +7,9 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 from .utils import _get_bids_params, _copyfiles, _realize_paths, _combine_tsv
-from .BIDSErrors import MappingError, NoScanError, AssociationError
-from .Scan import Scan
-from .QueryMixin import QueryMixin
+from .bidserrors import MappingError, NoScanError, AssociationError
+from .scan import Scan
+from .querymixin import QueryMixin
 
 
 _RAW_FILETYPES = ('.nii', '.bdf', '.con', '.sqd')   # TODO: add more...

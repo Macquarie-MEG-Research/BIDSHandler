@@ -4,11 +4,11 @@ import pandas as pd
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 
-from .Subject import Subject
-from .Session import Session
-from .Scan import Scan
-from .QueryMixin import QueryMixin
-from .BIDSErrors import NoSubjectError, MappingError, AssociationError
+from .subject import Subject
+from .session import Session
+from .scan import Scan
+from .querymixin import QueryMixin
+from .bidserrors import NoSubjectError, MappingError, AssociationError
 from .utils import _copyfiles, _realize_paths
 
 

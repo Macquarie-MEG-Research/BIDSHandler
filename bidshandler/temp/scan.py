@@ -2,7 +2,7 @@ import os.path as op
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
-from .QueryMixin import QueryMixin
+from .querymixin import QueryMixin
 
 from .utils import (_get_bids_params, _realize_paths,
                     _bids_params_are_subsets, _splitall)
