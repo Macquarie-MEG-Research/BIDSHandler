@@ -7,10 +7,12 @@ import pytest
 
 from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
+from bidshandler.constants import test_path
 
-TESTPATH1 = 'data\\BIDSTEST1'
-TESTPATH2 = 'data\\BIDSTEST2'
-TESTPATH3 = 'data\\bids-examples'
+testpath = test_path()
+TESTPATH1 = op.join(testpath, 'BIDSTEST1')
+TESTPATH2 = op.join(testpath, 'BIDSTEST2')
+TESTPATH3 = op.join(testpath, 'bids-examples')
 
 
 def test_containment():
@@ -49,9 +51,9 @@ def test_containment():
 
         # Check the paths for the associated `channels`, `events` and
         # `coordsystem` file are correct
-        assert (scan.coordsystem_json == op.normpath('data/BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_coordsystem.json'))  # noqa
-        assert (scan.events_tsv == op.normpath('data/BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_task-resting_run-1_events.tsv'))  # noqa
-        assert (scan.channels_tsv == op.normpath('data/BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_task-resting_run-1_channels.tsv'))  # noqa
+        assert scan.coordsystem_json == op.normpath(op.join(testpath, 'BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_coordsystem.json'))  # noqa
+        assert scan.events_tsv == op.normpath(op.join(testpath, 'BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_task-resting_run-1_events.tsv'))  # noqa
+        assert scan.channels_tsv == op.normpath(op.join(testpath, 'BIDSTEST1/test1/sub-1/ses-1/meg/sub-1_ses-1_task-resting_run-1_channels.tsv'))  # noqa
 
         # Check that an error is raised when trying to get a specific object
         # that doesn't exist.
@@ -69,11 +71,11 @@ def test_containment():
         # Check that some inherited properties correctly aren't defined for
         # objects they shouldn't be
         with pytest.raises(AttributeError):
-            _ = subj.projects
+            subj.projects
         with pytest.raises(AttributeError):
-            _ = sess.subjects
+            sess.subjects
         with pytest.raises(AttributeError):
-            _ = scan.sessions
+            scan.sessions
 
 
 def test_large_dataset():

@@ -6,10 +6,10 @@ import xml.etree.ElementTree as ET
 
 import pandas as pd
 
-from .utils import get_bids_params, copyfiles, realize_paths, combine_tsv
-from .BIDSErrors import MappingError, NoScanError, AssociationError
-from .Scan import Scan
-from .QueryMixin import QueryMixin
+from .utils import _get_bids_params, _copyfiles, _realize_paths, _combine_tsv
+from .bidserrors import MappingError, NoScanError, AssociationError
+from .scan import Scan
+from .querymixin import QueryMixin
 
 
 _RAW_FILETYPES = ('.nii', '.bdf', '.con', '.sqd')   # TODO: add more...
@@ -50,7 +50,7 @@ class Session(QueryMixin):
 
 #region public methods
 
-    def add(self, other, copier=copyfiles):
+    def add(self, other, copier=_copyfiles):
         """.. # noqa
 
         Add another Scan or Session to this object.
@@ -67,7 +67,7 @@ class Session(QueryMixin):
             `function(src_files: list, dst_files: list)`
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
-            This will default to using utils.copyfiles which simply implements
+            This will default to using utils._copyfiles which simply implements
             :py:func:`shutil.copy` and creates any directories that do not
             already exist.
         """
@@ -95,7 +95,7 @@ class Session(QueryMixin):
                         ('acq_time', [other.acq_time])]),
                     columns=['filename', 'acq_time'])
                 # Combine the new data into the original tsv.
-                combine_tsv(self.scans_tsv, other_scan_df, 'filename')
+                _combine_tsv(self.scans_tsv, other_scan_df, 'filename')
 
                 # Assign as a set to avoid any potential doubling of the raw
                 # file path.
@@ -103,7 +103,7 @@ class Session(QueryMixin):
                 files.add(other._sidecar)
                 files.add(other._raw_file)
                 # Copy the files over.
-                fl_left = realize_paths(other, files)
+                fl_left = _realize_paths(other, files)
                 fl_right = []
                 for fpath in files:
                     fl_right.append(op.join(self.path, other._path, fpath))
@@ -128,7 +128,7 @@ class Session(QueryMixin):
             structure.
         """
         file_list = set()
-        file_list.add(realize_paths(self, self._scans_tsv))
+        file_list.add(_realize_paths(self, self._scans_tsv))
         for scan in self.scans:
             file_list.update(scan.contained_files())
         return file_list
@@ -168,11 +168,11 @@ class Session(QueryMixin):
                 self.recording_types.append(fname)
             # The only other non-folder should be the scans tsv.
             else:
-                filename_data = get_bids_params(fname)
+                filename_data = _get_bids_params(fname)
                 if filename_data.get('file', None) == 'scans':
                     # Store the path and extract the paths of the scans.
                     self._scans_tsv = fname
-                    scans = pd.read_csv(realize_paths(self, self._scans_tsv),
+                    scans = pd.read_csv(_realize_paths(self, self._scans_tsv),
                                         sep='\t')
                     column_names = set(scans.columns.values)
                     if 'filename' not in column_names:
@@ -192,12 +192,12 @@ class Session(QueryMixin):
             #TODO: have a switch for each folder name?
             for rec_type in self.recording_types:
                 if rec_type not in ('anat', 'dwi'):
-                    rec_path = realize_paths(self, rec_type)
+                    rec_path = _realize_paths(self, rec_type)
                     if rec_type == 'fmap':
                         # fieldmap sequence
                         # The files with `file` = `magnitude1` are not raw
                         # scans.
-                        filename_data = get_bids_params(fname)
+                        filename_data = _get_bids_params(fname)
                         if ((filename_data['file'] not in ('magnitude1',
                                                            'magnitude2')) and
                                 'nii' in fname):
@@ -233,7 +233,7 @@ class Session(QueryMixin):
             New uninitialized Session cloned from `other` to be a child of
             `subject`.
         """
-        os.makedirs(realize_paths(subject, other.ID), exist_ok=True)
+        os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
         # Create a new empty session object.
         new_session = Session(other._id, subject, initialize=False)
         new_session._create_empty_scan_tsv()
@@ -242,7 +242,7 @@ class Session(QueryMixin):
     def _create_empty_scan_tsv(self):
         """Create an empty scans.tsv file for this session."""
         self._scans_tsv = '{0}_{1}_scans.tsv'.format(self.subject.ID, self.ID)
-        full_path = realize_paths(self, self._scans_tsv)
+        full_path = _realize_paths(self, self._scans_tsv)
         if not op.exists(full_path):
             df = pd.DataFrame(OrderedDict([('filename', [])]),
                               columns=['filename'])
@@ -279,7 +279,7 @@ class Session(QueryMixin):
         """List of files that are able to be inherited by child objects."""
         files = self.subject.inheritable_files
         for fname in os.listdir(self.path):
-            abs_path = realize_paths(self, fname)
+            abs_path = _realize_paths(self, fname)
             if op.isfile(abs_path):
                 files.append(abs_path)
         return files
@@ -304,7 +304,7 @@ class Session(QueryMixin):
     @property
     def scans_tsv(self):
         """Absolute path of associated scans.tsv file."""
-        return realize_paths(self, self._scans_tsv)
+        return _realize_paths(self, self._scans_tsv)
 
 #region class methods
 

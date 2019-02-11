@@ -6,9 +6,11 @@ import shutil
 import pytest
 
 from bidshandler import BIDSTree, AssociationError
+from bidshandler.constants import test_path
 
-TESTPATH1 = 'data/BIDSTEST1'
-TESTPATH2 = 'data/BIDSTEST2'
+testpath = test_path()
+TESTPATH1 = op.join(testpath, 'BIDSTEST1')
+TESTPATH2 = op.join(testpath, 'BIDSTEST2')
 
 
 def test_add_new_project_recursively():

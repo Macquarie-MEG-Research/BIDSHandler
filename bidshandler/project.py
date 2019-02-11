@@ -4,12 +4,12 @@ import pandas as pd
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 
-from .Subject import Subject
-from .Session import Session
-from .Scan import Scan
-from .QueryMixin import QueryMixin
-from .BIDSErrors import NoSubjectError, MappingError, AssociationError
-from .utils import copyfiles, realize_paths
+from .subject import Subject
+from .session import Session
+from .scan import Scan
+from .querymixin import QueryMixin
+from .bidserrors import NoSubjectError, MappingError, AssociationError
+from .utils import _copyfiles, _realize_paths
 
 
 class Project(QueryMixin):
@@ -41,7 +41,7 @@ class Project(QueryMixin):
 
 #region public methods
 
-    def add(self, other, copier=copyfiles):
+    def add(self, other, copier=_copyfiles):
         """.. # noqa
 
         Add another Scan, Session, Subject or Project to this object.
@@ -58,7 +58,7 @@ class Project(QueryMixin):
             `function(src_files: list, dst_files: list)`
             Where src_files is the list of files to be moved and dst_files is
             the list of corresponding destinations.
-            This will default to using utils.copyfiles which simply implements
+            This will default to using utils._copyfiles which simply implements
             :py:func:`shutil.copy` and creates any directories that do not
             already exist.
         """
@@ -176,7 +176,7 @@ class Project(QueryMixin):
             New uninitialized Project cloned from `other` to be a child of
             `bids_tree`.
         """
-        os.makedirs(realize_paths(bids_tree, other.ID), exist_ok=True)
+        os.makedirs(_realize_paths(bids_tree, other.ID), exist_ok=True)
         new_project = Project(other._id, bids_tree, initialize=False)
         new_project._create_empty_participants_tsv()
         return new_project
@@ -184,7 +184,7 @@ class Project(QueryMixin):
     def _create_empty_participants_tsv(self):
         """Create an empty participants.tsv file for this project."""
         self._participants_tsv = 'participants.tsv'
-        full_path = realize_paths(self, self._participants_tsv)
+        full_path = _realize_paths(self, self._participants_tsv)
         if not op.exists(full_path):
             df = pd.DataFrame(
                 OrderedDict([('participant_id', [])]),
@@ -211,7 +211,7 @@ class Project(QueryMixin):
     def description(self):
         """Real path to the associated description if there is one."""
         if self._description is not None:
-            return realize_paths(self, self._description)
+            return _realize_paths(self, self._description)
         return None
 
     @property
@@ -224,7 +224,7 @@ class Project(QueryMixin):
         """List of files that are able to be inherited by child objects."""
         files = []
         for fname in os.listdir(self.path):
-            abs_path = realize_paths(self, fname)
+            abs_path = _realize_paths(self, fname)
             if op.isfile(abs_path):
                 files.append(abs_path)
         return files
@@ -233,7 +233,7 @@ class Project(QueryMixin):
     def participants_tsv(self):
         """Real path to the associated participants.tsv if there is one."""
         if self._participants_tsv is not None:
-            return realize_paths(self, self._participants_tsv)
+            return _realize_paths(self, self._participants_tsv)
         return None
 
     @property
@@ -245,7 +245,7 @@ class Project(QueryMixin):
     def readme(self):
         """Real path to the associated README.txt if there is one."""
         if self._readme is not None:
-            return realize_paths(self, self._readme)
+            return _realize_paths(self, self._readme)
         return None
 
     @property

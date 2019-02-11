@@ -5,7 +5,7 @@ API Documentation
 =================
 
 
-BIDSTree (:py:mod:`bidshandler.BIDSTree`):
+BIDSTree (:py:mod:`bidshandler.bidstree`):
 
 .. currentmodule:: bidshandler
 
@@ -15,7 +15,7 @@ BIDSTree (:py:mod:`bidshandler.BIDSTree`):
    BIDSTree
 
 
-Project (:py:mod:`bidshandler.Project`):
+Project (:py:mod:`bidshandler.project`):
 
 .. currentmodule:: bidshandler
 
@@ -25,7 +25,7 @@ Project (:py:mod:`bidshandler.Project`):
    Project
 
 
-Subject (:py:mod:`bidshandler.Subject`):
+Subject (:py:mod:`bidshandler.subject`):
 
 .. currentmodule:: bidshandler
 
@@ -35,7 +35,7 @@ Subject (:py:mod:`bidshandler.Subject`):
    Subject
 
 
-Session (:py:mod:`bidshandler.Session`):
+Session (:py:mod:`bidshandler.session`):
 
 .. currentmodule:: bidshandler
 
@@ -45,7 +45,7 @@ Session (:py:mod:`bidshandler.Session`):
    Session
 
 
-Scan (:py:mod:`bidshandler.Scan`):
+Scan (:py:mod:`bidshandler.scan`):
 
 .. currentmodule:: bidshandler
 
@@ -55,11 +55,21 @@ Scan (:py:mod:`bidshandler.Scan`):
    Scan
 
 
-QueryMixin (:py:mod:`bidshandler.QueryMixin`):
+QueryMixin (:py:mod:`bidshandler.querymixin`):
 
-.. currentmodule:: bidshandler
+.. currentmodule:: bidshandler.querymixin
 
 .. autosummary::
    :toctree: generated/
 
    QueryMixin
+
+
+QueryList (:py:mod:`bidshandler.querylist`):
+
+.. currentmodule:: bidshandler.querylist
+
+.. autosummary::
+   :toctree: generated/
+
+   QueryList
