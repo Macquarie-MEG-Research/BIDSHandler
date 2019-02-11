@@ -1,8 +1,43 @@
-bidshandler.Scan module
-=======================
+bidshandler.Scan
+================
 
-.. automodule:: bidshandler.Scan
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. currentmodule:: bidshandler
+
+.. autoclass:: Scan
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Scan.__init__
+      ~Scan.contained_files
+      ~Scan.query
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Scan.bids_tree
+      ~Scan.channels_tsv
+      ~Scan.coordsystem_json
+      ~Scan.events_tsv
+      ~Scan.path
+      ~Scan.project
+      ~Scan.projects
+      ~Scan.raw_file
+      ~Scan.raw_file_relative
+      ~Scan.scans
+      ~Scan.sessions
+      ~Scan.sidecar
+      ~Scan.subject
+      ~Scan.subjects
+   
+   

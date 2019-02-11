@@ -1,0 +1,31 @@
+bidshandler.querymixin.QueryMixin
+=================================
+
+.. currentmodule:: bidshandler.querymixin
+
+.. autoclass:: QueryMixin
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QueryMixin.query
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~QueryMixin.projects
+      ~QueryMixin.scans
+      ~QueryMixin.sessions
+      ~QueryMixin.subjects
+   
+   

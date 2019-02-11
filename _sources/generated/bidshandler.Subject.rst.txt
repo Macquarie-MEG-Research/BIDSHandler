@@ -1,8 +1,39 @@
-bidshandler.Subject module
-==========================
+bidshandler.Subject
+===================
 
-.. automodule:: bidshandler.Subject
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. currentmodule:: bidshandler
+
+.. autoclass:: Subject
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Subject.__init__
+      ~Subject.add
+      ~Subject.contained_files
+      ~Subject.query
+      ~Subject.session
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Subject.ID
+      ~Subject.bids_tree
+      ~Subject.inheritable_files
+      ~Subject.path
+      ~Subject.projects
+      ~Subject.scans
+      ~Subject.sessions
+      ~Subject.subjects
+   
+   

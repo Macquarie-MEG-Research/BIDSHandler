@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.Project &mdash; BIDSHandler v0.2 documentation</title>
+  <title>bidshandler.project &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -56,7 +56,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -83,12 +83,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.querymixin.QueryMixin.html">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Using BIDSHandler</a><ul>
@@ -154,7 +155,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>bidshandler.Project</li>
+      <li>bidshandler.project</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,22 +170,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for bidshandler.Project</h1><div class="highlight"><pre>
+  <h1>Source code for bidshandler.project</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
 
-<span class="kn">from</span> <span class="nn">.Subject</span> <span class="k">import</span> <span class="n">Subject</span>
-<span class="kn">from</span> <span class="nn">.Session</span> <span class="k">import</span> <span class="n">Session</span>
-<span class="kn">from</span> <span class="nn">.Scan</span> <span class="k">import</span> <span class="n">Scan</span>
-<span class="kn">from</span> <span class="nn">.QueryMixin</span> <span class="k">import</span> <span class="n">QueryMixin</span>
-<span class="kn">from</span> <span class="nn">.BIDSErrors</span> <span class="k">import</span> <span class="n">NoSubjectError</span><span class="p">,</span> <span class="n">MappingError</span><span class="p">,</span> <span class="n">AssociationError</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">copyfiles</span><span class="p">,</span> <span class="n">realize_paths</span>
+<span class="kn">from</span> <span class="nn">.subject</span> <span class="k">import</span> <span class="n">Subject</span>
+<span class="kn">from</span> <span class="nn">.session</span> <span class="k">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">.scan</span> <span class="k">import</span> <span class="n">Scan</span>
+<span class="kn">from</span> <span class="nn">.querymixin</span> <span class="k">import</span> <span class="n">QueryMixin</span>
+<span class="kn">from</span> <span class="nn">.bidserrors</span> <span class="k">import</span> <span class="n">NoSubjectError</span><span class="p">,</span> <span class="n">MappingError</span><span class="p">,</span> <span class="n">AssociationError</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_copyfiles</span><span class="p">,</span> <span class="n">_realize_paths</span>
 
 
-<div class="viewcode-block" id="Project"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.Project">[docs]</a><span class="k">class</span> <span class="nc">Project</span><span class="p">(</span><span class="n">QueryMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="Project"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project">[docs]</a><span class="k">class</span> <span class="nc">Project</span><span class="p">(</span><span class="n">QueryMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Project-level object</span>
 
 <span class="sd">    Parameters</span>
@@ -196,7 +197,7 @@
 <span class="sd">    initialize : bool, optional</span>
 <span class="sd">        Whether to parse the folder and load any child structures.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">,</span> <span class="n">bids_tree</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.__init__"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">,</span> <span class="n">bids_tree</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Project</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">id_</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bids_tree</span> <span class="o">=</span> <span class="n">bids_tree</span>
@@ -209,11 +210,11 @@
 
         <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_subjects</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">()</span></div>
 
 <span class="c1">#region public methods</span>
 
-<div class="viewcode-block" id="Project.add"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.Project.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">copier</span><span class="o">=</span><span class="n">copyfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.add"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">copier</span><span class="o">=</span><span class="n">_copyfiles</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;.. # noqa</span>
 
 <span class="sd">        Add another Scan, Session, Subject or Project to this object.</span>
@@ -230,10 +231,9 @@
 <span class="sd">            `function(src_files: list, dst_files: list)`</span>
 <span class="sd">            Where src_files is the list of files to be moved and dst_files is</span>
 <span class="sd">            the list of corresponding destinations.</span>
-<span class="sd">            This will default to using utils.copyfiles which simply implements</span>
+<span class="sd">            This will default to using utils._copyfiles which simply implements</span>
 <span class="sd">            :py:func:`shutil.copy` and creates any directories that do not</span>
 <span class="sd">            already exist.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Project</span><span class="p">):</span>
             <span class="c1"># If the project has the same ID, take all the child subjects and</span>
@@ -273,7 +273,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot add a </span><span class="si">{0}</span><span class="s2"> object to a Subject&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Project.contained_files"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.Project.contained_files">[docs]</a>    <span class="k">def</span> <span class="nf">contained_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.contained_files"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.contained_files">[docs]</a>    <span class="k">def</span> <span class="nf">contained_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the list of contained files.</span>
 
 <span class="sd">        Returns</span>
@@ -290,7 +290,7 @@
             <span class="n">file_list</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subject</span><span class="o">.</span><span class="n">contained_files</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">file_list</span></div>
 
-<div class="viewcode-block" id="Project.subject"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.Project.subject">[docs]</a>    <span class="k">def</span> <span class="nf">subject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+<div class="viewcode-block" id="Project.subject"><a class="viewcode-back" href="../../generated/bidshandler.Project.html#bidshandler.Project.subject">[docs]</a>    <span class="k">def</span> <span class="nf">subject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the Subject in this project with the corresponding ID.</span>
 
 <span class="sd">        Parameters</span>
@@ -340,7 +340,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        bids_tree : :class:`bidshandler.BIDSTree`</span>
 <span class="sd">            New parent BIDSTree.</span>
-<span class="sd">        other : BIDSHandler.Project</span>
+<span class="sd">        other : :class:`BIDSHandler.Project`</span>
 <span class="sd">            Original Project instance to clone.</span>
 
 <span class="sd">        Returns</span>
@@ -349,7 +349,7 @@
 <span class="sd">            New uninitialized Project cloned from `other` to be a child of</span>
 <span class="sd">            `bids_tree`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">realize_paths</span><span class="p">(</span><span class="n">bids_tree</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">ID</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">_realize_paths</span><span class="p">(</span><span class="n">bids_tree</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">ID</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">new_project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">bids_tree</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">new_project</span><span class="o">.</span><span class="n">_create_empty_participants_tsv</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">new_project</span>
@@ -357,7 +357,7 @@
     <span class="k">def</span> <span class="nf">_create_empty_participants_tsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create an empty participants.tsv file for this project.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span> <span class="o">=</span> <span class="s1">&#39;participants.tsv&#39;</span>
-        <span class="n">full_path</span> <span class="o">=</span> <span class="n">realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span><span class="p">)</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
                 <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;participant_id&#39;</span><span class="p">,</span> <span class="p">[])]),</span>
@@ -384,7 +384,7 @@
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Real path to the associated description if there is one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
@@ -397,7 +397,7 @@
         <span class="sd">&quot;&quot;&quot;List of files that are able to be inherited by child objects.&quot;&quot;&quot;</span>
         <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
-            <span class="n">abs_path</span> <span class="o">=</span> <span class="n">realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="n">abs_path</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">abs_path</span><span class="p">):</span>
                 <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">abs_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">files</span>
@@ -406,7 +406,7 @@
     <span class="k">def</span> <span class="nf">participants_tsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Real path to the associated participants.tsv if there is one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
@@ -418,7 +418,7 @@
     <span class="k">def</span> <span class="nf">readme</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Real path to the associated README.txt if there is one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_readme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_readme</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_readme</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
@@ -524,7 +524,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

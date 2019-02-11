@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Querying BIDS data &mdash; BIDSHandler v0.2 documentation</title>
+  <title>Querying BIDS data &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -84,12 +84,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Subject.html">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.querymixin.QueryMixin.html">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul class="current">
@@ -189,7 +190,7 @@ To understand how this works we can look at the function used:</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">BIDSTree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For the full details on allowed values etc see <a class="reference internal" href="../generated/bidshandler.QueryMixin.html#bidshandler.QueryMixin.QueryMixin.query" title="bidshandler.QueryMixin.QueryMixin.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin.query()</span></code></a>.
+<p>For the full details on allowed values etc see <code class="xref py py-func docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin.query()</span></code>.
 We will however summarise the process and meanings here.</p>
 <ul>
 <li><p class="first"><cite>obj</cite> is the name of the object type you want and can be one of <cite>‘project’</cite>, <cite>‘subject’</cite>, <cite>‘session’</cite> or <cite>‘scan’</cite>. The object name must be the of the same level as the object you are querying or lower.</p>
@@ -282,7 +283,7 @@ First we will find all the subjects that are female, then we will find all the s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

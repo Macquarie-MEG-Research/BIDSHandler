@@ -1,8 +1,41 @@
-bidshandler.Project module
-==========================
+bidshandler.Project
+===================
 
-.. automodule:: bidshandler.Project
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. currentmodule:: bidshandler
+
+.. autoclass:: Project
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Project.__init__
+      ~Project.add
+      ~Project.contained_files
+      ~Project.query
+      ~Project.subject
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Project.ID
+      ~Project.description
+      ~Project.inheritable_files
+      ~Project.participants_tsv
+      ~Project.path
+      ~Project.projects
+      ~Project.readme
+      ~Project.scans
+      ~Project.sessions
+      ~Project.subjects
+   
+   

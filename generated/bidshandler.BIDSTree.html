@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.BIDSTree module &mdash; BIDSHandler v0.2 documentation</title>
+  <title>bidshandler.BIDSTree &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="bidshandler.Project module" href="bidshandler.Project.html" />
+    <link rel="next" title="bidshandler.Project" href="bidshandler.Project.html" />
     <link rel="prev" title="API Documentation" href="../api.html" /> 
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -85,12 +85,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Subject.html">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.querymixin.QueryMixin.html">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul>
@@ -156,7 +157,7 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-      <li>bidshandler.BIDSTree module</li>
+      <li>bidshandler.BIDSTree</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,7 +173,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="bidshandler.Project.html" class="btn btn-neutral float-right" title="bidshandler.Project module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="bidshandler.Project.html" class="btn btn-neutral float-right" title="bidshandler.Project" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../api.html" class="btn btn-neutral" title="API Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -184,12 +185,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-bidshandler.BIDSTree">
-<span id="bidshandler-bidstree-module"></span><h1>bidshandler.BIDSTree module<a class="headerlink" href="#module-bidshandler.BIDSTree" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="bidshandler-bidstree">
+<h1>bidshandler.BIDSTree<a class="headerlink" href="#bidshandler-bidstree" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="bidshandler.BIDSTree.BIDSTree">
-<em class="property">class </em><code class="descclassname">bidshandler.BIDSTree.</code><code class="descname">BIDSTree</code><span class="sig-paren">(</span><em>fpath</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/BIDSTree.html#BIDSTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="bidshandler.QueryMixin.html#bidshandler.QueryMixin.QueryMixin" title="bidshandler.QueryMixin.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin</span></code></a></p>
+<dt id="bidshandler.BIDSTree">
+<em class="property">class </em><code class="descclassname">bidshandler.</code><code class="descname">BIDSTree</code><span class="sig-paren">(</span><em>fpath</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/bidstree.html#BIDSTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="bidshandler.querymixin.QueryMixin.html#bidshandler.querymixin.QueryMixin" title="bidshandler.querymixin.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.querymixin.QueryMixin</span></code></a></p>
 <p>Highest BIDS archive level containing all the various projects</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -205,8 +206,59 @@ specification.</li>
 </tbody>
 </table>
 <dl class="method">
-<dt id="bidshandler.BIDSTree.BIDSTree.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>copier=&lt;function copyfiles&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/BIDSTree.html#BIDSTree.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.add" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>fpath</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/bidstree.html#BIDSTree.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.BIDSTree.__init__" title="bidshandler.BIDSTree.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(fpath[,&nbsp;initialize])</td>
+<td>Initialize self.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.BIDSTree.add" title="bidshandler.BIDSTree.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(other[,&nbsp;copier])</td>
+<td>Add another Scan, Session, Subject, Project or BIDSTree to this object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.BIDSTree.generate_map" title="bidshandler.BIDSTree.generate_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_map</span></code></a>([output_file])</td>
+<td>Generate a map of the BIDS folder.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.BIDSTree.project" title="bidshandler.BIDSTree.project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project</span></code></a>(id_)</td>
+<td>Return the Project corresponding to the provided id.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.BIDSTree.query" title="bidshandler.BIDSTree.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
+<td>Query the BIDS object and return the appropriate data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.BIDSTree.projects" title="bidshandler.BIDSTree.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
+<td>List of all Projects contained in the BIDS folder.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.BIDSTree.scans" title="bidshandler.BIDSTree.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
+<td>List of all Scans contained in the BIDS folder.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.BIDSTree.sessions" title="bidshandler.BIDSTree.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
+<td>List of all Sessions contained in the BIDS folder.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.BIDSTree.subjects" title="bidshandler.BIDSTree.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
+<td>List of all Subjects contained in the BIDS folder.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="bidshandler.BIDSTree.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>copier=&lt;function _copyfiles&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/bidstree.html#BIDSTree.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add another Scan, Session, Subject, Project or BIDSTree to this
 object.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -214,7 +266,7 @@ object.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#module-bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#module-bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a>, <a class="reference internal" href="bidshandler.Subject.html#module-bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>, <a class="reference internal" href="bidshandler.Project.html#module-bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a> or <a class="reference internal" href="#module-bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a>) – Object to be added to this BIDSTree.
+<li><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a>, <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>, <a class="reference internal" href="bidshandler.Project.html#bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a> or <a class="reference internal" href="#bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a>) – Object to be added to this BIDSTree.
 The added object must already exist in the same context as this
 object (except BIDSTree objects).</li>
 <li><strong>copier</strong> (<em>function</em>) – A function to facilitate the copying of any applicable data.
@@ -222,7 +274,7 @@ This function must have the call signature
 <cite>function(src_files: list, dst_files: list)</cite>
 Where src_files is the list of files to be moved and dst_files is
 the list of corresponding destinations.
-This will default to using utils.copyfiles which simply implements
+This will default to using utils._copyfiles which simply implements
 <a class="reference external" href="https://docs.python.org/3/library/shutil.html#shutil.copy" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shutil.copy()</span></code></a> and creates any directories that do not
 already exist.</li>
 </ul>
@@ -233,8 +285,8 @@ already exist.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.BIDSTree.BIDSTree.generate_map">
-<code class="descname">generate_map</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/BIDSTree.html#BIDSTree.generate_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.generate_map" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.generate_map">
+<code class="descname">generate_map</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/bidstree.html#BIDSTree.generate_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.generate_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a map of the BIDS folder.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -243,7 +295,7 @@ already exist.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>output_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to write the file to.
 If not provided this will return the string representation.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>xml_map</strong> – String representation of xml structure.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">String representation of xml structure.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
@@ -252,20 +304,20 @@ If not provided this will return the string representation.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.BIDSTree.BIDSTree.project">
-<code class="descname">project</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/BIDSTree.html#BIDSTree.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.project" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.project">
+<code class="descname">project</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/bidstree.html#BIDSTree.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.BIDSTree.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Project corresponding to the provided id.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.BIDSTree.BIDSTree.projects">
-<code class="descname">projects</code><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.projects" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.projects">
+<code class="descname">projects</code><a class="headerlink" href="#bidshandler.BIDSTree.projects" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Projects contained in the BIDS folder.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.BIDSTree.BIDSTree.query">
-<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.query" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.BIDSTree.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the BIDS object and return the appropriate data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -324,7 +376,7 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.QueryList.html#module-bidshandler.QueryList" title="bidshandler.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -332,20 +384,20 @@ Currently regex is not supported, but this may come in the future.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.BIDSTree.BIDSTree.scans">
-<code class="descname">scans</code><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.scans" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.scans">
+<code class="descname">scans</code><a class="headerlink" href="#bidshandler.BIDSTree.scans" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Scans contained in the BIDS folder.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.BIDSTree.BIDSTree.sessions">
-<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.sessions" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.sessions">
+<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.BIDSTree.sessions" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Sessions contained in the BIDS folder.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.BIDSTree.BIDSTree.subjects">
-<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.BIDSTree.BIDSTree.subjects" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.BIDSTree.subjects">
+<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.BIDSTree.subjects" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Subjects contained in the BIDS folder.</p>
 </dd></dl>
 
@@ -386,7 +438,7 @@ Currently regex is not supported, but this may come in the future.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

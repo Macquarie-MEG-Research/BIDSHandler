@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.Subject module &mdash; BIDSHandler v0.2 documentation</title>
+  <title>bidshandler.Subject &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="bidshandler.Session module" href="bidshandler.Session.html" />
-    <link rel="prev" title="bidshandler.Project module" href="bidshandler.Project.html" /> 
+    <link rel="next" title="bidshandler.Session" href="bidshandler.Session.html" />
+    <link rel="prev" title="bidshandler.Project" href="bidshandler.Project.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -85,12 +85,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.querymixin.QueryMixin.html">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul>
@@ -156,7 +157,7 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-      <li>bidshandler.Subject module</li>
+      <li>bidshandler.Subject</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,10 +173,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="bidshandler.Session.html" class="btn btn-neutral float-right" title="bidshandler.Session module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="bidshandler.Session.html" class="btn btn-neutral float-right" title="bidshandler.Session" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="bidshandler.Project.html" class="btn btn-neutral" title="bidshandler.Project module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="bidshandler.Project.html" class="btn btn-neutral" title="bidshandler.Project" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -184,12 +185,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-bidshandler.Subject">
-<span id="bidshandler-subject-module"></span><h1>bidshandler.Subject module<a class="headerlink" href="#module-bidshandler.Subject" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="bidshandler-subject">
+<h1>bidshandler.Subject<a class="headerlink" href="#bidshandler-subject" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="bidshandler.Subject.Subject">
-<em class="property">class </em><code class="descclassname">bidshandler.Subject.</code><code class="descname">Subject</code><span class="sig-paren">(</span><em>id_</em>, <em>project</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="bidshandler.QueryMixin.html#bidshandler.QueryMixin.QueryMixin" title="bidshandler.QueryMixin.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryMixin.QueryMixin</span></code></a></p>
+<dt id="bidshandler.Subject">
+<em class="property">class </em><code class="descclassname">bidshandler.</code><code class="descname">Subject</code><span class="sig-paren">(</span><em>id_</em>, <em>project</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/subject.html#Subject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="bidshandler.querymixin.QueryMixin.html#bidshandler.querymixin.QueryMixin" title="bidshandler.querymixin.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.querymixin.QueryMixin</span></code></a></p>
 <p>Subject-level object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -197,29 +198,92 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Id of the subject. This is the sequence of characters after <cite>‘sub-‘</cite>.</li>
-<li><strong>project</strong> (<a class="reference internal" href="bidshandler.Project.html#module-bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a>) – Parent Project object containing this Subject.</li>
+<li><strong>project</strong> (<a class="reference internal" href="bidshandler.Project.html#bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a>) – Parent Project object containing this Subject.</li>
 <li><strong>initialize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to parse the folder and load any child structures.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="bidshandler.Subject.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>id_</em>, <em>project</em>, <em>initialize=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/subject.html#Subject.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.__init__" title="bidshandler.Subject.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(id_,&nbsp;project[,&nbsp;initialize])</td>
+<td>Initialize self.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.add" title="bidshandler.Subject.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(other[,&nbsp;copier])</td>
+<td>Add another Scan, Session or Subject to this object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.contained_files" title="bidshandler.Subject.contained_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contained_files</span></code></a>()</td>
+<td>Get the list of contained files.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.query" title="bidshandler.Subject.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
+<td>Query the BIDS object and return the appropriate data.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.session" title="bidshandler.Subject.session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session</span></code></a>(id_)</td>
+<td>Return the Session corresponding to the provided id.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.ID" title="bidshandler.Subject.ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ID</span></code></a></td>
+<td>ID with ‘sub’ prefix.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.bids_tree" title="bidshandler.Subject.bids_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bids_tree</span></code></a></td>
+<td>Parent <a class="reference internal" href="bidshandler.BIDSTree.html#bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.inheritable_files" title="bidshandler.Subject.inheritable_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inheritable_files</span></code></a></td>
+<td>List of files that are able to be inherited by child objects.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.path" title="bidshandler.Subject.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
+<td>Determine path location based on parent paths.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.projects" title="bidshandler.Subject.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
+<td>List of contained projects or self if the object itself is a Project</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.scans" title="bidshandler.Subject.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
+<td>List of contained Scans.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Subject.sessions" title="bidshandler.Subject.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
+<td>List of contained Sessions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Subject.subjects" title="bidshandler.Subject.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
+<td>List of contained subjects or self if the object itself is a Subject</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.ID">
-<code class="descname">ID</code><a class="headerlink" href="#bidshandler.Subject.Subject.ID" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.ID">
+<code class="descname">ID</code><a class="headerlink" href="#bidshandler.Subject.ID" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID with ‘sub’ prefix.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.Subject.Subject.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>copier=&lt;function copyfiles&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.add" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>copier=&lt;function _copyfiles&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/subject.html#Subject.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add another Scan, Session or Subject to this object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#module-bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#module-bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a> or <a class="reference internal" href="#module-bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>) – Object to be added to this Subject.
+<li><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a> or <a class="reference internal" href="#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>) – Object to be added to this Subject.
 The added object must already exist in the same context as this
 object.</li>
 <li><strong>copier</strong> (<em>function</em><em>, </em><em>optional</em>) – A function to facilitate the copying of any applicable data.
@@ -227,7 +291,7 @@ This function must have the call signature
 <cite>function(src_files: list, dst_files: list)</cite>
 Where src_files is the list of files to be moved and dst_files is
 the list of corresponding destinations.
-This will default to using utils.copyfiles which simply implements
+This will default to using utils._copyfiles which simply implements
 <a class="reference external" href="https://docs.python.org/3/library/shutil.html#shutil.copy" title="(in Python v3.7)"><code class="xref py py-func docutils literal notranslate"><span class="pre">shutil.copy()</span></code></a> and creates any directories that do not
 already exist.</li>
 </ul>
@@ -238,14 +302,14 @@ already exist.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.bids_tree">
-<code class="descname">bids_tree</code><a class="headerlink" href="#bidshandler.Subject.Subject.bids_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parent <a class="reference internal" href="bidshandler.BIDSTree.html#module-bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a> object.</p>
+<dt id="bidshandler.Subject.bids_tree">
+<code class="descname">bids_tree</code><a class="headerlink" href="#bidshandler.Subject.bids_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parent <a class="reference internal" href="bidshandler.BIDSTree.html#bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a> object.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.Subject.Subject.contained_files">
-<code class="descname">contained_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.contained_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.contained_files" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.contained_files">
+<code class="descname">contained_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/subject.html#Subject.contained_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.contained_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of contained files.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -261,26 +325,26 @@ structure.</td>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.inheritable_files">
-<code class="descname">inheritable_files</code><a class="headerlink" href="#bidshandler.Subject.Subject.inheritable_files" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.inheritable_files">
+<code class="descname">inheritable_files</code><a class="headerlink" href="#bidshandler.Subject.inheritable_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of files that are able to be inherited by child objects.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.path">
-<code class="descname">path</code><a class="headerlink" href="#bidshandler.Subject.Subject.path" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.path">
+<code class="descname">path</code><a class="headerlink" href="#bidshandler.Subject.path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine path location based on parent paths.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.projects">
-<code class="descname">projects</code><a class="headerlink" href="#bidshandler.Subject.Subject.projects" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.projects">
+<code class="descname">projects</code><a class="headerlink" href="#bidshandler.Subject.projects" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of contained projects or self if the object itself is a Project</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.Subject.Subject.query">
-<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.Subject.Subject.query" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.Subject.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the BIDS object and return the appropriate data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -339,7 +403,7 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.QueryList.html#module-bidshandler.QueryList" title="bidshandler.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -347,14 +411,14 @@ Currently regex is not supported, but this may come in the future.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.scans">
-<code class="descname">scans</code><a class="headerlink" href="#bidshandler.Subject.Subject.scans" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.scans">
+<code class="descname">scans</code><a class="headerlink" href="#bidshandler.Subject.scans" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of contained Scans.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bidshandler.Subject.Subject.session">
-<code class="descname">session</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/Subject.html#Subject.session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.Subject.session" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.session">
+<code class="descname">session</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/subject.html#Subject.session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Subject.session" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Session corresponding to the provided id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -364,21 +428,21 @@ Currently regex is not supported, but this may come in the future.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Contained Session with the specified <cite>id_</cite>.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="bidshandler.Session.html#module-bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.sessions">
-<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.Subject.Subject.sessions" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.sessions">
+<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.Subject.sessions" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of contained Sessions.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Subject.Subject.subjects">
-<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.Subject.Subject.subjects" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.Subject.subjects">
+<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.Subject.subjects" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of contained subjects or self if the object itself is a Subject</p>
 </dd></dl>
 
@@ -419,7 +483,7 @@ Currently regex is not supported, but this may come in the future.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

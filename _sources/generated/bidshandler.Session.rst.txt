@@ -1,8 +1,41 @@
-bidshandler.Session module
-==========================
+bidshandler.Session
+===================
 
-.. automodule:: bidshandler.Session
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. currentmodule:: bidshandler
+
+.. autoclass:: Session
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Session.__init__
+      ~Session.add
+      ~Session.contained_files
+      ~Session.query
+      ~Session.scan
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Session.ID
+      ~Session.bids_tree
+      ~Session.inheritable_files
+      ~Session.path
+      ~Session.project
+      ~Session.projects
+      ~Session.scans
+      ~Session.scans_tsv
+      ~Session.sessions
+      ~Session.subjects
+   
+   

@@ -1,8 +1,35 @@
-bidshandler.BIDSTree module
-===========================
+bidshandler.BIDSTree
+====================
 
-.. automodule:: bidshandler.BIDSTree
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. currentmodule:: bidshandler
+
+.. autoclass:: BIDSTree
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BIDSTree.__init__
+      ~BIDSTree.add
+      ~BIDSTree.generate_map
+      ~BIDSTree.project
+      ~BIDSTree.query
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BIDSTree.projects
+      ~BIDSTree.scans
+      ~BIDSTree.sessions
+      ~BIDSTree.subjects
+   
+   

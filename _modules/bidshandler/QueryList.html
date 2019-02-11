@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.QueryList &mdash; BIDSHandler v0.2 documentation</title>
+  <title>bidshandler.querylist &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -56,7 +56,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -83,12 +83,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Subject.html">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.querymixin.QueryMixin.html">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Using BIDSHandler</a><ul>
@@ -154,7 +155,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>bidshandler.QueryList</li>
+      <li>bidshandler.querylist</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,19 +170,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for bidshandler.QueryList</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="QueryList"><a class="viewcode-back" href="../../generated/bidshandler.QueryList.html#bidshandler.QueryList.QueryList">[docs]</a><span></span><span class="k">class</span> <span class="nc">QueryList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+  <h1>Source code for bidshandler.querylist</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="QueryList"><a class="viewcode-back" href="../../generated/bidshandler.querylist.QueryList.html#bidshandler.querylist.QueryList">[docs]</a><span></span><span class="k">class</span> <span class="nc">QueryList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List wrapper class to allow the list of return objects from a query to</span>
 <span class="sd">    itself be queried.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">iterable</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">QueryList</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">iterable</span><span class="p">)</span>
+<div class="viewcode-block" id="QueryList.__init__"><a class="viewcode-back" href="../../generated/bidshandler.querylist.QueryList.html#bidshandler.querylist.QueryList.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">iterable</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QueryList</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">iterable</span><span class="p">)</span></div>
 
 <span class="c1">#region public methods</span>
 
-<div class="viewcode-block" id="QueryList.query"><a class="viewcode-back" href="../../generated/bidshandler.QueryList.html#bidshandler.QueryList.QueryList.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="QueryList.query"><a class="viewcode-back" href="../../generated/bidshandler.querylist.QueryList.html#bidshandler.querylist.QueryList.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Query the BIDS object and return the appropriate data.</span>
 
@@ -240,7 +241,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        return_data : :py:class:`bidshandler.QueryList`</span>
 <span class="sd">            List of objects that satisfy the provided query conditions.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">return_data</span> <span class="o">=</span> <span class="n">QueryList</span><span class="p">()</span>
@@ -281,7 +281,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

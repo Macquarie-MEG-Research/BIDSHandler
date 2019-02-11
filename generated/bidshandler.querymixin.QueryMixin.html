@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.QueryList module &mdash; BIDSHandler v0.2 documentation</title>
+  <title>bidshandler.querymixin.QueryMixin &mdash; BIDSHandler v0.2.1 documentation</title>
   
 
   
@@ -27,7 +27,9 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bidshandler.querylist.QueryList" href="bidshandler.querylist.QueryList.html" />
+    <link rel="prev" title="bidshandler.Scan" href="bidshandler.Scan.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -56,7 +58,7 @@
             
             
               <div class="version">
-                0.2
+                0.2.1
               </div>
             
           
@@ -81,14 +83,15 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Subject.html">bidshandler.Subject module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bidshandler.QueryMixin.html">bidshandler.QueryMixin module</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Project.html">bidshandler.Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Subject.html">bidshandler.Subject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Session.html">bidshandler.Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.Scan.html">bidshandler.Scan</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">bidshandler.querymixin.QueryMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Using BIDSHandler</a><ul>
@@ -152,13 +155,15 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>bidshandler.QueryList module</li>
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+      <li>bidshandler.querymixin.QueryMixin</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/generated/bidshandler.QueryList.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/bidshandler.querymixin.QueryMixin.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,22 +171,77 @@
   </ul>
 
   
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="bidshandler.querylist.QueryList.html" class="btn btn-neutral float-right" title="bidshandler.querylist.QueryList" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bidshandler.Scan.html" class="btn btn-neutral" title="bidshandler.Scan" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-bidshandler.QueryList">
-<span id="bidshandler-querylist-module"></span><h1>bidshandler.QueryList module<a class="headerlink" href="#module-bidshandler.QueryList" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="bidshandler-querymixin-querymixin">
+<h1>bidshandler.querymixin.QueryMixin<a class="headerlink" href="#bidshandler-querymixin-querymixin" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="bidshandler.QueryList.QueryList">
-<em class="property">class </em><code class="descclassname">bidshandler.QueryList.</code><code class="descname">QueryList</code><span class="sig-paren">(</span><em>*iterable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/QueryList.html#QueryList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.QueryList.QueryList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></p>
-<p>List wrapper class to allow the list of return objects from a query to
-itself be queried.</p>
+<dt id="bidshandler.querymixin.QueryMixin">
+<em class="property">class </em><code class="descclassname">bidshandler.querymixin.</code><code class="descname">QueryMixin</code><a class="reference internal" href="../_modules/bidshandler/querymixin.html#QueryMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.querymixin.QueryMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Provides query functionality to the various BIDS classes</p>
+<p>This Mix-in class has no functionality on its own and can only be used
+as a sub-class.</p>
 <dl class="method">
-<dt id="bidshandler.QueryList.QueryList.query">
-<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/QueryList.html#QueryList.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.QueryList.QueryList.query" title="Permalink to this definition">¶</a></dt>
+<dt id="bidshandler.querymixin.QueryMixin.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querymixin.QueryMixin.query" title="bidshandler.querymixin.QueryMixin.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
+<td>Query the BIDS object and return the appropriate data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querymixin.QueryMixin.projects" title="bidshandler.querymixin.QueryMixin.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
+<td>List of contained projects or self if the object itself is a Project</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querymixin.QueryMixin.scans" title="bidshandler.querymixin.QueryMixin.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
+<td>The Scan object itself.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querymixin.QueryMixin.sessions" title="bidshandler.querymixin.QueryMixin.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
+<td>List of contained sessions or self if the object itself is a Session</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querymixin.QueryMixin.subjects" title="bidshandler.querymixin.QueryMixin.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
+<td>List of contained subjects or self if the object itself is a Subject</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="bidshandler.querymixin.QueryMixin.projects">
+<code class="descname">projects</code><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.projects" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained projects or self if the object itself is a Project</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.querymixin.QueryMixin.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>obj</em>, <em>token</em>, <em>condition</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/querymixin.html#QueryMixin.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the BIDS object and return the appropriate data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -229,7 +289,7 @@ the value specified.
 This operator is currently only supported for the tokens <cite>‘task’</cite>,
 <cite>‘acquisition’</cite>/<cite>’acq’, `’run’</cite> and <cite>‘proc’</cite>.</li>
 <li><strong>value</strong> (<em>str | int | float</em>) – The value the token has (or the value to compare using the
-<cite>condition</cite> argument)
+<cite>condition</cite> argument).
 The value provided must match exactly if the equality operator is
 used, and must have a type appropriate for comparison if an
 inequality operator is used.
@@ -240,11 +300,33 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#module-bidshandler.QueryList" title="bidshandler.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.querymixin.QueryMixin.scans">
+<code class="descname">scans</code><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.scans" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Scan object itself.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is overwritten by every inheriting class except the Scan class.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.querymixin.QueryMixin.sessions">
+<code class="descname">sessions</code><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.sessions" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained sessions or self if the object itself is a Session</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.querymixin.QueryMixin.subjects">
+<code class="descname">subjects</code><a class="headerlink" href="#bidshandler.querymixin.QueryMixin.subjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of contained subjects or self if the object itself is a Subject</p>
 </dd></dl>
 
 </dd></dl>
@@ -284,7 +366,7 @@ Currently regex is not supported, but this may come in the future.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.2',
+            VERSION:'v0.2.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
