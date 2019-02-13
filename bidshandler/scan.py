@@ -170,12 +170,13 @@ class Scan(QueryMixin):
 
     @property
     def emptyroom(self):
-        """Associated emptyroom file.
+        """Associated emptyroom Scan.
 
         Returns
         -------
         :class:`bidshandler.Scan`
             Associated emptyroom Scan object.
+
         Note
         ----
         Only for MEG scans.

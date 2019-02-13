@@ -11,12 +11,12 @@ Version 0.3
 > API Changes
 -------------
 
-- Scan object has new properties: `scan_type` and `emptyroom`.
+- Scan object has new properties: `scan_type` and `emptyroom`. (`#14 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14>`_)
 
 > New Features
 --------------
 
-- MEG data with an associated empty room file now brings the data along when it is added to another BIDS folder hierarchy.
+- MEG data with an associated empty room file now brings the data along when it is added to another BIDS folder hierarchy. (`#14 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14>`_)
 
 
 Version 0.2.1
