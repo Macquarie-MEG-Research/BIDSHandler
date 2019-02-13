@@ -19,6 +19,5 @@
     "MiscChannelCount": 93,
     "TriggerChannelCount": 3,
     "RecordingDuration": 10,
-    "ContinuousHeadLocalization": false,
-    "AssociatedEmptyRoom": "sub-emptyroom/ses-20181026/meg/sub-emptyroom_ses-20181026_task-noise_meg.con"
+    "ContinuousHeadLocalization": false
 }
