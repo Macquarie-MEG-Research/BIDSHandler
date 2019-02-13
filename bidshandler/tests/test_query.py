@@ -19,17 +19,17 @@ def test_query():
     assert len(folder.query('subject', 'age', '>', 2)) == 2
     assert len(folder.query('subject', 'age', '>=', 2)) == 3
     assert len(folder.query('subject', 'sex', '=', 'M')) == 1
-    assert len(folder.query('subject', 'sex', '!=', 'M')) == 2
+    assert len(folder.query('subject', 'sex', '!=', 'M')) == 3
     assert len(folder.query('subject', 'group', '=', 'autistic')) == 2
 
     # query some tasks
     assert len(folder.query('scan', 'task', '=', 'resting')) == 2
     # ask if any of the subjects has *any* tasks that aren't 'resting'
-    assert (folder.query('subject', 'task', '!=', 'resting')[0] ==
-            folder.project('test1').subject('1'))
+    assert (folder.project('test1').subject('1') in
+            folder.query('subject', 'task', '!=', 'resting'))
     # ask if any of the subjects have not got a task called 'resting'
-    assert (folder.query('subject', 'task', '!!=', 'resting')[0] ==
-            folder.project('test1').subject('2'))
+    assert (folder.project('test1').subject('2') in
+            folder.query('subject', 'task', '!!=', 'resting'))
     with pytest.raises(ValueError, match='Condition'):
         folder.query('subject', 'task', '>', 'resting')
 
@@ -37,24 +37,24 @@ def test_query():
     ref_datetime = '2018-10-26T11:32:33'
     ref_date = '2018-10-26'
     assert len(folder.query('scan', 'rec_date', '=', ref_datetime)) == 1
-    assert len(folder.query('scan', 'rec_date', '<=', ref_datetime)) == 4
+    assert len(folder.query('scan', 'rec_date', '<=', ref_datetime)) == 5
     assert len(folder.query('scan', 'rec_date', '>', ref_datetime)) == 1
-    assert len(folder.query('scan', 'rec_date', '=', ref_date)) == 5
-    assert len(folder.query('session', 'rec_date', '=', ref_date)) == 4
+    assert len(folder.query('scan', 'rec_date', '=', ref_date)) == 6
+    assert len(folder.query('session', 'rec_date', '=', ref_date)) == 5
 
     # query some data in the sidecar.json:
     assert len(folder.query('project', 'PowerLineFrequency', '=', 50)) == 2
-    assert len(folder.query('subject', 'MiscChannelCount', '=', 93)) == 3
+    assert len(folder.query('subject', 'MiscChannelCount', '=', 93)) == 4
     assert len(folder.query('session', 'TaskName', '=', 'resting')) == 2
-    assert len(folder.query('scan', 'RecordingDuration', '>=', 5)) == 5
+    assert len(folder.query('scan', 'RecordingDuration', '>=', 5)) == 6
 
     # query for number of subjects, sessions, or scans
-    assert len(folder.query('project', 'subjects', '=', 2)) == 1
+    assert len(folder.query('project', 'subjects', '=', 2)) == 2
     assert len(folder.query('project', 'sessions', '!=', 3)) == 1
-    assert len(folder.query('subject', 'sessions', '<', 2)) == 2
+    assert len(folder.query('subject', 'sessions', '<', 2)) == 3
     assert len(folder.query('project', 'scans', '>', 4)) == 0
-    assert len(folder.query('subject', 'scans', '<=', 2)) == 2
-    assert len(folder.query('session', 'scans', '<', 2)) == 3
+    assert len(folder.query('subject', 'scans', '<=', 2)) == 3
+    assert len(folder.query('session', 'scans', '<', 2)) == 4
 
     with pytest.raises(ValueError):
         folder.query('subject', 'subjects', '=', 2)
@@ -92,14 +92,14 @@ def test_query():
     assert len(subjs.query('scan', 'task', '=', 'resting')) == 1
 
     projs = folder.query('project', 'subjects', '>', 1)
-    assert (projs.query('project', 'sessions', '=', 3)[0] ==
-            folder.project('test1'))
+    assert (folder.project('test1') in
+            projs.query('project', 'sessions', '=', 3))
 
     subjs = folder.query('subject', 'sex', '=', 'F')
-    assert (subjs.query('subject', 'sessions', '=', 1)[0] ==
-            folder.project('test2').subject('3'))
+    assert (folder.project('test2').subject('3') in
+            subjs.query('subject', 'sessions', '=', 1))
 
     sesss = folder.query('session', 'scans', '=', 1)
-    assert len(sesss) == 3
-    assert (sesss.query('session', 'TaskName', '=', 'resting')[0] ==
-            folder.project('test2').subject('3').session('1'))
+    assert len(sesss) == 4
+    assert (folder.project('test2').subject('3').session('1') in
+            sesss.query('session', 'TaskName', '=', 'resting'))

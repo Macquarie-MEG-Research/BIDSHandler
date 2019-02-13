@@ -14,7 +14,10 @@ BIDSHandler: A simple way to manage and manipulate BIDS compatible data.
    
    api
    usage
+.. toctree::
+   :maxdepth: 1
 
+   changes
 
 Installation
 ============

@@ -1,6 +1,6 @@
 """API for handling folders containing BIDS formatted data."""
 
-__version__ = '0.2.1'
+__version__ = '0.3dev0'
 name = "BIDSHandler"  # noqa
 
 from .bidstree import BIDSTree  # noqa

@@ -21,17 +21,20 @@ def test_add_new_project_recursively():
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
         src_bf = BIDSTree(TESTPATH1)
         dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
-        dst_bf.add(src_bf.project('test2').subject('3').session('1').scan(
-            task='resting', run='1'))
+        scan = src_bf.project('test2').subject('3').session('1').scan(
+            task='resting', run='1')
+        assert scan.emptyroom is not None
+        dst_bf.add(scan)
         # make sure the project was added
         assert len(dst_bf.projects) == 2
         assert op.exists(dst_bf.project('test2').readme)
         assert op.exists(dst_bf.project('test2').description)
-        # make sure the subject was added
-        assert len(dst_bf.project('test1').subjects) == 1
+        # make sure the subject was added and the empty room data was too
+        assert len(dst_bf.project('test2').subjects) == 2
         # make sure the scan was added
         scans_tsv = dst_bf.project('test2').subject('3').session('1').scans_tsv
         assert op.exists(scans_tsv)
+        dst_bf.project('test2').subject('emptyroom')
 
 
 def test_merge_bidstrees():

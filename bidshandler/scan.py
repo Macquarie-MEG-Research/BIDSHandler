@@ -2,10 +2,12 @@ import os.path as op
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
-from .querymixin import QueryMixin
+from warnings import warn
 
+from .querymixin import QueryMixin
 from .utils import (_get_bids_params, _realize_paths,
                     _bids_params_are_subsets, _splitall)
+from .bidserrors import NoSubjectError
 
 _SIDECAR_MAP = {'meg': 'meg',
                 'fmap': 'phasediff',
@@ -153,7 +155,7 @@ class Scan(QueryMixin):
     @property
     def channels_tsv(self):
         """Absolute path to the associated channels.tsv file."""
-        channels_path = self.associated_files.get('channels', None)
+        channels_path = self.associated_files.get('channels')
         if channels_path is not None:
             return _realize_paths(self, channels_path)
         return None
@@ -161,15 +163,45 @@ class Scan(QueryMixin):
     @property
     def coordsystem_json(self):
         """Absolute path to the associated coordsystem.json file."""
-        coordsystem_path = self.associated_files.get('coordsystem', None)
+        coordsystem_path = self.associated_files.get('coordsystem')
         if coordsystem_path is not None:
             return _realize_paths(self, coordsystem_path)
         return None
 
     @property
+    def emptyroom(self):
+        """Associated emptyroom Scan.
+
+        Returns
+        -------
+        :class:`bidshandler.Scan`
+            Associated emptyroom Scan object.
+
+        Note
+        ----
+        Only for MEG scans.
+        """
+        if self.scan_type == 'meg':
+            emptyroom = self.info.get('AssociatedEmptyRoom')
+            if emptyroom is not None:
+                fname = op.basename(emptyroom)
+                bids_params = _get_bids_params(fname)
+                try:
+                    return self.project.subject(
+                        bids_params['sub']).session(
+                            bids_params['ses']).scan(
+                                task=bids_params.get('task'),
+                                acq=bids_params.get('acq'),
+                                run=bids_params.get('run'))
+                except (KeyError, NoSubjectError):
+                    msg = 'Associated empty room file for {0} cannot be found'
+                    warn(msg.format(str(self)))
+                    return None
+
+    @property
     def events_tsv(self):
         """Absolute path to the associated events.tsv file."""
-        events_path = self.associated_files.get('events', None)
+        events_path = self.associated_files.get('events')
         if events_path is not None:
             return _realize_paths(self, events_path)
         return None
@@ -193,6 +225,11 @@ class Scan(QueryMixin):
     def raw_file_relative(self):
         """Relative path (to parent session) of associated raw file."""
         return op.join(self._path, self._raw_file)
+
+    @property
+    def scan_type(self):
+        """Scan type."""
+        return self._path
 
     @property
     def sidecar(self):
