@@ -112,6 +112,11 @@ class Session(QueryMixin):
                 scan = Scan(other.raw_file_relative, self,
                             acq_time=other.acq_time)
                 self._scans.append(scan)
+
+                # finally, check to see if the scan had an associated empty
+                # room file. If so, make sure it comes along too
+                if other.emptyroom is not None:
+                    self.project.add(other.emptyroom)
             else:
                 raise AssociationError("scan", "project, subject and session")
         else:

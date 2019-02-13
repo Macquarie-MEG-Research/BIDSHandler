@@ -4,6 +4,7 @@ import tempfile
 import os.path as op
 import shutil
 import pytest
+import warnings
 
 from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
@@ -35,6 +36,10 @@ def test_containment():
         assert scan in dst_bf.project('test1').subject('1')
         assert scan in dst_bf.project('test1')
         assert scan in dst_bf
+        assert scan.scan_type == 'meg'
+        # check some emptyroom values
+        sess2 = src_bf.project('test2').subject('3').session('1')
+        assert sess2.scan(task='resting', run='1').emptyroom is not None
 
         # Make sure an error is raised if trying to test for an object that
         # connot possibly be in another.
