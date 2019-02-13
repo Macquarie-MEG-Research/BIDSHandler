@@ -4,7 +4,6 @@ import tempfile
 import os.path as op
 import shutil
 import pytest
-import warnings
 
 from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
