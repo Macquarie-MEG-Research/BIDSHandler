@@ -31,14 +31,20 @@ def test_containment():
         assert sess in dst_bf.project('test1').subject('1')
         assert sess in dst_bf.project('test1')
         assert sess in dst_bf
-        assert scan in dst_bf.project('test1').subject('1').session('1')
-        assert scan in dst_bf.project('test1').subject('1')
+        assert scan in dst_bf.project('test1').subject(1).session(1)
+        assert scan in dst_bf.project('test1').subject(1)
         assert scan in dst_bf.project('test1')
         assert scan in dst_bf
         assert scan.scan_type == 'meg'
         # check some emptyroom values
         sess2 = src_bf.project('test2').subject('3').session('1')
         assert sess2.scan(task='resting', run='1').emptyroom is not None
+
+        # check regex works for scans
+        with pytest.raises(Exception, match='Multiple'):
+            sess.scan(run='1')
+        assert len(sess.scan(run='1', return_all=True)) == 2
+        assert sess.scan(task='rest') is not None
 
         # Make sure an error is raised if trying to test for an object that
         # connot possibly be in another.

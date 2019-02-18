@@ -7,7 +7,7 @@ from warnings import warn
 from .querymixin import QueryMixin
 from .utils import (_get_bids_params, _realize_paths,
                     _bids_params_are_subsets, _splitall)
-from .bidserrors import NoSubjectError
+from .bidserrors import NoScanError
 
 _SIDECAR_MAP = {'meg': 'meg',
                 'fmap': 'phasediff',
@@ -193,7 +193,7 @@ class Scan(QueryMixin):
                                 task=bids_params.get('task'),
                                 acq=bids_params.get('acq'),
                                 run=bids_params.get('run'))
-                except (KeyError, NoSubjectError):
+                except (KeyError, NoScanError):
                     msg = 'Associated empty room file for {0} cannot be found'
                     warn(msg.format(str(self)))
                     return None
