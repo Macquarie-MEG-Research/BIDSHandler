@@ -19,6 +19,13 @@ BIDSHandler: A simple way to manage and manipulate BIDS compatible data.
 
    changes
 
+Why use BIDSHandler?
+====================
+
+`BIDSHandler` is designed to be able to load in any BIDS-compatible folder and allow you to organise the data within.
+Merging in externally converted BIDS data into an archive can be a tedious precess but with `BIDSHandler` it requires only a few lines of code!
+`BIDSHandler` also allows you to query your database of BIDS data and easily find the particular scan/session/subject/project you are looking for, making it simple to find a specific entry in huge databases.
+
 Installation
 ============
 
