@@ -1,11 +1,12 @@
 import os.path as op
+import os
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
 from warnings import warn
 
 from .querymixin import QueryMixin
-from .utils import (_get_bids_params, _realize_paths,
+from .utils import (_get_bids_params, _realize_paths, _multi_replace,
                     _bids_params_are_subsets, _splitall)
 from .bidserrors import NoScanError
 
@@ -59,10 +60,17 @@ class Scan(QueryMixin):
             structure.
         """
         file_list = set()
-        file_list.add(self.sidecar)
+        if self.sidecar is not None:
+            file_list.add(self.sidecar)
         file_list.update(_realize_paths(self,
                                         list(self.associated_files.values())))
         return file_list
+
+    def delete(self):
+        pass
+
+    def rename(self, task, acq, run):
+        pass
 
 #region private methods
 
@@ -81,7 +89,13 @@ class Scan(QueryMixin):
                     # TODO: this will not work for .ds folders...
                     if not op.isdir(_realize_paths(self, fname)):
                         if part is None:
-                            self.associated_files[bids_params['file']] = fname
+                            if bids_params['file'] in self.associated_files:
+                                new_key = bids_params['file'] + \
+                                    bids_params['ext']
+                                self.associated_files[new_key] = fname
+                            else:
+                                self.associated_files[bids_params['file']] = \
+                                    fname
                         else:
                             if part == '01':
                                 # Assign the correct raw file name.
@@ -144,6 +158,47 @@ class Scan(QueryMixin):
         if self._sidecar is not None:
             with open(self.sidecar, 'r') as sidecar:
                 self.info = json.load(sidecar)
+
+    def _rename(self, subj_id, sess_id):
+        """Rename all the files contained by the scan.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        sess_id : str
+            Raw session ID value. Ie. *without* `ses-`.
+        """
+        old_subj_id = self.subject.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_sess_id = self.session.ID
+        new_sess_id = 'ses-{0}'.format(sess_id)
+        # rename all the contained files
+        for fname in self.contained_files():
+            new_fname = _multi_replace(fname, [old_subj_id, old_sess_id],
+                                       [new_subj_id, new_sess_id])
+            if not op.exists(op.dirname(new_fname)):
+                os.makedirs(op.dirname(new_fname))
+            os.rename(fname, new_fname)
+        # rename the raw file
+        old_fname = self.raw_file
+        new_fname = _multi_replace(old_fname, [old_subj_id, old_sess_id],
+                                   [new_subj_id, new_sess_id])
+        if not op.exists(op.dirname(new_fname)):
+            os.makedirs(op.dirname(new_fname))
+        os.rename(old_fname, new_fname)
+        self._raw_file = _multi_replace(self._raw_file,
+                                        [old_subj_id, old_sess_id],
+                                        [new_subj_id, new_sess_id])
+
+        # rename all the internal file names
+        if self._sidecar is not None:
+            self._sidecar = _multi_replace(self._sidecar,
+                                           [old_subj_id, old_sess_id],
+                                           [new_subj_id, new_sess_id])
+        for key, value in self.associated_files.items():
+            self.associated_files[key] = _multi_replace(
+                value, [old_subj_id, old_sess_id], [new_subj_id, new_sess_id])
 
 #region properties
 

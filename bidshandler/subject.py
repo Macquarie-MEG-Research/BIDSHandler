@@ -74,28 +74,38 @@ class Subject(QueryMixin):
             else:
                 raise ValueError("Added subject must have same ID.")
         elif isinstance(other, Session):
-            if (self._id == other.subject._id and
+            # check to see if we have only one scan without a session folder:
+            if not (self._id == other.subject._id and
                     self.project._id == other.project._id):
-                if other in self:
-                    self.session(other._id).add(other, copier)
-                else:
-                    new_session = Session._clone_into_subject(self, other)
-                    new_session.add(other, copier)
-                    self._sessions[other._id] = new_session
-            else:
                 raise AssociationError("session", "project and subject")
-        elif isinstance(other, Scan):
-            if (self._id == other.subject._id and
-                    self.project._id == other.project._id):
-                if other.session in self:
-                    self.session(other.session._id).add(other, copier)
-                else:
-                    new_session = Session._clone_into_subject(self,
-                                                              other.session)
-                    new_session.add(other, copier)
-                    self._sessions[other.session._id] = new_session
+
+            if len(self.sessions) == 1:
+                session = self.sessions[0]
+                if session.has_no_folder:
+                    # in this case the session has to be given a folder
+                    # and moved, then the new folder can also be added.
+                    moved_session = Session._clone_into_subject(
+                        self, session, create_in_folder=True)
+                    print(moved_session)
+            if other in self:
+                self.session(other._id).add(other, copier)
             else:
+                new_session = Session._clone_into_subject(self, other)
+                new_session.add(other, copier)
+                self._sessions[other._id] = new_session
+
+        elif isinstance(other, Scan):
+            if not (self._id == other.subject._id and
+                    self.project._id == other.project._id):
                 raise AssociationError("scan", "project and subject")
+
+            if other.session in self:
+                self.session(other.session._id).add(other, copier)
+            else:
+                new_session = Session._clone_into_subject(self,
+                                                          other.session)
+                new_session.add(other, copier)
+                self._sessions[other.session._id] = new_session
         else:
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
@@ -113,6 +123,12 @@ class Subject(QueryMixin):
         for session in self.sessions:
             file_list.update(session.contained_files())
         return file_list
+
+    def delete(self):
+        pass
+
+    def rename(self, id_):
+        pass
 
     def session(self, id_):
         """Return the Session corresponding to the provided id.

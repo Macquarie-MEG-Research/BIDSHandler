@@ -76,7 +76,7 @@ def test_containment():
         with pytest.raises(NoScanError):
             scan = sess.scan(task='fake')
 
-        assert len(dst_bf['test1'].contained_files()) == 10
+        assert len(dst_bf['test1'].contained_files()) == 19
 
         # Check that some inherited properties correctly aren't defined for
         # objects they shouldn't be

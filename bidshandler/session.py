@@ -2,12 +2,14 @@ import os
 import os.path as op
 from collections import OrderedDict
 import re
+import shutil
 
 import xml.etree.ElementTree as ET
 
 import pandas as pd
 
-from .utils import _get_bids_params, _copyfiles, _realize_paths, _combine_tsv
+from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
+                    _multi_replace)
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
@@ -81,45 +83,44 @@ class Session(QueryMixin):
         elif isinstance(other, Scan):
             # TODO-LT: handle other modalities
             # We need to make sure that the scan is of the same person/session:
-            if (self._id == other.session._id and
+            if not (self._id == other.session._id and
                     self.subject._id == other.subject._id and
                     self.project._id == other.project._id):
-                # Handle merging the scans.tsv file.
-                if other in self:
-                    # We don't want to add it if it is already in this session.
-                    # TODO: add overwrite argument to allow it to still be
-                    # added.
-                    return
-                other_scan_df = pd.DataFrame(
-                    OrderedDict([
-                        ('filename', [other.raw_file_relative]),
-                        ('acq_time', [other.acq_time])]),
-                    columns=['filename', 'acq_time'])
-                # Combine the new data into the original tsv.
-                _combine_tsv(self.scans_tsv, other_scan_df, 'filename')
-
-                # Assign as a set to avoid any potential doubling of the raw
-                # file path.
-                files = set(other.associated_files.values())
-                files.add(other._sidecar)
-                files.add(other._raw_file)
-                # Copy the files over.
-                fl_left = _realize_paths(other, files)
-                fl_right = []
-                for fpath in files:
-                    fl_right.append(op.join(self.path, other._path, fpath))
-                copier(fl_left, fl_right)
-                # Add the scan object to our scans list.
-                scan = Scan(other.raw_file_relative, self,
-                            acq_time=other.acq_time)
-                self._scans.append(scan)
-
-                # finally, check to see if the scan had an associated empty
-                # room file. If so, make sure it comes along too
-                if other.emptyroom is not None:
-                    self.project.add(other.emptyroom)
-            else:
                 raise AssociationError("scan", "project, subject and session")
+            # Handle merging the scans.tsv file.
+            if other in self:
+                # We don't want to add it if it is already in this session.
+                # TODO: add overwrite argument to allow it to still be
+                # added.
+                return
+            other_scan_df = pd.DataFrame(
+                OrderedDict([
+                    ('filename', [other.raw_file_relative]),
+                    ('acq_time', [other.acq_time])]),
+                columns=['filename', 'acq_time'])
+            # Combine the new data into the original tsv.
+            _combine_tsv(self.scans_tsv, other_scan_df, 'filename')
+
+            # Assign as a set to avoid any potential doubling of the raw
+            # file path.
+            files = set(other.associated_files.values())
+            files.add(other._sidecar)
+            files.add(other._raw_file)
+            # Copy the files over.
+            fl_left = _realize_paths(other, files)
+            fl_right = []
+            for fpath in files:
+                fl_right.append(op.join(self.path, other._path, fpath))
+            copier(fl_left, fl_right)
+            # Add the scan object to our scans list.
+            scan = Scan(other.raw_file_relative, self,
+                        acq_time=other.acq_time)
+            self._scans.append(scan)
+
+            # finally, check to see if the scan had an associated empty
+            # room file. If so, make sure it comes along too
+            if other.emptyroom is not None:
+                self.project.add(other.emptyroom)
         else:
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
@@ -138,6 +139,69 @@ class Session(QueryMixin):
         for scan in self.scans:
             file_list.update(scan.contained_files())
         return file_list
+
+    def delete(self):
+        """Delete the session information."""
+        if self.has_no_folder:
+            for fname in os.listdir(self.path):
+                if op.isdir(fname):
+                    shutil.rmtree(fname)
+                elif op.isfile(fname):
+                    os.remove(fname)
+        else:
+            shutil.rmtree(self.path)
+        del self.subject._sessions[self._id]
+
+    def rename(self, id_):
+        self._rename(self.subject._id, id_)
+
+    def _rename(self, subj_id, sess_id):
+        """Change the session id for all contained files.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        sess_id : str
+            Raw session ID value. Ie. *without* `ses-`.
+        """
+        # cache current values
+        old_subj_id = self.subject.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_sess_id = self.ID
+        new_sess_id = 'ses-{0}'.format(sess_id)
+        old_scans_tsv = self.scans_tsv
+
+        if self.has_no_folder:
+            print('not yet...')
+            return
+
+        os.mkdir(self.path.replace(old_sess_id, new_sess_id))
+
+        # call rename on each of the contained Scan objects
+        for scan in self.scans:
+            scan._rename(subj_id, sess_id)
+
+        # update the row data to point to the new scan locations
+        df = pd.read_csv(self.scans_tsv, sep='\t')
+        for idx, row in enumerate(df['filename']):
+            df['filename'][idx] = row.replace(old_sess_id, new_sess_id)
+        df.to_csv(self.scans_tsv, sep='\t', index=False, na_rep='n/a',
+                  encoding='utf-8')
+
+        # change the internal id. self.ID -> new_sess_id
+        self._id = sess_id
+
+        self._scans_tsv = _multi_replace(self._scans_tsv,
+                                         [old_subj_id, old_sess_id],
+                                         [new_subj_id, new_sess_id])
+
+        # rename the scans.tsv file
+        os.rename(old_scans_tsv, self.scans_tsv)
+
+        # remove the old path
+        # TODO: check to see if the folders are empty.
+        shutil.rmtree(_realize_paths(self.subject, old_sess_id))
 
     def scan(self, task='.', acq='.', run='.', return_all=False):
         """Return a list of all contained Scan's corresponding to the provided
@@ -248,7 +312,7 @@ class Session(QueryMixin):
                 self.project.ID, self.subject.ID, self.ID))
 
     @staticmethod
-    def _clone_into_subject(subject, other):
+    def _clone_into_subject(subject, other, create_in_folder=False):
         """Create a copy of the Session with a new parent Subject.
 
         Parameters
@@ -257,6 +321,9 @@ class Session(QueryMixin):
             New parent Subject.
         other : :class:`BIDSHandler.Session`
             Original Session instance to clone.
+        create_in_folder : bool
+            Whether or not to force the new session to be cloned into a folder
+            named `ses-XX`.
 
         Returns
         -------
@@ -264,10 +331,19 @@ class Session(QueryMixin):
             New uninitialized Session cloned from `other` to be a child of
             `subject`.
         """
-        os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
-        # Create a new empty session object.
-        new_session = Session(other._id, subject, initialize=False)
-        new_session._create_empty_scan_tsv()
+        # TODO: Test me!! (and finish me...)
+        if not other.has_no_folder or create_in_folder:
+            os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
+            # Create a new empty session object.
+            new_session = Session(other._id, subject, initialize=False)
+            new_session._create_empty_scan_tsv()
+        else:
+            # set the directory to be the same as the parent.
+            os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
+            # Create a new empty session object.
+            new_session = Session(other._id, subject, initialize=False,
+                                  no_folder=other.has_no_folder)
+            new_session._create_empty_scan_tsv()
         return new_session
 
     def _create_empty_scan_tsv(self):
@@ -320,7 +396,7 @@ class Session(QueryMixin):
         """Determine path location based on parent paths."""
         if self.has_no_folder:
             return self.subject.path
-        return op.join(self.subject.path, self.ID)
+        return _realize_paths(self.subject, self.ID)
 
     @property
     def project(self):

@@ -177,6 +177,32 @@ def _get_bids_params(fname):
     return data
 
 
+def _multi_replace(str_in, old, new):
+    """Replace all instances of all strings in `old` with the strings in `new`
+
+    Parameters
+    ----------
+    str_in : str
+        Original string.
+    old : list(str)
+        List of strings to be replaced.
+    new : list(str)
+        List of string to replace with.
+
+    Returns
+    -------
+    str_out : str
+        String with values replaced.
+    """
+    if ((not isinstance(old, list)) or (not isinstance(new, list)) or
+            len(old) != len(new)):
+        raise ValueError
+    str_out = str_in
+    for i in range(len(old)):
+        str_out = str_out.replace(old[i], new[i])
+    return str_out
+
+
 def _prettyprint_xml(xml_str):
     """Take a flat string representation of xml data and pretty print it."""
     curr_indent = 0
