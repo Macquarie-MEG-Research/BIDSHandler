@@ -355,7 +355,7 @@ class Session(QueryMixin):
         if op.exists(old_scans_tsv):
             df = pd.read_csv(old_scans_tsv, sep='\t')
             for idx, row in enumerate(df['filename']):
-                df['filename'][idx] = _multi_replace(
+                df.at[idx, 'filename'] = _multi_replace(
                     row, [old_subj_id, old_sess_id],
                     [new_subj_id, new_sess_id])
             df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
@@ -367,14 +367,19 @@ class Session(QueryMixin):
 
         # rename the scans.tsv file
         os.rename(old_scans_tsv, op.join(self.project.path, new_subj_id,
-                                         self._scans_tsv))
+                                         new_sess_id, self._scans_tsv))
 
         # remove the old path
         # TODO: check to see if the folders are empty.
         shutil.rmtree(_realize_paths(self.subject, old_sess_id))
 
         # change the internal id. self.ID -> new_sess_id
-        self._id = subj_id
+        old_id = self._id
+        self._id = sess_id
+        # update the parent subject dictionary
+        if old_id != self._id:
+            self.subject._sessions[self._id] = self
+            del self.subject._sessions[old_id]
 
 #region properties
 

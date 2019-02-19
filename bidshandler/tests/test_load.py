@@ -19,25 +19,25 @@ def test_containment():
     with tempfile.TemporaryDirectory() as tmp:
         # copy the dst to a temp folder
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
-        src_bf = BIDSTree(TESTPATH1)
-        dst_bf = BIDSTree(op.join(tmp, 'BIDSTEST2'))
+        src_bt = BIDSTree(TESTPATH1)
+        dst_bt = BIDSTree(op.join(tmp, 'BIDSTEST2'))
 
-        proj = src_bf.project('test1')
+        proj = src_bt.project('test1')
         subj = proj.subject('1')
         sess = subj.session('1')
         scan = sess.scan(task='resting', run='1')
-        assert subj in dst_bf.project('test1')
-        assert subj in dst_bf
-        assert sess in dst_bf.project('test1').subject('1')
-        assert sess in dst_bf.project('test1')
-        assert sess in dst_bf
-        assert scan in dst_bf.project('test1').subject(1).session(1)
-        assert scan in dst_bf.project('test1').subject(1)
-        assert scan in dst_bf.project('test1')
-        assert scan in dst_bf
+        assert subj in dst_bt.project('test1')
+        assert subj in dst_bt
+        assert sess in dst_bt.project('test1').subject('1')
+        assert sess in dst_bt.project('test1')
+        assert sess in dst_bt
+        assert scan in dst_bt.project('test1').subject(1).session(1)
+        assert scan in dst_bt.project('test1').subject(1)
+        assert scan in dst_bt.project('test1')
+        assert scan in dst_bt
         assert scan.scan_type == 'meg'
         # check some emptyroom values
-        sess2 = src_bf.project('test2').subject('3').session('1')
+        sess2 = src_bt.project('test2').subject('3').session('1')
         assert sess2.scan(task='resting', run='1').emptyroom is not None
 
         # check regex works for scans
@@ -49,15 +49,15 @@ def test_containment():
         # Make sure an error is raised if trying to test for an object that
         # connot possibly be in another.
         with pytest.raises(TypeError):
-            assert 'cats' in src_bf
+            assert 'cats' in src_bt
         with pytest.raises(TypeError):
-            assert dst_bf in src_bf
+            assert dst_bt in src_bt
         with pytest.raises(TypeError):
-            assert dst_bf in proj
+            assert dst_bt in proj
         with pytest.raises(TypeError):
-            assert dst_bf in subj
+            assert dst_bt in subj
         with pytest.raises(TypeError):
-            assert dst_bf in sess
+            assert dst_bt in sess
 
         # Check the paths for the associated `channels`, `events` and
         # `coordsystem` file are correct
@@ -68,7 +68,7 @@ def test_containment():
         # Check that an error is raised when trying to get a specific object
         # that doesn't exist.
         with pytest.raises(NoProjectError):
-            proj = src_bf.project('5')
+            proj = src_bt.project('5')
         with pytest.raises(NoSubjectError):
             sess = proj.subject('5')
         with pytest.raises(NoSessionError):
@@ -76,7 +76,7 @@ def test_containment():
         with pytest.raises(NoScanError):
             scan = sess.scan(task='fake')
 
-        assert len(dst_bf['test1'].contained_files()) == 19
+        assert len(dst_bt['test1'].contained_files()) == 19
 
         # Check that some inherited properties correctly aren't defined for
         # objects they shouldn't be

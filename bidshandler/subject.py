@@ -273,7 +273,7 @@ class Subject(QueryMixin):
             df = pd.read_csv(self.project.participants_tsv, sep='\t')
             for idx, row in enumerate(df['participant_id']):
                 if row == old_subj_id:
-                    df['participant_id'][idx] = new_subj_id
+                    df.at[idx, 'participant_id'] = new_subj_id
                     break
             df.to_csv(self.project.participants_tsv, sep='\t', index=False,
                       na_rep='n/a', encoding='utf-8')
