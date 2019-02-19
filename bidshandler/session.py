@@ -155,54 +155,6 @@ class Session(QueryMixin):
     def rename(self, id_):
         self._rename(self.subject._id, id_)
 
-    def _rename(self, subj_id, sess_id):
-        """Change the session id for all contained files.
-
-        Parameters
-        ----------
-        subj_id : str
-            Raw subject ID value. Ie. *without* `sub-`.
-        sess_id : str
-            Raw session ID value. Ie. *without* `ses-`.
-        """
-        # cache current values
-        old_subj_id = self.subject.ID
-        new_subj_id = 'sub-{0}'.format(subj_id)
-        old_sess_id = self.ID
-        new_sess_id = 'ses-{0}'.format(sess_id)
-        old_scans_tsv = self.scans_tsv
-
-        if self.has_no_folder:
-            print('not yet...')
-            return
-
-        os.mkdir(self.path.replace(old_sess_id, new_sess_id))
-
-        # call rename on each of the contained Scan objects
-        for scan in self.scans:
-            scan._rename(subj_id, sess_id)
-
-        # update the row data to point to the new scan locations
-        df = pd.read_csv(self.scans_tsv, sep='\t')
-        for idx, row in enumerate(df['filename']):
-            df['filename'][idx] = row.replace(old_sess_id, new_sess_id)
-        df.to_csv(self.scans_tsv, sep='\t', index=False, na_rep='n/a',
-                  encoding='utf-8')
-
-        # change the internal id. self.ID -> new_sess_id
-        self._id = sess_id
-
-        self._scans_tsv = _multi_replace(self._scans_tsv,
-                                         [old_subj_id, old_sess_id],
-                                         [new_subj_id, new_sess_id])
-
-        # rename the scans.tsv file
-        os.rename(old_scans_tsv, self.scans_tsv)
-
-        # remove the old path
-        # TODO: check to see if the folders are empty.
-        shutil.rmtree(_realize_paths(self.subject, old_sess_id))
-
     def scan(self, task='.', acq='.', run='.', return_all=False):
         """Return a list of all contained Scan's corresponding to the provided
         values.
@@ -368,6 +320,61 @@ class Session(QueryMixin):
         for scan in self.scans:
             root.append(scan._generate_map())
         return root
+
+    def _rename(self, subj_id, sess_id):
+        """Change the session id for all contained files.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        sess_id : str
+            Raw session ID value. Ie. *without* `ses-`.
+        """
+        # cache current values and generate new ones for use
+        old_subj_id = self.subject.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_sess_id = self.ID
+        new_sess_id = 'ses-{0}'.format(sess_id)
+        old_scans_tsv = self.scans_tsv
+        old_path = self.path
+        new_path = _multi_replace(old_path, [old_subj_id, old_sess_id],
+                                  [new_subj_id, new_sess_id])
+        if not op.exists(new_path):
+            os.makedirs(new_path)
+
+        if self.has_no_folder:
+            print('not yet...')
+            return
+
+        # call rename on each of the contained Scan objects
+        for scan in self.scans:
+            scan._rename(subj_id, sess_id)
+
+        # update the row data to point to the new scan locations
+        if op.exists(old_scans_tsv):
+            df = pd.read_csv(old_scans_tsv, sep='\t')
+            for idx, row in enumerate(df['filename']):
+                df['filename'][idx] = _multi_replace(
+                    row, [old_subj_id, old_sess_id],
+                    [new_subj_id, new_sess_id])
+            df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
+                      encoding='utf-8')
+
+        self._scans_tsv = _multi_replace(self._scans_tsv,
+                                         [old_subj_id, old_sess_id],
+                                         [new_subj_id, new_sess_id])
+
+        # rename the scans.tsv file
+        os.rename(old_scans_tsv, op.join(self.project.path, new_subj_id,
+                                         self._scans_tsv))
+
+        # remove the old path
+        # TODO: check to see if the folders are empty.
+        shutil.rmtree(_realize_paths(self.subject, old_sess_id))
+
+        # change the internal id. self.ID -> new_sess_id
+        self._id = subj_id
 
 #region properties
 

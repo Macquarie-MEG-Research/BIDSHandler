@@ -2,6 +2,7 @@ import os
 import os.path as op
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
+import shutil
 
 import pandas as pd
 
@@ -128,7 +129,7 @@ class Subject(QueryMixin):
         pass
 
     def rename(self, id_):
-        pass
+        self._rename(id_)
 
     def session(self, id_):
         """Return the Session corresponding to the provided id.
@@ -247,6 +248,45 @@ class Subject(QueryMixin):
         for session in self.sessions:
             root.append(session._generate_map())
         return root
+
+    def _rename(self, subj_id):
+        """Change the session id for all contained files.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        """
+        # cache current values
+        old_subj_id = self.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_path = self.path
+        new_path = self.path.replace(old_subj_id, new_subj_id)
+        if not op.exists(new_path):
+            os.mkdir(new_path)
+
+        # call rename on each of the contained Scan objects
+        for session in self.sessions:
+            session._rename(subj_id, session._id)
+
+        if op.exists(self.project.participants_tsv):
+            df = pd.read_csv(self.project.participants_tsv, sep='\t')
+            for idx, row in enumerate(df['participant_id']):
+                if row == old_subj_id:
+                    df['participant_id'][idx] = new_subj_id
+                    break
+            df.to_csv(self.project.participants_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
+
+        # remove the old path
+        # TODO: check to see if the folders are empty.
+        if len(os.listdir(old_path)) == 0:
+            shutil.rmtree(old_path)
+        else:
+            print(os.listdir(old_path))
+
+        self._id = subj_id
+
 
 #region properties
 
