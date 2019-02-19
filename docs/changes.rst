@@ -12,6 +12,7 @@ Version 0.3
 -------------
 
 - Scan object has new properties: `scan_type` and `emptyroom`. (`#14 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14>`_)
+- Searching for a `Scan` within a `Session` can now accept regex and is able to return more than one scan if multiple match. (`#15 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/15>`_)
 
 > New Features
 --------------

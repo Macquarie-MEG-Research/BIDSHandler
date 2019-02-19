@@ -1,13 +1,14 @@
 import os
 import os.path as op
 from collections import OrderedDict
+import re
 
 import xml.etree.ElementTree as ET
 
 import pandas as pd
 
 from .utils import _get_bids_params, _copyfiles, _realize_paths, _combine_tsv
-from .bidserrors import MappingError, NoScanError, AssociationError
+from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
 
@@ -138,10 +139,9 @@ class Session(QueryMixin):
             file_list.update(scan.contained_files())
         return file_list
 
-    def scan(self, task=None, acq=None, run=None):
-        # TODO: Allow this to return a list if mutliple scans match.
-        # Consider None a wildcard.
-        """Return the contained Scan corresponding to the provided values
+    def scan(self, task='.', acq='.', run='.', return_all=False):
+        """Return a list of all contained Scan's corresponding to the provided
+        values.
 
         Parameters
         ----------
@@ -151,16 +151,42 @@ class Session(QueryMixin):
             Value of `acq` in the BIDS filename.
         run : str
             Value of `run` in the BIDS filename.
+        return_all : bool
+            Whether to return every scan in the session that matches the
+            provided values or not.
 
         Returns
         -------
-        scan : :class:`bidshandler.Scan`
-            Scan object.
+        scan : list(:class:`bidshandler.Scan`)
+            List of Scan's.
+
+        Notes
+        -----
+        The `task`, `acq` and `run` arguments may all have regular expressions
+        passed to them.
         """
+        # First process any regular expressions passed:
+        tsk_re = re.compile(task) if task is not None else re.compile('.')
+        acq_re = re.compile(acq) if acq is not None else re.compile('.')
+        run_re = re.compile(run) if run is not None else re.compile('.')
+        valid_scans = list()
         for scan in self.scans:
-            if (scan.task == task and scan.acq == acq and scan.run == run):
-                return scan
-        raise NoScanError
+            _task = scan.task if scan.task is not None else '.'
+            _acq = scan.acq if scan.acq is not None else '.'
+            _run = scan.run if scan.run is not None else '.'
+            if (re.match(tsk_re, _task) and re.match(acq_re, _acq) and
+                    re.match(run_re, _run)):
+                valid_scans.append(scan)
+        if return_all:
+            return valid_scans
+        else:
+            if len(valid_scans) > 1:
+                raise Exception("Multiple scans found for {0}. To get the "
+                                "list set `return_all=True`".format(
+                                    self.subject.ID))
+            if valid_scans == []:
+                raise NoScanError
+            return valid_scans[0]
 
 #region private methods
 
