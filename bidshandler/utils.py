@@ -165,6 +165,17 @@ def _copyfiles(src_files, dst_files):
             print('same file!!')
 
 
+def _fix_folderless(session, fname, old_sess_id, old_subj_id):
+    # TODO: join this into _multi_replace?
+    if session.has_no_folder:
+        # replace all the sub-XX with sub-XX_ses-YY
+        fname = fname.replace(old_subj_id, old_subj_id + '_' + old_sess_id)
+        # then replace the sub-XX_ses-YY in the path to sub-XX/ses-YY
+        fname = fname.replace(old_subj_id + '_' + old_sess_id + op.sep,
+                              op.join(old_subj_id, old_sess_id) + op.sep)
+    return fname
+
+
 def _get_bids_params(fname):
     filename, ext = op.splitext(fname)
     f = filename.split('_')

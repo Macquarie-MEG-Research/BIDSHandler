@@ -7,9 +7,10 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import pandas as pd
+from datetime import datetime
 
 from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
-                    _multi_replace)
+                    _multi_replace, _fix_folderless)
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
@@ -264,7 +265,7 @@ class Session(QueryMixin):
                 self.project.ID, self.subject.ID, self.ID))
 
     @staticmethod
-    def _clone_into_subject(subject, other, create_in_folder=False):
+    def _clone_into_subject(subject, other):
         """Create a copy of the Session with a new parent Subject.
 
         Parameters
@@ -273,9 +274,6 @@ class Session(QueryMixin):
             New parent Subject.
         other : :class:`BIDSHandler.Session`
             Original Session instance to clone.
-        create_in_folder : bool
-            Whether or not to force the new session to be cloned into a folder
-            named `ses-XX`.
 
         Returns
         -------
@@ -283,19 +281,11 @@ class Session(QueryMixin):
             New uninitialized Session cloned from `other` to be a child of
             `subject`.
         """
-        # TODO: Test me!! (and finish me...)
-        if not other.has_no_folder or create_in_folder:
-            os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
-            # Create a new empty session object.
-            new_session = Session(other._id, subject, initialize=False)
-            new_session._create_empty_scan_tsv()
-        else:
-            # set the directory to be the same as the parent.
-            os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
-            # Create a new empty session object.
-            new_session = Session(other._id, subject, initialize=False,
-                                  no_folder=other.has_no_folder)
-            new_session._create_empty_scan_tsv()
+        # set the directory to be the same as the parent.
+        os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
+        # Create a new empty session object.
+        new_session = Session(other._id, subject, initialize=False)
+        new_session._create_empty_scan_tsv()
         return new_session
 
     def _create_empty_scan_tsv(self):
@@ -338,29 +328,33 @@ class Session(QueryMixin):
         new_sess_id = 'ses-{0}'.format(sess_id)
         old_scans_tsv = self.scans_tsv
         old_path = self.path
-        new_path = _multi_replace(old_path, [old_subj_id, old_sess_id],
-                                  [new_subj_id, new_sess_id])
+        if self.has_no_folder:
+            new_path = op.join(self.subject.path, new_sess_id)
+        else:
+            new_path = _multi_replace(old_path, [old_subj_id, old_sess_id],
+                                      [new_subj_id, new_sess_id])
         if not op.exists(new_path):
             os.makedirs(new_path)
 
-        if self.has_no_folder:
-            print('not yet...')
-            return
-
+        scan_delete_paths = set()
         # call rename on each of the contained Scan objects
         for scan in self.scans:
+            scan_delete_paths.add(scan.path)
             scan._rename(subj_id, sess_id)
 
         # update the row data to point to the new scan locations
         if op.exists(old_scans_tsv):
             df = pd.read_csv(old_scans_tsv, sep='\t')
             for idx, row in enumerate(df['filename']):
+                row = _fix_folderless(self, row, old_sess_id, old_subj_id)
                 df.at[idx, 'filename'] = _multi_replace(
                     row, [old_subj_id, old_sess_id],
                     [new_subj_id, new_sess_id])
             df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
                       encoding='utf-8')
 
+        self._scans_tsv = _fix_folderless(self, self._scans_tsv, old_sess_id,
+                                          old_subj_id)
         self._scans_tsv = _multi_replace(self._scans_tsv,
                                          [old_subj_id, old_sess_id],
                                          [new_subj_id, new_sess_id])
@@ -371,7 +365,8 @@ class Session(QueryMixin):
 
         # remove the old path
         # TODO: check to see if the folders are empty.
-        shutil.rmtree(_realize_paths(self.subject, old_sess_id))
+        for fpath in scan_delete_paths:
+            shutil.rmtree(fpath)
 
         # change the internal id. self.ID -> new_sess_id
         old_id = self._id
@@ -387,6 +382,34 @@ class Session(QueryMixin):
     def bids_tree(self):
         """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
+
+    @property
+    def date(self):
+        """The recording date of the session.
+
+        Returns
+        -------
+        known_date : :func:`datetime.date`
+            Specific date of the year the session ocurred on.
+        """
+        known_date = None
+        for scan in self.scans:
+            # if the scan has an acquisition date, load it into a datetime.date
+            # object and compare
+            if scan.acq_time is not None:
+                try:
+                    compare_date = datetime.strptime(scan.acq_time, '%Y-%m-%d')
+                except ValueError:
+                    compare_date = datetime.strptime(scan.acq_time,
+                                                     '%Y-%m-%dT%H:%M:%S')
+                compare_date = compare_date.date()
+                if known_date is None:
+                    known_date = compare_date
+                else:
+                    if compare_date != known_date:
+                        known_date = None
+                        break
+        return known_date
 
     @property
     def ID(self):

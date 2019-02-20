@@ -7,7 +7,7 @@ from warnings import warn
 
 from .querymixin import QueryMixin
 from .utils import (_get_bids_params, _realize_paths, _multi_replace,
-                    _bids_params_are_subsets, _splitall)
+                    _bids_params_are_subsets, _splitall, _fix_folderless)
 from .bidserrors import NoScanError
 
 _SIDECAR_MAP = {'meg': 'meg',
@@ -175,28 +175,38 @@ class Scan(QueryMixin):
         new_sess_id = 'ses-{0}'.format(sess_id)
         # rename all the contained files
         for fname in self.contained_files():
-            new_fname = _multi_replace(fname, [old_subj_id, old_sess_id],
+            new_fname = _fix_folderless(self.session, fname, old_sess_id,
+                                        old_subj_id)
+            new_fname = _multi_replace(new_fname, [old_subj_id, old_sess_id],
                                        [new_subj_id, new_sess_id])
             if not op.exists(op.dirname(new_fname)):
                 os.makedirs(op.dirname(new_fname))
             os.rename(fname, new_fname)
         # rename the raw file
         old_fname = self.raw_file
-        new_fname = _multi_replace(old_fname, [old_subj_id, old_sess_id],
+        new_fname = _fix_folderless(self.session, old_fname, old_sess_id,
+                                    old_subj_id)
+        new_fname = _multi_replace(new_fname, [old_subj_id, old_sess_id],
                                    [new_subj_id, new_sess_id])
         if not op.exists(op.dirname(new_fname)):
             os.makedirs(op.dirname(new_fname))
         os.rename(old_fname, new_fname)
+        self._raw_file = _fix_folderless(self.session, self._raw_file,
+                                         old_sess_id, old_subj_id)
         self._raw_file = _multi_replace(self._raw_file,
                                         [old_subj_id, old_sess_id],
                                         [new_subj_id, new_sess_id])
 
         # rename all the internal file names
         if self._sidecar is not None:
+            self._sidecar = _fix_folderless(self.session, self._sidecar,
+                                            old_sess_id, old_subj_id)
             self._sidecar = _multi_replace(self._sidecar,
                                            [old_subj_id, old_sess_id],
                                            [new_subj_id, new_sess_id])
         for key, value in self.associated_files.items():
+            value = _fix_folderless(self.session, value, old_sess_id,
+                                    old_subj_id)
             self.associated_files[key] = _multi_replace(
                 value, [old_subj_id, old_sess_id], [new_subj_id, new_sess_id])
 

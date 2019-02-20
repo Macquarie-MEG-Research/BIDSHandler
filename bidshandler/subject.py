@@ -75,22 +75,25 @@ class Subject(QueryMixin):
             else:
                 raise ValueError("Added subject must have same ID.")
         elif isinstance(other, Session):
-            # check to see if we have only one scan without a session folder:
+            # Check to see if we have only one scan without a session folder:
             if not (self._id == other.subject._id and
                     self.project._id == other.project._id):
                 raise AssociationError("session", "project and subject")
-
-            if len(self.sessions) == 1:
-                session = self.sessions[0]
-                if session.has_no_folder:
-                    # in this case the session has to be given a folder
-                    # and moved, then the new folder can also be added.
-                    moved_session = Session._clone_into_subject(
-                        self, session, create_in_folder=True)
-                    print(moved_session)
             if other in self:
+                # if the other session being added has the same ID, merge it
+                # with the current session with that ID.
                 self.session(other._id).add(other, copier)
             else:
+                if len(self.sessions) == 1:
+                    # If we have only one existing session, we want to
+                    # check whether the existing session has no actual
+                    # session folder.
+                    if self.sessions[0].has_no_folder:
+                        print("Current Subject has only one session with no "
+                              "specified session id. Please set this "
+                              "sessions' id by renaming it using "
+                              "`self.sessions[0].rename(1)` (or other number)")
+                        return
                 new_session = Session._clone_into_subject(self, other)
                 new_session.add(other, copier)
                 self._sessions[other._id] = new_session
@@ -165,7 +168,7 @@ class Subject(QueryMixin):
         # assume that the current folder is in fact the session folder (ie.
         # only one session).
         if len(self._sessions) == 0:
-            self._sessions['01'] = Session('01', self, no_folder=True)
+            self._sessions['none'] = Session('none', self, no_folder=True)
 
     def _check(self):
         """Check that there is at least one included session."""

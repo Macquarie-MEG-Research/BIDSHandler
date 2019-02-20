@@ -46,7 +46,7 @@ def test_merge_bidstrees():
         dst_bt = BIDSTree(op.join(tmp, 'BIDSTEST2'))
         dst_bt.add(src_bt)
         assert len(dst_bt.projects) == 2
-        raw = dst_bt.project('test1').subject('2').session('1').scan(
+        raw = dst_bt.project('test1').subject('2').session('none').scan(
             task='restingstate', run='1').raw_file
         assert op.exists(raw)
 
