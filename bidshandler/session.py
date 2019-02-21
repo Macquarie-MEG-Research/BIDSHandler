@@ -10,7 +10,7 @@ import pandas as pd
 from datetime import datetime
 
 from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
-                    _multi_replace, _fix_folderless)
+                    _multi_replace, _fix_folderless, _file_list)
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
@@ -143,12 +143,25 @@ class Session(QueryMixin):
 
     def delete(self):
         """Delete the session information."""
-        for scan in self.scans:
+        for scan in self.scans[:]:
+            # Delete the scan. This will remove it from this sessions' scan
+            # list.
             scan.delete()
         os.remove(self.scans_tsv)
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
+
+        # Remove this session from the session list in the subject and delete.
         del self.subject._sessions[self._id]
 
     def rename(self, id_):
+        """Change the sessions' id.
+
+        Parameters
+        ----------
+        id_ : str
+            New id for the session object.
+        """
         self._rename(self.subject._id, id_)
 
     def scan(self, task='.', acq='.', run='.', return_all=False):
@@ -478,7 +491,7 @@ class Session(QueryMixin):
         return '<Session, ID: {0}, {1} scan{2}, @ {3}>'.format(
             self.ID,
             len(self.scans),
-            ('s' if len(self.scans) > 1 else ''),
+            ('s' if len(self.scans) != 1 else ''),
             self.path)
 
     def __str__(self):

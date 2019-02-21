@@ -374,7 +374,7 @@ class Subject(QueryMixin):
         return '<Subject, ID: {0}, {1} session{2}, @ {3}>'.format(
             self.ID,
             len(self.sessions),
-            ('s' if len(self.sessions) > 1 else ''),
+            ('s' if len(self.sessions) != 1 else ''),
             self.path)
 
     def __str__(self):

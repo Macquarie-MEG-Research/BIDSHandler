@@ -91,6 +91,11 @@ def test_containment():
         with pytest.raises(AttributeError):
             scan.sessions
 
+        # check deleting a session object works correctly
+        dst_bt.project('test1').subject(1).session(1).delete()
+        with pytest.raises(NoSessionError):
+            sess = dst_bt.project('test1').subject(1).session(1)
+
 
 def test_large_dataset():
     # Test loading the bids-example dataset

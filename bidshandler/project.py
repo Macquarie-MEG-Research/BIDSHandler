@@ -309,7 +309,7 @@ class Project(QueryMixin):
         return '<Project, ID: {0}, {1} subject{2}, @ {3}>'.format(
             self.ID,
             len(self.subjects),
-            ('s' if len(self.subjects) > 1 else ''),
+            ('s' if len(self.subjects) != 1 else ''),
             self.path)
 
     def __str__(self):

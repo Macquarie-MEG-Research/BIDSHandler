@@ -4,10 +4,12 @@ from os import listdir
 import json
 import xml.etree.ElementTree as ET
 from warnings import warn
+import shutil
 
 from .querymixin import QueryMixin
 from .utils import (_get_bids_params, _realize_paths, _multi_replace,
-                    _bids_params_are_subsets, _splitall, _fix_folderless)
+                    _bids_params_are_subsets, _splitall, _fix_folderless,
+                    _file_list)
 from .bidserrors import NoScanError
 
 _SIDECAR_MAP = {'meg': 'meg',
@@ -67,10 +69,31 @@ class Scan(QueryMixin):
         return file_list
 
     def delete(self):
-        pass
+        """Delete all the scan files."""
+        for fname in self.contained_files():
+            # make sure we only delete files that are in the same directory or
+            # lower.
+            if not fname.startswith('..'):
+                # also make sure that there are no other scans in the same
+                # session using the file
+                used = False
+                for scan in self.session.scans:
+                    if scan != self:
+                        if fname in scan.contained_files():
+                            used = True
+                            break
+                if not used:
+                    os.remove(fname)
+        # remove the raw file
+        os.remove(self.raw_file)
+        # is the directory is empty remove it
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
 
-    def rename(self, task, acq, run):
-        pass
+        # remove the scan from the parent session
+        self.session._scans.remove(self)
+        # and delete self
+        del self
 
 #region private methods
 
