@@ -4,6 +4,7 @@ import tempfile
 import os.path as op
 import shutil
 import pytest
+from datetime import date
 
 from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
@@ -39,6 +40,9 @@ def test_containment():
         # check some emptyroom values
         sess2 = src_bt.project('test2').subject('3').session('1')
         assert sess2.scan(task='resting', run='1').emptyroom is not None
+
+        # check the session date is correct
+        assert sess.date == date(year=2018, month=10, day=26)
 
         # check regex works for scans
         with pytest.raises(Exception, match='Multiple'):

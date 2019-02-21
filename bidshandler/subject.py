@@ -3,6 +3,7 @@ import os.path as op
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import shutil
+from warnings import warn
 
 import pandas as pd
 
@@ -282,11 +283,11 @@ class Subject(QueryMixin):
                       na_rep='n/a', encoding='utf-8')
 
         # remove the old path
-        # TODO: check to see if the folders are empty.
         if len(os.listdir(old_path)) == 0:
             shutil.rmtree(old_path)
         else:
-            print(os.listdir(old_path))
+            warn_msg = "The following files haven't been moved correctly:\n{0}"
+            warn(warn_msg.format("\n".join(os.listdir(old_path))))
 
         self._id = subj_id
 

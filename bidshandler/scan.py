@@ -220,18 +220,20 @@ class Scan(QueryMixin):
     @property
     def channels_tsv(self):
         """Absolute path to the associated channels.tsv file."""
+        _path = None
         channels_path = self.associated_files.get('channels')
         if channels_path is not None:
-            return _realize_paths(self, channels_path)
-        return None
+            _path = _realize_paths(self, channels_path)
+        return _path
 
     @property
     def coordsystem_json(self):
         """Absolute path to the associated coordsystem.json file."""
+        _path = None
         coordsystem_path = self.associated_files.get('coordsystem')
         if coordsystem_path is not None:
-            return _realize_paths(self, coordsystem_path)
-        return None
+            _path = _realize_paths(self, coordsystem_path)
+        return _path
 
     @property
     def emptyroom(self):
@@ -246,13 +248,14 @@ class Scan(QueryMixin):
         ----
         Only for MEG scans.
         """
+        _path = None
         if self.scan_type == 'meg':
             emptyroom = self.info.get('AssociatedEmptyRoom')
             if emptyroom is not None:
                 fname = op.basename(emptyroom)
                 bids_params = _get_bids_params(fname)
                 try:
-                    return self.project.subject(
+                    _path = self.project.subject(
                         bids_params['sub']).session(
                             bids_params['ses']).scan(
                                 task=bids_params.get('task'),
@@ -261,15 +264,17 @@ class Scan(QueryMixin):
                 except (KeyError, NoScanError):
                     msg = 'Associated empty room file for {0} cannot be found'
                     warn(msg.format(str(self)))
-                    return None
+                    _path = None
+        return _path
 
     @property
     def events_tsv(self):
         """Absolute path to the associated events.tsv file."""
+        _path = None
         events_path = self.associated_files.get('events')
         if events_path is not None:
-            return _realize_paths(self, events_path)
-        return None
+            _path = _realize_paths(self, events_path)
+        return _path
 
     @property
     def path(self):
@@ -299,9 +304,10 @@ class Scan(QueryMixin):
     @property
     def sidecar(self):
         """Absolute path of associated sidecar file."""
+        _path = None
         if self._sidecar is not None:
-            return _realize_paths(self, self._sidecar)
-        return None
+            _path = _realize_paths(self, self._sidecar)
+        return _path
 
     @property
     def subject(self):

@@ -6,11 +6,12 @@ import shutil
 import os
 import pandas as pd
 
-from bidshandler import BIDSTree
+from bidshandler import BIDSTree, Session
 from bidshandler.constants import test_path
 
 testpath = test_path()
 TESTPATH1 = op.join(testpath, 'BIDSTEST1')
+TESTPATH2 = op.join(testpath, 'BIDSTEST2')
 
 
 def test_rename():
@@ -38,3 +39,12 @@ def test_rename():
         for row in df['filename']:
             assert 'ses-2' in row
             assert 'sub-4' in row
+
+        # test renaming a folder-less session to have a session label
+        shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
+        src_bt = BIDSTree(op.join(tmp, 'BIDSTEST2'))
+
+        sess = src_bt.project('test1').subject(2).session('none')
+        orig_path = sess.path
+        sess.rename('1')
+        assert sess.path == op.join(orig_path, 'ses-1')

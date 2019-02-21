@@ -375,6 +375,8 @@ class Session(QueryMixin):
         if old_id != self._id:
             self.subject._sessions[self._id] = self
             del self.subject._sessions[old_id]
+        if self._id != 'none':
+            self.has_no_folder = False
 
 #region properties
 
