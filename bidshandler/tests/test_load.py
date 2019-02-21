@@ -6,6 +6,8 @@ import shutil
 import pytest
 from datetime import date
 
+import pandas as pd
+
 from bidshandler import (BIDSTree, NoSessionError, NoSubjectError,
                          NoProjectError, NoScanError)
 from bidshandler.constants import test_path
@@ -91,10 +93,28 @@ def test_containment():
         with pytest.raises(AttributeError):
             scan.sessions
 
+
+def test_deleting():
+    # make sure that data is removed correctly
+    with tempfile.TemporaryDirectory() as tmp:
+        # copy the dst to a temp folder
+        shutil.copytree(TESTPATH1, op.join(tmp, 'BIDSTEST1'))
+        bt = BIDSTree(op.join(tmp, 'BIDSTEST1'))
+
+        # TODO: add test for deleting a scan
+
         # check deleting a session object works correctly
-        dst_bt.project('test1').subject(1).session(1).delete()
+        bt.project('test1').subject(1).session(1).delete()
         with pytest.raises(NoSessionError):
-            sess = dst_bt.project('test1').subject(1).session(1)
+            bt.project('test1').subject(1).session(1)
+
+        # check deleting a subject object works correctly
+        bt.project('test1').subject(1).delete()
+        with pytest.raises(NoSubjectError):
+            bt.project('test1').subject(1)
+        participants_tsv = bt.project('test1').participants_tsv
+        df = pd.read_csv(participants_tsv, sep='\t')
+        assert 'sub-1' not in df['participant_id']
 
 
 def test_large_dataset():

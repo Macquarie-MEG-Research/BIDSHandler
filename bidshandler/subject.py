@@ -130,9 +130,30 @@ class Subject(QueryMixin):
         return file_list
 
     def delete(self):
-        pass
+        """Delete the  subject from the parent Project."""
+        for session in self.sessions[:]:
+            session.delete()
+        # remove the subject information from the participants.tsv
+        if self.project.participants_tsv is not None:
+            df = pd.read_csv(self.project.participants_tsv, sep='\t')
+            row_idx = df[df['participant_id'] == self.ID].index.item()
+            df = df.drop(row_idx)
+            df.to_csv(self.project.participants_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
+
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
+
+        del self.project._subjects[self._id]
 
     def rename(self, id_):
+        """Change the subjects' id.
+
+        Parameters
+        ----------
+        id_ : str
+            New id for the subject object.
+        """
         self._rename(id_)
 
     def session(self, id_):

@@ -147,7 +147,8 @@ class Session(QueryMixin):
             # Delete the scan. This will remove it from this sessions' scan
             # list.
             scan.delete()
-        os.remove(self.scans_tsv)
+        if self.scans_tsv is not None:
+            os.remove(self.scans_tsv)
         if len(list(_file_list(self.path))) == 0:
             shutil.rmtree(self.path)
 
