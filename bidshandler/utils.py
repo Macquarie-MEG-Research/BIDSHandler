@@ -66,6 +66,14 @@ def download_test_data(overwrite=True, dst=None):
 
 #region private functions
 
+
+def _file_list(folder):
+    """ List of all the files contained recursively within a directory """
+    for _, _, files in os.walk(folder):
+        for file in files:
+            yield file
+
+
 def _bids_params_are_subsets(params1, params2):
     """
     Equivalent to asking if params1 ⊇ params2.

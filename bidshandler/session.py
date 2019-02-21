@@ -143,14 +143,9 @@ class Session(QueryMixin):
 
     def delete(self):
         """Delete the session information."""
-        if self.has_no_folder:
-            for fname in os.listdir(self.path):
-                if op.isdir(fname):
-                    shutil.rmtree(fname)
-                elif op.isfile(fname):
-                    os.remove(fname)
-        else:
-            shutil.rmtree(self.path)
+        for scan in self.scans:
+            scan.delete()
+        os.remove(self.scans_tsv)
         del self.subject._sessions[self._id]
 
     def rename(self, id_):
@@ -343,25 +338,26 @@ class Session(QueryMixin):
             scan._rename(subj_id, sess_id)
 
         # update the row data to point to the new scan locations
-        if op.exists(old_scans_tsv):
-            df = pd.read_csv(old_scans_tsv, sep='\t')
-            for idx, row in enumerate(df['filename']):
-                row = _fix_folderless(self, row, old_sess_id, old_subj_id)
-                df.at[idx, 'filename'] = _multi_replace(
-                    row, [old_subj_id, old_sess_id],
-                    [new_subj_id, new_sess_id])
-            df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
-                      encoding='utf-8')
+        if old_scans_tsv is not None:
+            if op.exists(old_scans_tsv):
+                df = pd.read_csv(old_scans_tsv, sep='\t')
+                for idx, row in enumerate(df['filename']):
+                    row = _fix_folderless(self, row, old_sess_id, old_subj_id)
+                    df.at[idx, 'filename'] = _multi_replace(
+                        row, [old_subj_id, old_sess_id],
+                        [new_subj_id, new_sess_id])
+                df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
+                          encoding='utf-8')
 
-        self._scans_tsv = _fix_folderless(self, self._scans_tsv, old_sess_id,
-                                          old_subj_id)
-        self._scans_tsv = _multi_replace(self._scans_tsv,
-                                         [old_subj_id, old_sess_id],
-                                         [new_subj_id, new_sess_id])
+            self._scans_tsv = _fix_folderless(self, self._scans_tsv,
+                                              old_sess_id, old_subj_id)
+            self._scans_tsv = _multi_replace(self._scans_tsv,
+                                             [old_subj_id, old_sess_id],
+                                             [new_subj_id, new_sess_id])
 
-        # rename the scans.tsv file
-        os.rename(old_scans_tsv, op.join(self.project.path, new_subj_id,
-                                         new_sess_id, self._scans_tsv))
+            # rename the scans.tsv file
+            os.rename(old_scans_tsv, op.join(self.project.path, new_subj_id,
+                                             new_sess_id, self._scans_tsv))
 
         # remove the old path
         # TODO: check to see if the folders are empty.
@@ -448,7 +444,10 @@ class Session(QueryMixin):
     @property
     def scans_tsv(self):
         """Absolute path of associated scans.tsv file."""
-        return _realize_paths(self, self._scans_tsv)
+        _path = None
+        if self._scans_tsv is not None:
+            _path = _realize_paths(self, self._scans_tsv)
+        return _path
 
 #region class methods
 

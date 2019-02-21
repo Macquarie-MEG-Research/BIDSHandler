@@ -11,7 +11,7 @@ from .bidserrors import MappingError, NoSessionError, AssociationError
 from .session import Session
 from .scan import Scan
 from .querymixin import QueryMixin
-from .utils import _copyfiles, _realize_paths
+from .utils import _copyfiles, _realize_paths, _file_list
 
 
 class Subject(QueryMixin):
@@ -283,11 +283,13 @@ class Subject(QueryMixin):
                       na_rep='n/a', encoding='utf-8')
 
         # remove the old path
-        if len(os.listdir(old_path)) == 0:
+        if len(list(_file_list(old_path))) == 0:
             shutil.rmtree(old_path)
         else:
             warn_msg = "The following files haven't been moved correctly:\n{0}"
-            warn(warn_msg.format("\n".join(os.listdir(old_path))))
+            warn(warn_msg.format(
+                "\n".join(
+                    [_realize_paths(self, p) for p in os.listdir(old_path)])))
 
         self._id = subj_id
 

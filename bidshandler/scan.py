@@ -89,6 +89,9 @@ class Scan(QueryMixin):
                     # TODO: this will not work for .ds folders...
                     if not op.isdir(_realize_paths(self, fname)):
                         if part is None:
+                            if fname == self._raw_file:
+                                # Don't add the raw file name to the list.
+                                continue
                             if bids_params['file'] in self.associated_files:
                                 new_key = bids_params['file'] + \
                                     bids_params['ext']
@@ -169,19 +172,24 @@ class Scan(QueryMixin):
         sess_id : str
             Raw session ID value. Ie. *without* `ses-`.
         """
+        # TODO: handle moving of anat data
         old_subj_id = self.subject.ID
         new_subj_id = 'sub-{0}'.format(subj_id)
         old_sess_id = self.session.ID
         new_sess_id = 'ses-{0}'.format(sess_id)
         # rename all the contained files
         for fname in self.contained_files():
-            new_fname = _fix_folderless(self.session, fname, old_sess_id,
-                                        old_subj_id)
-            new_fname = _multi_replace(new_fname, [old_subj_id, old_sess_id],
-                                       [new_subj_id, new_sess_id])
-            if not op.exists(op.dirname(new_fname)):
-                os.makedirs(op.dirname(new_fname))
-            os.rename(fname, new_fname)
+            # make sure we only rename files that are in the same directory or
+            # lower.
+            if not fname.startswith('..'):
+                new_fname = _fix_folderless(self.session, fname, old_sess_id,
+                                            old_subj_id)
+                new_fname = _multi_replace(new_fname,
+                                           [old_subj_id, old_sess_id],
+                                           [new_subj_id, new_sess_id])
+                if not op.exists(op.dirname(new_fname)):
+                    os.makedirs(op.dirname(new_fname))
+                os.rename(fname, new_fname)
         # rename the raw file
         old_fname = self.raw_file
         new_fname = _fix_folderless(self.session, old_fname, old_sess_id,

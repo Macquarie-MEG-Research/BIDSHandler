@@ -6,7 +6,7 @@ import shutil
 import os
 import pandas as pd
 
-from bidshandler import BIDSTree, Session
+from bidshandler import BIDSTree
 from bidshandler.constants import test_path
 
 testpath = test_path()
