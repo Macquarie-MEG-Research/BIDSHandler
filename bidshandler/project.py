@@ -210,9 +210,10 @@ class Project(QueryMixin):
     @property
     def description(self):
         """Real path to the associated description if there is one."""
+        _path = None
         if self._description is not None:
-            return _realize_paths(self, self._description)
-        return None
+            _path = _realize_paths(self, self._description)
+        return _path
 
     @property
     def ID(self):
@@ -232,9 +233,10 @@ class Project(QueryMixin):
     @property
     def participants_tsv(self):
         """Real path to the associated participants.tsv if there is one."""
+        _path = None
         if self._participants_tsv is not None:
-            return _realize_paths(self, self._participants_tsv)
-        return None
+            _path = _realize_paths(self, self._participants_tsv)
+        return _path
 
     @property
     def path(self):
@@ -244,9 +246,10 @@ class Project(QueryMixin):
     @property
     def readme(self):
         """Real path to the associated README.txt if there is one."""
+        _path = None
         if self._readme is not None:
-            return _realize_paths(self, self._readme)
-        return None
+            _path = _realize_paths(self, self._readme)
+        return _path
 
     @property
     def sessions(self):
