@@ -26,18 +26,18 @@ def test_rename():
         for _, _, files in os.walk(subj.path):
             for fname in files:
                 assert 'sub-2' not in fname
-        sess = subj.session(1)
+        sess = subj.session(2)
         assert 'sub-4' in sess.scans[0].raw_file
 
         # renaming a session
-        sess.rename('2')
-        assert sess.ID == 'ses-2'
+        sess.rename('3')
+        assert sess.ID == 'ses-3'
         for _, _, files in os.walk(subj.path):
             for fname in files:
-                assert 'ses-1' not in fname
+                assert 'ses-2' not in fname
         df = pd.read_csv(sess.scans_tsv, sep='\t')
         for row in df['filename']:
-            assert 'ses-2' in row
+            assert 'ses-3' in row
             assert 'sub-4' in row
 
         # test renaming a folder-less session to have a session label

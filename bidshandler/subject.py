@@ -90,10 +90,11 @@ class Subject(QueryMixin):
                     # check whether the existing session has no actual
                     # session folder.
                     if self.sessions[0].has_no_folder:
-                        print("Current Subject has only one session with no "
-                              "specified session id. Please set this "
-                              "sessions' id by renaming it using "
-                              "`self.sessions[0].rename(1)` (or other number)")
+                        warn("Current Subject has only one session with no "
+                             "specified session id. Please set this "
+                             "sessions' id by renaming it using "
+                             "`self.sessions[0].rename(1)` (or other number). "
+                             "The session to be added will not be added.")
                         return
                 new_session = Session._clone_into_subject(self, other)
                 new_session.add(other, copier)

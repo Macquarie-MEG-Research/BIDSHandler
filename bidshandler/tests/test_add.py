@@ -3,6 +3,7 @@
 import tempfile
 import os.path as op
 import shutil
+
 import pytest
 
 from bidshandler import BIDSTree, AssociationError
@@ -44,11 +45,17 @@ def test_merge_bidstrees():
         shutil.copytree(TESTPATH2, op.join(tmp, 'BIDSTEST2'))
         src_bt = BIDSTree(TESTPATH1)
         dst_bt = BIDSTree(op.join(tmp, 'BIDSTEST2'))
-        dst_bt.add(src_bt)
+        with pytest.warns(UserWarning):
+            dst_bt.add(src_bt)
         assert len(dst_bt.projects) == 2
-        raw = dst_bt.project('test1').subject('2').session('none').scan(
-            task='restingstate', run='1').raw_file
-        assert op.exists(raw)
+        # proj:test1, subj:2, sess: 1 will not have been merged
+        assert (src_bt.project('test1').subject(2).session(2) not in
+                dst_bt.project('test1').subject(2))
+        # To rectify this, rename the folder-less session then re-add
+        dst_bt.project('test1').subject(2).session('none').rename('1')
+        dst_bt.project('test1').subject(2).add(
+            src_bt.project('test1').subject(2).session(2))
+        assert len(dst_bt.project('test1').subject(2).sessions) == 2
 
 
 def test_bidstree_to_bidstree():

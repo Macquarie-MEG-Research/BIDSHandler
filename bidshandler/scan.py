@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 from warnings import warn
 import shutil
 
+import pandas as pd
+
 from .querymixin import QueryMixin
 from .utils import (_get_bids_params, _realize_paths, _multi_replace,
                     _bids_params_are_subsets, _splitall, _fix_folderless,
@@ -86,6 +88,14 @@ class Scan(QueryMixin):
                     os.remove(fname)
         # remove the raw file
         os.remove(self.raw_file)
+
+        # remove the scan information from the scans.tsv
+        if self.session.scans_tsv is not None:
+            df = pd.read_csv(self.session.scans_tsv, sep='\t')
+            row_idx = df[df['filename'] == self.raw_file_relative].index.item()
+            df = df.drop(row_idx)
+            df.to_csv(self.session.scans_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
         # is the directory is empty remove it
         if len(list(_file_list(self.path))) == 0:
             shutil.rmtree(self.path)
