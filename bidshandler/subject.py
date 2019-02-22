@@ -331,6 +331,7 @@ class Subject(QueryMixin):
     @property
     def inheritable_files(self):
         """List of files that are able to be inherited by child objects."""
+        # TODO: make private?
         files = self.project.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = _realize_paths(self, fname)
@@ -340,12 +341,18 @@ class Subject(QueryMixin):
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path of Subject folder."""
         return op.join(self.project.path, self.ID)
 
     @property
     def scans(self):
-        """List of contained Scans."""
+        """List of all contained :class:`bidshandler.Scan`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Scan`
+            All Scans within this Subject.
+        """
         scan_list = []
         for session in self.sessions:
             scan_list.extend(session.scans)
@@ -353,7 +360,13 @@ class Subject(QueryMixin):
 
     @property
     def sessions(self):
-        """List of contained Sessions."""
+        """List of all contained :class:`bidshandler.Session`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Session`
+            All Sessions within this Subject.
+        """
         return list(self._sessions.values())
 
 #region class methods
@@ -384,6 +397,7 @@ class Subject(QueryMixin):
                         "contained.")
 
     def __iter__(self):
+        """Iterable of the contained Session objects."""
         return iter(self._sessions.values())
 
     def __getitem__(self, item):

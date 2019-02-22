@@ -233,9 +233,7 @@ class QueryMixin():
 
     @property
     def projects(self):
-        """
-        List of contained projects or self if the object itself is a Project
-        """
+        # List of contained projects or self if the object itself is a Project.
         from .project import Project
         if isinstance(self, Project):
             return [self]
@@ -246,9 +244,7 @@ class QueryMixin():
 
     @property
     def subjects(self):
-        """
-        List of contained subjects or self if the object itself is a Subject
-        """
+        # List of contained subjects or self if the object itself is a Subject.
         from .subject import Subject
         if isinstance(self, Subject):
             return [self]
@@ -259,9 +255,7 @@ class QueryMixin():
 
     @property
     def sessions(self):
-        """
-        List of contained sessions or self if the object itself is a Session
-        """
+        # List of contained sessions or self if the object itself is a Session.
         from .session import Session
         if isinstance(self, Session):
             return [self]
@@ -272,13 +266,9 @@ class QueryMixin():
 
     @property
     def scans(self):
-        """
-        The Scan object itself.
-
-        Note
-        ----
-        This is overwritten by every inheriting class except the Scan class.
-        """
+        # The Scan object itself.
+        # Note:
+        # This is overwritten by every inheriting class except the Scan class.
         return [self]
 
 #region class methods

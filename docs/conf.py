@@ -24,9 +24,9 @@ copyright = '2019, Matt Sanderson'
 author = 'Matt Sanderson'
 
 # The short X.Y version
-version = '0.2.1'
+version = '0.3'
 # The full version, including alpha/beta/rc tags
-release = 'v0.2.1'
+release = 'v0.3dev0'
 
 
 def trim_docstring_with_noqa(app, what, name, obj, options, lines):
@@ -36,10 +36,7 @@ def trim_docstring_with_noqa(app, what, name, obj, options, lines):
 
 
 def setup(app):
-    app.connect(
-        'autodoc-process-docstring',
-        trim_docstring_with_noqa,
-    )
+    app.connect('autodoc-process-docstring', trim_docstring_with_noqa,)
 
 
 # -- General configuration ---------------------------------------------------
@@ -64,9 +61,10 @@ extensions = [
 
 autodoc_default_options = {
     'member-order': 'bysource',
-    'undoc-members': None,
+    'undoc-members': False,
     'show-inheritance': True,
     'inherited-members': True,
+    'special-members': '__contains__,__iter__,__getitem__',
     'exclude-members': '__init__'
 }
 

@@ -198,6 +198,7 @@ class BIDSTree(QueryMixin):
                         "contained.")
 
     def __iter__(self):
+        """Iterable of the contained Project objects."""
         return iter(self.projects)
 
     def __getitem__(self, item):

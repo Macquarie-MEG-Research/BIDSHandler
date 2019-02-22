@@ -260,7 +260,7 @@ class Scan(QueryMixin):
 
     @property
     def channels_tsv(self):
-        """Absolute path to the associated channels.tsv file."""
+        """Path to the associated channels.tsv file if there is one."""
         _path = None
         channels_path = self.associated_files.get('channels')
         if channels_path is not None:
@@ -269,7 +269,7 @@ class Scan(QueryMixin):
 
     @property
     def coordsystem_json(self):
-        """Absolute path to the associated coordsystem.json file."""
+        """Path to the associated coordsystem.json file if there is one."""
         _path = None
         coordsystem_path = self.associated_files.get('coordsystem')
         if coordsystem_path is not None:
@@ -319,7 +319,7 @@ class Scan(QueryMixin):
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path of folder containing Scan."""
         return op.join(self.session.path, self._path)
 
     @property
@@ -329,22 +329,26 @@ class Scan(QueryMixin):
 
     @property
     def raw_file(self):
-        """Absolute path of associated raw file."""
+        """Path of associated raw file."""
         return _realize_paths(self, self._raw_file)
 
     @property
     def raw_file_relative(self):
-        """Relative path (to parent session) of associated raw file."""
+        """Path of associated raw file relative to parent Session."""
         return op.join(self._path, self._raw_file)
 
     @property
     def scan_type(self):
-        """Scan type."""
+        """Type of Scan.
+
+        This will be the name of the folder the Scan resides in.
+        Eg. `meg` for MEG data, `func` for fMRI data.
+        """
         return self._path
 
     @property
     def sidecar(self):
-        """Absolute path of associated sidecar file."""
+        """Path of associated sidecar file if there is one."""
         _path = None
         if self._sidecar is not None:
             _path = _realize_paths(self, self._sidecar)

@@ -431,6 +431,7 @@ class Session(QueryMixin):
     @property
     def inheritable_files(self):
         """List of files that are able to be inherited by child objects."""
+        # TODO: make private?
         files = self.subject.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = _realize_paths(self, fname)
@@ -440,7 +441,7 @@ class Session(QueryMixin):
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path to Session folder."""
         if self.has_no_folder:
             return self.subject.path
         return _realize_paths(self.subject, self.ID)
@@ -452,12 +453,18 @@ class Session(QueryMixin):
 
     @property
     def scans(self):
-        """List of contained Scans."""
+        """List of all contained :class:`bidshandler.Scan`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Scan`
+            All Scans within this Session.
+        """
         return self._scans
 
     @property
     def scans_tsv(self):
-        """Absolute path of associated scans.tsv file."""
+        """Path of associated scans.tsv file if there is one."""
         _path = None
         if self._scans_tsv is not None:
             _path = _realize_paths(self, self._scans_tsv)
@@ -486,6 +493,7 @@ class Session(QueryMixin):
         raise TypeError("Can only determine if a Scan is contained.")
 
     def __iter__(self):
+        """Iterable of the contained Scan objects."""
         return iter(self._scans)
 
     def __repr__(self):
