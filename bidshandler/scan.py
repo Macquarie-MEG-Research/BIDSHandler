@@ -33,12 +33,15 @@ class Scan(QueryMixin):
     """
     def __init__(self, fpath, session, **scan_params):
         super(Scan, self).__init__()
-        self._path = _splitall(fpath)[0]
-        split_paths = _splitall(fpath)[1:]
-        if len(split_paths) == 1:
-            self._raw_file = split_paths[0]
-        elif len(split_paths) > 1:
-            self._raw_file = op.join(split_paths[0], *split_paths[1:])
+        split_paths = _splitall(fpath)
+        if len(split_paths) < 2:
+            raise ValueError("Scan must be within a subfolder of the session.")
+        self._path = split_paths[0]
+        sub_paths = split_paths[1:]
+        if len(sub_paths) == 1:
+            self._raw_file = sub_paths[0]
+        elif len(sub_paths) > 1:
+            self._raw_file = op.join(sub_paths[0], *sub_paths[1:])
         self.acq_time = scan_params.pop('acq_time', None)
         self.scan_params = scan_params
         self.session = session

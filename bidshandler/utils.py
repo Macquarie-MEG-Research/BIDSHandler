@@ -277,19 +277,25 @@ def _realize_paths(obj, rel_paths):
     return op.normpath(op.join(obj.path, rel_paths))
 
 
-def _splitall(path):
+def _splitall(fpath):
     # credit: Trent Mick:
     # https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
     allparts = []
+    # first, need to fix the path name to be split-able on the current OS:
+    # temp fix while fix is addressed in mne-bids:
+    if '\\' in fpath:
+        fpath = fpath.replace('\\', os.sep)
+    elif '/' in fpath:
+        fpath = fpath.replace('/', os.sep)
     while 1:
-        parts = op.split(path)
-        if parts[0] == path:  # sentinel for absolute paths
+        parts = op.split(fpath)
+        if parts[0] == fpath:  # sentinel for absolute paths
             allparts.insert(0, parts[0])
             break
-        elif parts[1] == path:  # sentinel for relative paths
+        elif parts[1] == fpath:  # sentinel for relative paths
             allparts.insert(0, parts[1])
             break
         else:
-            path = parts[0]
+            fpath = parts[0]
             allparts.insert(0, parts[1])
     return allparts
