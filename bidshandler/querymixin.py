@@ -70,7 +70,7 @@ class QueryMixin():
 
         Returns
         -------
-        return_data : :py:class:`bidshandler.QueryList`
+        return_data : :py:class:`bidshandler.querylist.QueryList`
             List of objects that satisfy the provided query conditions.
         """
         if not self._allow_query(obj):
