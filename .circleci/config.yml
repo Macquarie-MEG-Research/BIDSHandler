@@ -7,7 +7,9 @@ jobs:
             - checkout
             - run:
                 name: Install dependencies
-                command: pip install sphinx numpydoc
+                command: |
+                  pip install sphinx numpydoc
+                  python setup.py develop
             - run:
                 name: Build docs
                 command: |
