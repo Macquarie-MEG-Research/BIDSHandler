@@ -10,7 +10,11 @@ jobs:
                 command: pip install sphinx numpydoc
             - run:
                 name: Build docs
-                command: docs/Makefile html
+                command: |
+                  cd docs
+                  make clean
+                  make html
+                  cd ..
             - persist_to_workspace:
                 root: docs/_build/html/
                 paths: site
