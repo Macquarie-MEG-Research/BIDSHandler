@@ -11,7 +11,7 @@ jobs:
                   python -m venv venv
                   . venv/bin/activate
                   pip install sphinx numpydoc sphinx_rtd_theme
-                  python setup.py develop
+                  python setup.py intall
             - run:
                 name: Build docs
                 command: |
@@ -19,8 +19,8 @@ jobs:
                   ls
                   make build-doc
             - persist_to_workspace:
-                root: docs/_build/html/
-                paths: site
+                root: docs/_build/
+                paths: html
             - store_artifacts:
                 path: docs/_build/html/
                 destination: html
@@ -30,7 +30,7 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                at: docs/_build/html/
+                at: docs/_build/
             - run:
                 name: Install and configure dependencies
                 command: |
