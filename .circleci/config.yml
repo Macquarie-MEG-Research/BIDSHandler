@@ -8,11 +8,14 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
+                  python -m venv venv
+                  . venv/bin/activate
                   pip install sphinx numpydoc
                   python setup.py develop
             - run:
                 name: Build docs
                 command: |
+                  . venv/bin/activate
                   ls
                   make build-doc
             - persist_to_workspace:
