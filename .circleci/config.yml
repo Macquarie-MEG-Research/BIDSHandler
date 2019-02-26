@@ -12,7 +12,9 @@ jobs:
                   python setup.py install
             - run:
                 name: Build docs
-                command: make build-doc
+                command: |
+                  python -c "import bidshandler"
+                  make build-doc
             - persist_to_workspace:
                 root: docs/_build/
                 paths: html
