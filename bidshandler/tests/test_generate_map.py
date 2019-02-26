@@ -32,4 +32,7 @@ def test_generate_xml():
         assert sess.attrib['ID'] == '1'
         scan = sess.find('Scan')
         assert (scan.attrib['path'] ==
-                'meg\\sub-1_ses-1_task-resting_run-1_meg\\sub-1_ses-1_task-resting_run-1_meg.con')  # noqa
+                op.join(
+                    'meg',
+                    'sub-1_ses-1_task-resting_run-1_meg',
+                    'sub-1_ses-1_task-resting_run-1_meg.con'))

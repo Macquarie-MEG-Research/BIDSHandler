@@ -1,6 +1,5 @@
 import os.path as op
 import os
-from os import listdir
 import json
 import xml.etree.ElementTree as ET
 from warnings import warn
@@ -35,7 +34,7 @@ class Scan(QueryMixin):
     def __init__(self, fpath, session, **scan_params):
         super(Scan, self).__init__()
         self._path = _splitall(fpath)[0]
-        self._raw_file = '\\'.join(_splitall(fpath)[1:])
+        self._raw_file = os.sep.join(_splitall(fpath)[1:])
         self.acq_time = scan_params.pop('acq_time', None)
         self.scan_params = scan_params
         self.session = session
@@ -110,7 +109,7 @@ class Scan(QueryMixin):
     def _assign_metadata(self):
         """Associate any files that are related to this raw file."""
         filename_data = _get_bids_params(op.basename(self._raw_file))
-        for fname in listdir(self.path):
+        for fname in os.listdir(self.path):
             bids_params = _get_bids_params(fname)
             part = bids_params.pop('part', None)
             if _bids_params_are_subsets(filename_data, bids_params):
@@ -182,7 +181,7 @@ class Scan(QueryMixin):
             # These will be in the same folder as the raw data.
             filename_data = _get_bids_params(op.basename(self._raw_file))
             raw_folder = op.dirname(self._raw_file)
-            for fname in listdir(op.join(self.path, raw_folder)):
+            for fname in os.listdir(op.join(self.path, raw_folder)):
                 bids_params = _get_bids_params(fname)
                 if _bids_params_are_subsets(filename_data, bids_params):
                     if bids_params['file'] == 'markers':
