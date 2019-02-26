@@ -8,13 +8,11 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
-                  pip install sphinx numpydoc sphinx_rtd_theme
-                  python setup.py install
+                  pip install sphinx numpydoc sphinx_rtd_theme pandas pytest
+                  python setup.py develop
             - run:
                 name: Build docs
-                command: |
-                  python -c "import bidshandler"
-                  make build-doc
+                command: make build-doc
             - persist_to_workspace:
                 root: docs/_build/
                 paths: html
