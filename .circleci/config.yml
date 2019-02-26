@@ -8,16 +8,11 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
-                  python -m venv venv
-                  . venv/bin/activate
                   pip install sphinx numpydoc sphinx_rtd_theme
                   python setup.py install
             - run:
                 name: Build docs
-                command: |
-                  . venv/bin/activate
-                  ls
-                  make build-doc
+                command: make build-doc
             - persist_to_workspace:
                 root: docs/_build/
                 paths: html
