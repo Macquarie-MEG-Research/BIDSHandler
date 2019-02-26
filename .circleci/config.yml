@@ -22,6 +22,8 @@ jobs:
                 command: |
                   . venv/bin/activate
                   python -c "from bidshandler.utils import download_test_data;download_test_data()"
+                  cd bidshandler/tests/
+                  pytest
             - persist_to_workspace:
                 root: docs/_build/
                 paths: html
