@@ -10,12 +10,12 @@ jobs:
                 command: pip install sphinx numpydoc
             - run:
                 name: Build docs
-                command: docs/make html
+                command: docs/Makefile html
             - persist_to_workspace:
                 root: docs/_build/html/
                 paths: site
             - store_artifacts:
-                path: doc/_build/html/
+                path: docs/_build/html/
                 destination: html
     deploy-docs:
         docker:
