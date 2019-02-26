@@ -66,6 +66,14 @@ def download_test_data(overwrite=True, dst=None):
 
 #region private functions
 
+
+def _file_list(folder):
+    """ List of all the files contained recursively within a directory """
+    for _, _, files in os.walk(folder):
+        for file in files:
+            yield file
+
+
 def _bids_params_are_subsets(params1, params2):
     """
     Equivalent to asking if params1 ⊇ params2.
@@ -165,6 +173,17 @@ def _copyfiles(src_files, dst_files):
             print('same file!!')
 
 
+def _fix_folderless(session, fname, old_sess_id, old_subj_id):
+    # TODO: join this into _multi_replace?
+    if session.has_no_folder:
+        # replace all the sub-XX with sub-XX_ses-YY
+        fname = fname.replace(old_subj_id, old_subj_id + '_' + old_sess_id)
+        # then replace the sub-XX_ses-YY in the path to sub-XX/ses-YY
+        fname = fname.replace(old_subj_id + '_' + old_sess_id + op.sep,
+                              op.join(old_subj_id, old_sess_id) + op.sep)
+    return fname
+
+
 def _get_bids_params(fname):
     filename, ext = op.splitext(fname)
     f = filename.split('_')
@@ -175,6 +194,32 @@ def _get_bids_params(fname):
         else:
             data['file'] = i
     return data
+
+
+def _multi_replace(str_in, old, new):
+    """Replace all instances of all strings in `old` with the strings in `new`
+
+    Parameters
+    ----------
+    str_in : str
+        Original string.
+    old : list(str)
+        List of strings to be replaced.
+    new : list(str)
+        List of string to replace with.
+
+    Returns
+    -------
+    str_out : str
+        String with values replaced.
+    """
+    if ((not isinstance(old, list)) or (not isinstance(new, list)) or
+            len(old) != len(new)):
+        raise ValueError
+    str_out = str_in
+    for i in range(len(old)):
+        str_out = str_out.replace(old[i], new[i])
+    return str_out
 
 
 def _prettyprint_xml(xml_str):

@@ -4,7 +4,8 @@ import tempfile
 import os.path as op
 
 from bidshandler.utils import (_get_bids_params, _bids_params_are_subsets,
-                               _compare, _compare_times, download_test_data)
+                               _compare, _compare_times, download_test_data,
+                               _multi_replace)
 
 
 def test_download_test_data():
@@ -59,3 +60,13 @@ def test__compare():
     assert _compare_times(ref_datetime2, '>', ref_datetime)
     with pytest.raises(TypeError):
         _compare_times(ref_date, '=', str)
+
+
+def test__multi_replace():
+    orig = 'this is a test'
+    new = _multi_replace(orig, [], [])
+    assert new == orig
+    new = _multi_replace(orig, [' '], ['_'])
+    assert new == 'this_is_a_test'
+    new = _multi_replace(orig, [' ', 's', 'tezt'], ['_', 'z', 'thing'])
+    assert new == 'thiz_iz_a_thing'

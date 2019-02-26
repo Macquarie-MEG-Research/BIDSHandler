@@ -1,12 +1,17 @@
 import os.path as op
+import os
 from os import listdir
 import json
 import xml.etree.ElementTree as ET
 from warnings import warn
+import shutil
+
+import pandas as pd
 
 from .querymixin import QueryMixin
-from .utils import (_get_bids_params, _realize_paths,
-                    _bids_params_are_subsets, _splitall)
+from .utils import (_get_bids_params, _realize_paths, _multi_replace,
+                    _bids_params_are_subsets, _splitall, _fix_folderless,
+                    _file_list)
 from .bidserrors import NoScanError
 
 _SIDECAR_MAP = {'meg': 'meg',
@@ -59,10 +64,46 @@ class Scan(QueryMixin):
             structure.
         """
         file_list = set()
-        file_list.add(self.sidecar)
+        if self.sidecar is not None:
+            file_list.add(self.sidecar)
         file_list.update(_realize_paths(self,
                                         list(self.associated_files.values())))
         return file_list
+
+    def delete(self):
+        """Delete all the scan files."""
+        for fname in self.contained_files():
+            # make sure we only delete files that are in the same directory or
+            # lower.
+            if not fname.startswith('..'):
+                # also make sure that there are no other scans in the same
+                # session using the file
+                used = False
+                for scan in self.session.scans:
+                    if scan != self:
+                        if fname in scan.contained_files():
+                            used = True
+                            break
+                if not used:
+                    os.remove(fname)
+        # remove the raw file
+        os.remove(self.raw_file)
+
+        # remove the scan information from the scans.tsv
+        if self.session.scans_tsv is not None:
+            df = pd.read_csv(self.session.scans_tsv, sep='\t')
+            row_idx = df[df['filename'] == self.raw_file_relative].index.item()
+            df = df.drop(row_idx)
+            df.to_csv(self.session.scans_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
+        # is the directory is empty remove it
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
+
+        # remove the scan from the parent session
+        self.session._scans.remove(self)
+        # and delete self
+        del self
 
 #region private methods
 
@@ -81,7 +122,16 @@ class Scan(QueryMixin):
                     # TODO: this will not work for .ds folders...
                     if not op.isdir(_realize_paths(self, fname)):
                         if part is None:
-                            self.associated_files[bids_params['file']] = fname
+                            if fname == self._raw_file:
+                                # Don't add the raw file name to the list.
+                                continue
+                            if bids_params['file'] in self.associated_files:
+                                new_key = bids_params['file'] + \
+                                    bids_params['ext']
+                                self.associated_files[new_key] = fname
+                            else:
+                                self.associated_files[bids_params['file']] = \
+                                    fname
                         else:
                             if part == '01':
                                 # Assign the correct raw file name.
@@ -145,6 +195,62 @@ class Scan(QueryMixin):
             with open(self.sidecar, 'r') as sidecar:
                 self.info = json.load(sidecar)
 
+    def _rename(self, subj_id, sess_id):
+        """Rename all the files contained by the scan.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        sess_id : str
+            Raw session ID value. Ie. *without* `ses-`.
+        """
+        # TODO: handle moving of anat data
+        old_subj_id = self.subject.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_sess_id = self.session.ID
+        new_sess_id = 'ses-{0}'.format(sess_id)
+        # rename all the contained files
+        for fname in self.contained_files():
+            # make sure we only rename files that are in the same directory or
+            # lower.
+            if not fname.startswith('..'):
+                new_fname = _fix_folderless(self.session, fname, old_sess_id,
+                                            old_subj_id)
+                new_fname = _multi_replace(new_fname,
+                                           [old_subj_id, old_sess_id],
+                                           [new_subj_id, new_sess_id])
+                if not op.exists(op.dirname(new_fname)):
+                    os.makedirs(op.dirname(new_fname))
+                os.rename(fname, new_fname)
+        # rename the raw file
+        old_fname = self.raw_file
+        new_fname = _fix_folderless(self.session, old_fname, old_sess_id,
+                                    old_subj_id)
+        new_fname = _multi_replace(new_fname, [old_subj_id, old_sess_id],
+                                   [new_subj_id, new_sess_id])
+        if not op.exists(op.dirname(new_fname)):
+            os.makedirs(op.dirname(new_fname))
+        os.rename(old_fname, new_fname)
+        self._raw_file = _fix_folderless(self.session, self._raw_file,
+                                         old_sess_id, old_subj_id)
+        self._raw_file = _multi_replace(self._raw_file,
+                                        [old_subj_id, old_sess_id],
+                                        [new_subj_id, new_sess_id])
+
+        # rename all the internal file names
+        if self._sidecar is not None:
+            self._sidecar = _fix_folderless(self.session, self._sidecar,
+                                            old_sess_id, old_subj_id)
+            self._sidecar = _multi_replace(self._sidecar,
+                                           [old_subj_id, old_sess_id],
+                                           [new_subj_id, new_sess_id])
+        for key, value in self.associated_files.items():
+            value = _fix_folderless(self.session, value, old_sess_id,
+                                    old_subj_id)
+            self.associated_files[key] = _multi_replace(
+                value, [old_subj_id, old_sess_id], [new_subj_id, new_sess_id])
+
 #region properties
 
     @property
@@ -154,19 +260,21 @@ class Scan(QueryMixin):
 
     @property
     def channels_tsv(self):
-        """Absolute path to the associated channels.tsv file."""
+        """Path to the associated channels.tsv file if there is one."""
+        _path = None
         channels_path = self.associated_files.get('channels')
         if channels_path is not None:
-            return _realize_paths(self, channels_path)
-        return None
+            _path = _realize_paths(self, channels_path)
+        return _path
 
     @property
     def coordsystem_json(self):
-        """Absolute path to the associated coordsystem.json file."""
+        """Path to the associated coordsystem.json file if there is one."""
+        _path = None
         coordsystem_path = self.associated_files.get('coordsystem')
         if coordsystem_path is not None:
-            return _realize_paths(self, coordsystem_path)
-        return None
+            _path = _realize_paths(self, coordsystem_path)
+        return _path
 
     @property
     def emptyroom(self):
@@ -181,13 +289,14 @@ class Scan(QueryMixin):
         ----
         Only for MEG scans.
         """
+        _path = None
         if self.scan_type == 'meg':
             emptyroom = self.info.get('AssociatedEmptyRoom')
             if emptyroom is not None:
                 fname = op.basename(emptyroom)
                 bids_params = _get_bids_params(fname)
                 try:
-                    return self.project.subject(
+                    _path = self.project.subject(
                         bids_params['sub']).session(
                             bids_params['ses']).scan(
                                 task=bids_params.get('task'),
@@ -196,19 +305,21 @@ class Scan(QueryMixin):
                 except (KeyError, NoScanError):
                     msg = 'Associated empty room file for {0} cannot be found'
                     warn(msg.format(str(self)))
-                    return None
+                    _path = None
+        return _path
 
     @property
     def events_tsv(self):
         """Absolute path to the associated events.tsv file."""
+        _path = None
         events_path = self.associated_files.get('events')
         if events_path is not None:
-            return _realize_paths(self, events_path)
-        return None
+            _path = _realize_paths(self, events_path)
+        return _path
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path of folder containing Scan."""
         return op.join(self.session.path, self._path)
 
     @property
@@ -218,25 +329,30 @@ class Scan(QueryMixin):
 
     @property
     def raw_file(self):
-        """Absolute path of associated raw file."""
+        """Path of associated raw file."""
         return _realize_paths(self, self._raw_file)
 
     @property
     def raw_file_relative(self):
-        """Relative path (to parent session) of associated raw file."""
+        """Path of associated raw file relative to parent Session."""
         return op.join(self._path, self._raw_file)
 
     @property
     def scan_type(self):
-        """Scan type."""
+        """Type of Scan.
+
+        This will be the name of the folder the Scan resides in.
+        Eg. `meg` for MEG data, `func` for fMRI data.
+        """
         return self._path
 
     @property
     def sidecar(self):
-        """Absolute path of associated sidecar file."""
+        """Path of associated sidecar file if there is one."""
+        _path = None
         if self._sidecar is not None:
-            return _realize_paths(self, self._sidecar)
-        return None
+            _path = _realize_paths(self, self._sidecar)
+        return _path
 
     @property
     def subject(self):

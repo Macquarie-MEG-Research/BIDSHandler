@@ -209,10 +209,11 @@ class Project(QueryMixin):
 
     @property
     def description(self):
-        """Real path to the associated description if there is one."""
+        """Path to the associated description if there is one."""
+        _path = None
         if self._description is not None:
-            return _realize_paths(self, self._description)
-        return None
+            _path = _realize_paths(self, self._description)
+        return _path
 
     @property
     def ID(self):
@@ -222,6 +223,7 @@ class Project(QueryMixin):
     @property
     def inheritable_files(self):
         """List of files that are able to be inherited by child objects."""
+        # TODO: make private?
         files = []
         for fname in os.listdir(self.path):
             abs_path = _realize_paths(self, fname)
@@ -231,26 +233,34 @@ class Project(QueryMixin):
 
     @property
     def participants_tsv(self):
-        """Real path to the associated participants.tsv if there is one."""
+        """Path to the associated participants.tsv if there is one."""
+        _path = None
         if self._participants_tsv is not None:
-            return _realize_paths(self, self._participants_tsv)
-        return None
+            _path = _realize_paths(self, self._participants_tsv)
+        return _path
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path to Project folder."""
         return op.join(self.bids_tree.path, self.ID)
 
     @property
     def readme(self):
-        """Real path to the associated README.txt if there is one."""
+        """Path to the associated README.txt if there is one."""
+        _path = None
         if self._readme is not None:
-            return _realize_paths(self, self._readme)
-        return None
+            _path = _realize_paths(self, self._readme)
+        return _path
 
     @property
     def sessions(self):
-        """List of all Sessions contained in the Project."""
+        """List of all contained :class:`bidshandler.Session`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Session`
+            All Sessions within this Project.
+        """
         session_list = []
         for subject in self.subjects:
             session_list.extend(subject.sessions)
@@ -258,7 +268,13 @@ class Project(QueryMixin):
 
     @property
     def scans(self):
-        """List of all Scans contained in the Project."""
+        """List of all contained :class:`bidshandler.Scan`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Scan`
+            All Scans within this Project.
+        """
         scan_list = []
         for subject in self.subjects:
             scan_list.extend(subject.scans)
@@ -266,7 +282,13 @@ class Project(QueryMixin):
 
     @property
     def subjects(self):
-        """List of all Subjects contained in the Project."""
+        """List of all contained :class:`bidshandler.Subject`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Subject`
+            All Subjects within this Project.
+        """
         return list(self._subjects.values())
 
 #region class methods
@@ -297,6 +319,7 @@ class Project(QueryMixin):
                         "contained.")
 
     def __iter__(self):
+        """Iterable of the contained Subject objects."""
         return iter(self._subjects.values())
 
     def __getitem__(self, item):
@@ -309,7 +332,7 @@ class Project(QueryMixin):
         return '<Project, ID: {0}, {1} subject{2}, @ {3}>'.format(
             self.ID,
             len(self.subjects),
-            ('s' if len(self.subjects) > 1 else ''),
+            ('s' if len(self.subjects) != 1 else ''),
             self.path)
 
     def __str__(self):

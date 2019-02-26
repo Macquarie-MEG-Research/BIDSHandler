@@ -2,12 +2,15 @@ import os
 import os.path as op
 from collections import OrderedDict
 import re
+import shutil
 
 import xml.etree.ElementTree as ET
 
 import pandas as pd
+from datetime import datetime
 
-from .utils import _get_bids_params, _copyfiles, _realize_paths, _combine_tsv
+from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
+                    _multi_replace, _fix_folderless, _file_list)
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
@@ -81,45 +84,44 @@ class Session(QueryMixin):
         elif isinstance(other, Scan):
             # TODO-LT: handle other modalities
             # We need to make sure that the scan is of the same person/session:
-            if (self._id == other.session._id and
+            if not (self._id == other.session._id and
                     self.subject._id == other.subject._id and
                     self.project._id == other.project._id):
-                # Handle merging the scans.tsv file.
-                if other in self:
-                    # We don't want to add it if it is already in this session.
-                    # TODO: add overwrite argument to allow it to still be
-                    # added.
-                    return
-                other_scan_df = pd.DataFrame(
-                    OrderedDict([
-                        ('filename', [other.raw_file_relative]),
-                        ('acq_time', [other.acq_time])]),
-                    columns=['filename', 'acq_time'])
-                # Combine the new data into the original tsv.
-                _combine_tsv(self.scans_tsv, other_scan_df, 'filename')
-
-                # Assign as a set to avoid any potential doubling of the raw
-                # file path.
-                files = set(other.associated_files.values())
-                files.add(other._sidecar)
-                files.add(other._raw_file)
-                # Copy the files over.
-                fl_left = _realize_paths(other, files)
-                fl_right = []
-                for fpath in files:
-                    fl_right.append(op.join(self.path, other._path, fpath))
-                copier(fl_left, fl_right)
-                # Add the scan object to our scans list.
-                scan = Scan(other.raw_file_relative, self,
-                            acq_time=other.acq_time)
-                self._scans.append(scan)
-
-                # finally, check to see if the scan had an associated empty
-                # room file. If so, make sure it comes along too
-                if other.emptyroom is not None:
-                    self.project.add(other.emptyroom)
-            else:
                 raise AssociationError("scan", "project, subject and session")
+            # Handle merging the scans.tsv file.
+            if other in self:
+                # We don't want to add it if it is already in this session.
+                # TODO: add overwrite argument to allow it to still be
+                # added.
+                return
+            other_scan_df = pd.DataFrame(
+                OrderedDict([
+                    ('filename', [other.raw_file_relative]),
+                    ('acq_time', [other.acq_time])]),
+                columns=['filename', 'acq_time'])
+            # Combine the new data into the original tsv.
+            _combine_tsv(self.scans_tsv, other_scan_df, 'filename')
+
+            # Assign as a set to avoid any potential doubling of the raw
+            # file path.
+            files = set(other.associated_files.values())
+            files.add(other._sidecar)
+            files.add(other._raw_file)
+            # Copy the files over.
+            fl_left = _realize_paths(other, files)
+            fl_right = []
+            for fpath in files:
+                fl_right.append(op.join(self.path, other._path, fpath))
+            copier(fl_left, fl_right)
+            # Add the scan object to our scans list.
+            scan = Scan(other.raw_file_relative, self,
+                        acq_time=other.acq_time)
+            self._scans.append(scan)
+
+            # finally, check to see if the scan had an associated empty
+            # room file. If so, make sure it comes along too
+            if other.emptyroom is not None:
+                self.project.add(other.emptyroom)
         else:
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
@@ -138,6 +140,30 @@ class Session(QueryMixin):
         for scan in self.scans:
             file_list.update(scan.contained_files())
         return file_list
+
+    def delete(self):
+        """Delete the session information."""
+        for scan in self.scans[:]:
+            # Delete the scan. This will remove it from this sessions' scan
+            # list.
+            scan.delete()
+        if self.scans_tsv is not None:
+            os.remove(self.scans_tsv)
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
+
+        # Remove this session from the session list in the subject and delete.
+        del self.subject._sessions[self._id]
+
+    def rename(self, id_):
+        """Change the sessions' id.
+
+        Parameters
+        ----------
+        id_ : str
+            New id for the session object.
+        """
+        self._rename(self.subject._id, id_)
 
     def scan(self, task='.', acq='.', run='.', return_all=False):
         """Return a list of all contained Scan's corresponding to the provided
@@ -264,6 +290,7 @@ class Session(QueryMixin):
             New uninitialized Session cloned from `other` to be a child of
             `subject`.
         """
+        # set the directory to be the same as the parent.
         os.makedirs(_realize_paths(subject, other.ID), exist_ok=True)
         # Create a new empty session object.
         new_session = Session(other._id, subject, initialize=False)
@@ -293,12 +320,108 @@ class Session(QueryMixin):
             root.append(scan._generate_map())
         return root
 
+    def _rename(self, subj_id, sess_id):
+        """Change the session id for all contained files.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        sess_id : str
+            Raw session ID value. Ie. *without* `ses-`.
+        """
+        # cache current values and generate new ones for use
+        old_subj_id = self.subject.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_sess_id = self.ID
+        new_sess_id = 'ses-{0}'.format(sess_id)
+        old_scans_tsv = self.scans_tsv
+        old_path = self.path
+        if self.has_no_folder:
+            new_path = op.join(self.subject.path, new_sess_id)
+        else:
+            new_path = _multi_replace(old_path, [old_subj_id, old_sess_id],
+                                      [new_subj_id, new_sess_id])
+        if not op.exists(new_path):
+            os.makedirs(new_path)
+
+        scan_delete_paths = set()
+        # call rename on each of the contained Scan objects
+        for scan in self.scans:
+            scan_delete_paths.add(scan.path)
+            scan._rename(subj_id, sess_id)
+
+        # update the row data to point to the new scan locations
+        if old_scans_tsv is not None:
+            if op.exists(old_scans_tsv):
+                df = pd.read_csv(old_scans_tsv, sep='\t')
+                for idx, row in enumerate(df['filename']):
+                    row = _fix_folderless(self, row, old_sess_id, old_subj_id)
+                    df.at[idx, 'filename'] = _multi_replace(
+                        row, [old_subj_id, old_sess_id],
+                        [new_subj_id, new_sess_id])
+                df.to_csv(old_scans_tsv, sep='\t', index=False, na_rep='n/a',
+                          encoding='utf-8')
+
+            self._scans_tsv = _fix_folderless(self, self._scans_tsv,
+                                              old_sess_id, old_subj_id)
+            self._scans_tsv = _multi_replace(self._scans_tsv,
+                                             [old_subj_id, old_sess_id],
+                                             [new_subj_id, new_sess_id])
+
+            # rename the scans.tsv file
+            os.rename(old_scans_tsv, op.join(self.project.path, new_subj_id,
+                                             new_sess_id, self._scans_tsv))
+
+        # remove the old path
+        # TODO: check to see if the folders are empty.
+        for fpath in scan_delete_paths:
+            shutil.rmtree(fpath)
+
+        # change the internal id. self.ID -> new_sess_id
+        old_id = self._id
+        self._id = sess_id
+        # update the parent subject dictionary
+        if old_id != self._id:
+            self.subject._sessions[self._id] = self
+            del self.subject._sessions[old_id]
+        if self._id != 'none':
+            self.has_no_folder = False
+
 #region properties
 
     @property
     def bids_tree(self):
         """Parent :class:`bidshandler.BIDSTree` object."""
         return self.project.bids_tree
+
+    @property
+    def date(self):
+        """The recording date of the session.
+
+        Returns
+        -------
+        known_date : :func:`datetime.date`
+            Specific date of the year the session ocurred on.
+        """
+        known_date = None
+        for scan in self.scans:
+            # if the scan has an acquisition date, load it into a datetime.date
+            # object and compare
+            if scan.acq_time is not None:
+                try:
+                    compare_date = datetime.strptime(scan.acq_time, '%Y-%m-%d')
+                except ValueError:
+                    compare_date = datetime.strptime(scan.acq_time,
+                                                     '%Y-%m-%dT%H:%M:%S')
+                compare_date = compare_date.date()
+                if known_date is None:
+                    known_date = compare_date
+                else:
+                    if compare_date != known_date:
+                        known_date = None
+                        break
+        return known_date
 
     @property
     def ID(self):
@@ -308,6 +431,7 @@ class Session(QueryMixin):
     @property
     def inheritable_files(self):
         """List of files that are able to be inherited by child objects."""
+        # TODO: make private?
         files = self.subject.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = _realize_paths(self, fname)
@@ -317,10 +441,10 @@ class Session(QueryMixin):
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path to Session folder."""
         if self.has_no_folder:
             return self.subject.path
-        return op.join(self.subject.path, self.ID)
+        return _realize_paths(self.subject, self.ID)
 
     @property
     def project(self):
@@ -329,13 +453,22 @@ class Session(QueryMixin):
 
     @property
     def scans(self):
-        """List of contained Scans."""
+        """List of all contained :class:`bidshandler.Scan`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Scan`
+            All Scans within this Session.
+        """
         return self._scans
 
     @property
     def scans_tsv(self):
-        """Absolute path of associated scans.tsv file."""
-        return _realize_paths(self, self._scans_tsv)
+        """Path of associated scans.tsv file if there is one."""
+        _path = None
+        if self._scans_tsv is not None:
+            _path = _realize_paths(self, self._scans_tsv)
+        return _path
 
 #region class methods
 
@@ -360,13 +493,14 @@ class Session(QueryMixin):
         raise TypeError("Can only determine if a Scan is contained.")
 
     def __iter__(self):
+        """Iterable of the contained Scan objects."""
         return iter(self._scans)
 
     def __repr__(self):
         return '<Session, ID: {0}, {1} scan{2}, @ {3}>'.format(
             self.ID,
             len(self.scans),
-            ('s' if len(self.scans) > 1 else ''),
+            ('s' if len(self.scans) != 1 else ''),
             self.path)
 
     def __str__(self):

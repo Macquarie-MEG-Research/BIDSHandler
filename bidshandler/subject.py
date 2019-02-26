@@ -2,6 +2,8 @@ import os
 import os.path as op
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
+import shutil
+from warnings import warn
 
 import pandas as pd
 
@@ -9,7 +11,7 @@ from .bidserrors import MappingError, NoSessionError, AssociationError
 from .session import Session
 from .scan import Scan
 from .querymixin import QueryMixin
-from .utils import _copyfiles, _realize_paths
+from .utils import _copyfiles, _realize_paths, _file_list
 
 
 class Subject(QueryMixin):
@@ -74,28 +76,42 @@ class Subject(QueryMixin):
             else:
                 raise ValueError("Added subject must have same ID.")
         elif isinstance(other, Session):
-            if (self._id == other.subject._id and
+            # Check to see if we have only one scan without a session folder:
+            if not (self._id == other.subject._id and
                     self.project._id == other.project._id):
-                if other in self:
-                    self.session(other._id).add(other, copier)
-                else:
-                    new_session = Session._clone_into_subject(self, other)
-                    new_session.add(other, copier)
-                    self._sessions[other._id] = new_session
-            else:
                 raise AssociationError("session", "project and subject")
-        elif isinstance(other, Scan):
-            if (self._id == other.subject._id and
-                    self.project._id == other.project._id):
-                if other.session in self:
-                    self.session(other.session._id).add(other, copier)
-                else:
-                    new_session = Session._clone_into_subject(self,
-                                                              other.session)
-                    new_session.add(other, copier)
-                    self._sessions[other.session._id] = new_session
+            if other in self:
+                # if the other session being added has the same ID, merge it
+                # with the current session with that ID.
+                self.session(other._id).add(other, copier)
             else:
+                if len(self.sessions) == 1:
+                    # If we have only one existing session, we want to
+                    # check whether the existing session has no actual
+                    # session folder.
+                    if self.sessions[0].has_no_folder:
+                        warn("Current Subject has only one session with no "
+                             "specified session id. Please set this "
+                             "sessions' id by renaming it using "
+                             "`self.sessions[0].rename(1)` (or other number). "
+                             "The session to be added will not be added.")
+                        return
+                new_session = Session._clone_into_subject(self, other)
+                new_session.add(other, copier)
+                self._sessions[other._id] = new_session
+
+        elif isinstance(other, Scan):
+            if not (self._id == other.subject._id and
+                    self.project._id == other.project._id):
                 raise AssociationError("scan", "project and subject")
+
+            if other.session in self:
+                self.session(other.session._id).add(other, copier)
+            else:
+                new_session = Session._clone_into_subject(self,
+                                                          other.session)
+                new_session.add(other, copier)
+                self._sessions[other.session._id] = new_session
         else:
             raise TypeError("Cannot add a {0} object to a Subject".format(
                 type(other).__name__))
@@ -113,6 +129,33 @@ class Subject(QueryMixin):
         for session in self.sessions:
             file_list.update(session.contained_files())
         return file_list
+
+    def delete(self):
+        """Delete the  subject from the parent Project."""
+        for session in self.sessions[:]:
+            session.delete()
+        # remove the subject information from the participants.tsv
+        if self.project.participants_tsv is not None:
+            df = pd.read_csv(self.project.participants_tsv, sep='\t')
+            row_idx = df[df['participant_id'] == self.ID].index.item()
+            df = df.drop(row_idx)
+            df.to_csv(self.project.participants_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
+
+        if len(list(_file_list(self.path))) == 0:
+            shutil.rmtree(self.path)
+
+        del self.project._subjects[self._id]
+
+    def rename(self, id_):
+        """Change the subjects' id.
+
+        Parameters
+        ----------
+        id_ : str
+            New id for the subject object.
+        """
+        self._rename(id_)
 
     def session(self, id_):
         """Return the Session corresponding to the provided id.
@@ -148,7 +191,7 @@ class Subject(QueryMixin):
         # assume that the current folder is in fact the session folder (ie.
         # only one session).
         if len(self._sessions) == 0:
-            self._sessions['01'] = Session('01', self, no_folder=True)
+            self._sessions['none'] = Session('none', self, no_folder=True)
 
     def _check(self):
         """Check that there is at least one included session."""
@@ -232,6 +275,47 @@ class Subject(QueryMixin):
             root.append(session._generate_map())
         return root
 
+    def _rename(self, subj_id):
+        """Change the session id for all contained files.
+
+        Parameters
+        ----------
+        subj_id : str
+            Raw subject ID value. Ie. *without* `sub-`.
+        """
+        # cache current values
+        old_subj_id = self.ID
+        new_subj_id = 'sub-{0}'.format(subj_id)
+        old_path = self.path
+        new_path = self.path.replace(old_subj_id, new_subj_id)
+        if not op.exists(new_path):
+            os.mkdir(new_path)
+
+        # call rename on each of the contained Scan objects
+        for session in self.sessions:
+            session._rename(subj_id, session._id)
+
+        if op.exists(self.project.participants_tsv):
+            df = pd.read_csv(self.project.participants_tsv, sep='\t')
+            for idx, row in enumerate(df['participant_id']):
+                if row == old_subj_id:
+                    df.at[idx, 'participant_id'] = new_subj_id
+                    break
+            df.to_csv(self.project.participants_tsv, sep='\t', index=False,
+                      na_rep='n/a', encoding='utf-8')
+
+        # remove the old path
+        if len(list(_file_list(old_path))) == 0:
+            shutil.rmtree(old_path)
+        else:
+            warn_msg = "The following files haven't been moved correctly:\n{0}"
+            warn(warn_msg.format(
+                "\n".join(
+                    [_realize_paths(self, p) for p in os.listdir(old_path)])))
+
+        self._id = subj_id
+
+
 #region properties
 
     @property
@@ -247,6 +331,7 @@ class Subject(QueryMixin):
     @property
     def inheritable_files(self):
         """List of files that are able to be inherited by child objects."""
+        # TODO: make private?
         files = self.project.inheritable_files
         for fname in os.listdir(self.path):
             abs_path = _realize_paths(self, fname)
@@ -256,12 +341,18 @@ class Subject(QueryMixin):
 
     @property
     def path(self):
-        """Determine path location based on parent paths."""
+        """Path of Subject folder."""
         return op.join(self.project.path, self.ID)
 
     @property
     def scans(self):
-        """List of contained Scans."""
+        """List of all contained :class:`bidshandler.Scan`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Scan`
+            All Scans within this Subject.
+        """
         scan_list = []
         for session in self.sessions:
             scan_list.extend(session.scans)
@@ -269,7 +360,13 @@ class Subject(QueryMixin):
 
     @property
     def sessions(self):
-        """List of contained Sessions."""
+        """List of all contained :class:`bidshandler.Session`'s.
+
+        Returns
+        -------
+        list of :class:`bidshandler.Session`
+            All Sessions within this Subject.
+        """
         return list(self._sessions.values())
 
 #region class methods
@@ -300,6 +397,7 @@ class Subject(QueryMixin):
                         "contained.")
 
     def __iter__(self):
+        """Iterable of the contained Session objects."""
         return iter(self._sessions.values())
 
     def __getitem__(self, item):
@@ -312,7 +410,7 @@ class Subject(QueryMixin):
         return '<Subject, ID: {0}, {1} session{2}, @ {3}>'.format(
             self.ID,
             len(self.sessions),
-            ('s' if len(self.sessions) > 1 else ''),
+            ('s' if len(self.sessions) != 1 else ''),
             self.path)
 
     def __str__(self):
