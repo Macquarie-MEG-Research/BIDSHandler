@@ -11,8 +11,8 @@ jobs:
             - run:
                 name: Build docs
                 command: |
-                  cd docs; make clean
-                  cd docs; make html
+                  ls
+                  make build-doc
             - persist_to_workspace:
                 root: docs/_build/html/
                 paths: site
