@@ -10,7 +10,7 @@ jobs:
                 command: |
                   python -m venv venv
                   . venv/bin/activate
-                  pip install sphinx numpydoc
+                  pip install sphinx numpydoc sphinx_rtd_theme
                   python setup.py develop
             - run:
                 name: Build docs
