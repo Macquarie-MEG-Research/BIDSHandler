@@ -36,7 +36,7 @@ class Scan(QueryMixin):
         self._path = _splitall(fpath)[0]
         split_paths = _splitall(fpath)[1:]
         if len(split_paths) == 1:
-            self._raw_file = split_paths
+            self._raw_file = split_paths[0]
         elif len(split_paths) > 1:
             self._raw_file = op.join(split_paths[0], *split_paths[1:])
         self.acq_time = scan_params.pop('acq_time', None)
