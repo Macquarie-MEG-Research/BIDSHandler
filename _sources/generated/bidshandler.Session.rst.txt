@@ -16,7 +16,9 @@ bidshandler.Session
       ~Session.__init__
       ~Session.add
       ~Session.contained_files
+      ~Session.delete
       ~Session.query
+      ~Session.rename
       ~Session.scan
    
    
@@ -29,6 +31,7 @@ bidshandler.Session
    
       ~Session.ID
       ~Session.bids_tree
+      ~Session.date
       ~Session.inheritable_files
       ~Session.path
       ~Session.project

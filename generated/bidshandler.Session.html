@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.Session &mdash; BIDSHandler v0.2.1 documentation</title>
+  <title>bidshandler.Session &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="bidshandler.Scan" href="bidshandler.Scan.html" />
     <link rel="prev" title="bidshandler.Subject" href="bidshandler.Subject.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.3
               </div>
             
           
@@ -106,6 +108,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage_docs/querying_data.html">Querying BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#new-features">&gt; New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id4">&gt; API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -176,7 +197,7 @@
         <a href="bidshandler.Scan.html" class="btn btn-neutral float-right" title="bidshandler.Scan" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="bidshandler.Subject.html" class="btn btn-neutral" title="bidshandler.Subject" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="bidshandler.Subject.html" class="btn btn-neutral float-left" title="bidshandler.Subject" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -231,11 +252,17 @@ be omitted and the Subject folder is in fact the Session folder.</li>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.contained_files" title="bidshandler.Session.contained_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contained_files</span></code></a>()</td>
 <td>Get the list of contained files.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.query" title="bidshandler.Session.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.delete" title="bidshandler.Session.delete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete</span></code></a>()</td>
+<td>Delete the session information.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.query" title="bidshandler.Session.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
 <td>Query the BIDS object and return the appropriate data.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.scan" title="bidshandler.Session.scan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan</span></code></a>([task,&nbsp;acq,&nbsp;run])</td>
-<td>Return the contained Scan corresponding to the provided values</td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.rename" title="bidshandler.Session.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename</span></code></a>(id_)</td>
+<td>Change the sessions’ id.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.scan" title="bidshandler.Session.scan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan</span></code></a>([task,&nbsp;acq,&nbsp;run,&nbsp;return_all])</td>
+<td>Return a list of all contained Scan’s corresponding to the provided values.</td>
 </tr>
 </tbody>
 </table>
@@ -252,29 +279,32 @@ be omitted and the Subject folder is in fact the Session folder.</li>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.bids_tree" title="bidshandler.Session.bids_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bids_tree</span></code></a></td>
 <td>Parent <a class="reference internal" href="bidshandler.BIDSTree.html#bidshandler.BIDSTree" title="bidshandler.BIDSTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.BIDSTree</span></code></a> object.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.inheritable_files" title="bidshandler.Session.inheritable_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inheritable_files</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.date" title="bidshandler.Session.date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date</span></code></a></td>
+<td>The recording date of the session.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.inheritable_files" title="bidshandler.Session.inheritable_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inheritable_files</span></code></a></td>
 <td>List of files that are able to be inherited by child objects.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.path" title="bidshandler.Session.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
-<td>Determine path location based on parent paths.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.path" title="bidshandler.Session.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
+<td>Path to Session folder.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.project" title="bidshandler.Session.project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.project" title="bidshandler.Session.project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project</span></code></a></td>
 <td>Parent <a class="reference internal" href="bidshandler.Project.html#bidshandler.Project" title="bidshandler.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Project</span></code></a> object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.projects" title="bidshandler.Session.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
-<td>List of contained projects or self if the object itself is a Project</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.projects" title="bidshandler.Session.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.scans" title="bidshandler.Session.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
-<td>List of contained Scans.</td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.scans" title="bidshandler.Session.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
+<td>List of all contained <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>’s.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.scans_tsv" title="bidshandler.Session.scans_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans_tsv</span></code></a></td>
-<td>Absolute path of associated scans.tsv file.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.scans_tsv" title="bidshandler.Session.scans_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans_tsv</span></code></a></td>
+<td>Path of associated scans.tsv file if there is one.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.sessions" title="bidshandler.Session.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
-<td>List of contained sessions or self if the object itself is a Session</td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.sessions" title="bidshandler.Session.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Session.subjects" title="bidshandler.Session.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
-<td>List of contained subjects or self if the object itself is a Subject</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Session.subjects" title="bidshandler.Session.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -282,6 +312,30 @@ be omitted and the Subject folder is in fact the Session folder.</li>
 <dt id="bidshandler.Session.ID">
 <code class="descname">ID</code><a class="headerlink" href="#bidshandler.Session.ID" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID with ‘ses’ prefix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Session.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the Session object contains a scan.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>) – Object to test whether it is contained in this Session.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Returns True if the object is contained within this Session.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Session.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterable of the contained Scan objects.</p>
 </dd></dl>
 
 <dl class="method">
@@ -335,6 +389,28 @@ structure.</td>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="bidshandler.Session.date">
+<code class="descname">date</code><a class="headerlink" href="#bidshandler.Session.date" title="Permalink to this definition">¶</a></dt>
+<dd><p>The recording date of the session.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>known_date</strong> – Specific date of the year the session ocurred on.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-func docutils literal notranslate"><span class="pre">datetime.date()</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Session.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the session information.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="bidshandler.Session.inheritable_files">
 <code class="descname">inheritable_files</code><a class="headerlink" href="#bidshandler.Session.inheritable_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of files that are able to be inherited by child objects.</p>
@@ -343,7 +419,7 @@ structure.</td>
 <dl class="attribute">
 <dt id="bidshandler.Session.path">
 <code class="descname">path</code><a class="headerlink" href="#bidshandler.Session.path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine path location based on parent paths.</p>
+<dd><p>Path to Session folder.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -355,8 +431,7 @@ structure.</td>
 <dl class="attribute">
 <dt id="bidshandler.Session.projects">
 <code class="descname">projects</code><a class="headerlink" href="#bidshandler.Session.projects" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of contained projects or self if the object itself is a Project</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.Session.query">
@@ -419,7 +494,7 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.querylist.QueryList.html#bidshandler.querylist.QueryList" title="bidshandler.querylist.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.querylist.QueryList</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -427,9 +502,24 @@ Currently regex is not supported, but this may come in the future.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="bidshandler.Session.rename">
+<code class="descname">rename</code><span class="sig-paren">(</span><em>id_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the sessions’ id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – New id for the session object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="bidshandler.Session.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>task=None</em>, <em>acq=None</em>, <em>run=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the contained Scan corresponding to the provided values</p>
+<code class="descname">scan</code><span class="sig-paren">(</span><em>task='.'</em>, <em>acq='.'</em>, <em>run='.'</em>, <em>return_all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/session.html#Session.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Session.scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all contained Scan’s corresponding to the provided
+values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -438,42 +528,55 @@ Currently regex is not supported, but this may come in the future.</li>
 <li><strong>task</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Value of <cite>task</cite> in the BIDS filename.</li>
 <li><strong>acq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Value of <cite>acq</cite> in the BIDS filename.</li>
 <li><strong>run</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Value of <cite>run</cite> in the BIDS filename.</li>
+<li><strong>return_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to return every scan in the session that matches the
+provided values or not.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>scan</strong> – Scan object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>scan</strong> – List of Scan’s.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(<a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>)</p>
 </td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The <cite>task</cite>, <cite>acq</cite> and <cite>run</cite> arguments may all have regular expressions
+passed to them.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Session.scans">
+<code class="descname">scans</code><a class="headerlink" href="#bidshandler.Session.scans" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all contained <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>’s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All Scans within this Session.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="bidshandler.Session.scans">
-<code class="descname">scans</code><a class="headerlink" href="#bidshandler.Session.scans" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of contained Scans.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="bidshandler.Session.scans_tsv">
 <code class="descname">scans_tsv</code><a class="headerlink" href="#bidshandler.Session.scans_tsv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Absolute path of associated scans.tsv file.</p>
+<dd><p>Path of associated scans.tsv file if there is one.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Session.sessions">
 <code class="descname">sessions</code><a class="headerlink" href="#bidshandler.Session.sessions" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of contained sessions or self if the object itself is a Session</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Session.subjects">
 <code class="descname">subjects</code><a class="headerlink" href="#bidshandler.Session.subjects" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of contained subjects or self if the object itself is a Subject</p>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -490,7 +593,7 @@ Currently regex is not supported, but this may come in the future.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Matt Sanderson.
+        &copy; Copyright 2019, Matt Sanderson
 
     </p>
   </div>
@@ -507,33 +610,16 @@ Currently regex is not supported, but this may come in the future.</li>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v0.2.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

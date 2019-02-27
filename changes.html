@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using BIDSHandler &mdash; BIDSHandler v0.3dev0 documentation</title>
+  <title>Change Log &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -35,8 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Loading BIDS data" href="usage_docs/loading_data.html" />
-    <link rel="prev" title="bidshandler.querylist.QueryList" href="generated/bidshandler.querylist.QueryList.html" /> 
+    <link rel="prev" title="Querying BIDS data" href="usage_docs/querying_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,7 +84,7 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.BIDSTree.html">bidshandler.BIDSTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.Project.html">bidshandler.Project</a></li>
@@ -96,7 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/bidshandler.querylist.QueryList.html">bidshandler.querylist.QueryList</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Using BIDSHandler</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Using BIDSHandler</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage_docs/loading_data.html">Loading BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="usage_docs/loading_data.html#loading">Loading</a></li>
 <li class="toctree-l3"><a class="reference internal" href="usage_docs/loading_data.html#looking-at-individual-sub-components">Looking at individual sub-components</a></li>
@@ -113,20 +112,20 @@
 </ul>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#version-0-3">Version 0.3</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changes.html#api-changes">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changes.html#new-features">&gt; New Features</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">&gt; New Features</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#version-0-2-1">Version 0.2.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changes.html#id4">&gt; API Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">&gt; API Changes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#version-0-2">Version 0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changes.html#id6">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changes.html#id7">&gt; New Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -176,13 +175,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Using BIDSHandler</li>
+      <li>Change Log</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/changes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,10 +191,8 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="usage_docs/loading_data.html" class="btn btn-neutral float-right" title="Loading BIDS data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="generated/bidshandler.querylist.QueryList.html" class="btn btn-neutral float-left" title="bidshandler.querylist.QueryList" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="usage_docs/querying_data.html" class="btn btn-neutral float-left" title="Querying BIDS data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -204,15 +201,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="using-bidshandler">
-<span id="usage"></span><h1>Using BIDSHandler<a class="headerlink" href="#using-bidshandler" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="usage_docs/loading_data.html">Loading BIDS data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage_docs/manipulating_data.html">Manipulating BIDS data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage_docs/querying_data.html">Querying BIDS data</a></li>
+  <div class="section" id="change-log">
+<span id="changelog"></span><h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-0-3">
+<h2>Version 0.3<a class="headerlink" href="#version-0-3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-changes">
+<h3>&gt; API Changes<a class="headerlink" href="#api-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Scan object has new properties: <cite>scan_type</cite> and <cite>emptyroom</cite>. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14">#14</a>)</li>
+<li>Searching for a <cite>Scan</cite> within a <cite>Session</cite> can now accept regex and is able to return more than one scan if multiple match. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/15">#15</a>)</li>
 </ul>
+</div>
+<div class="section" id="new-features">
+<h3>&gt; New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>MEG data with an associated empty room file now brings the data along when it is added to another BIDS folder hierarchy. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14">#14</a>)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="version-0-2-1">
+<h2>Version 0.2.1<a class="headerlink" href="#version-0-2-1" title="Permalink to this headline">¶</a></h2>
+<p>Date: 11th Feb 2019</p>
+<div class="section" id="id4">
+<h3>&gt; API Changes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>All functions in <cite>bidshandler.utils</cite> are now private with the exception of the new function <cite>download_test_data</cite>. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/13">#13</a>)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="version-0-2">
+<h2>Version 0.2<a class="headerlink" href="#version-0-2" title="Permalink to this headline">¶</a></h2>
+<p>Date: 5th Feb 2019</p>
+<div class="section" id="id6">
+<h3>&gt; API Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><cite>BIDSFolder</cite> renamed to <cite>BIDSTree</cite></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>&gt; New Features<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Query functionality. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/8">#8</a>)</li>
+<li><cite>BIDSTree</cite> objects are able to have an <cite>.xml</cite> file generated to map out their entire structure. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/4">#4</a>)</li>
+<li>EEG, fMRI and MRI data reading has been improved dramatically. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/9">#9</a>)</li>
+</ul>
+</div>
 </div>
 </div>
 

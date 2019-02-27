@@ -16,7 +16,9 @@ bidshandler.Subject
       ~Subject.__init__
       ~Subject.add
       ~Subject.contained_files
+      ~Subject.delete
       ~Subject.query
+      ~Subject.rename
       ~Subject.session
    
    

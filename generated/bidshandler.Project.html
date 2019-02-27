@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.Project &mdash; BIDSHandler v0.2.1 documentation</title>
+  <title>bidshandler.Project &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="bidshandler.Subject" href="bidshandler.Subject.html" />
     <link rel="prev" title="bidshandler.BIDSTree" href="bidshandler.BIDSTree.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.3
               </div>
             
           
@@ -106,6 +108,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage_docs/querying_data.html">Querying BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#new-features">&gt; New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id4">&gt; API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -176,7 +197,7 @@
         <a href="bidshandler.Subject.html" class="btn btn-neutral float-right" title="bidshandler.Subject" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="bidshandler.BIDSTree.html" class="btn btn-neutral" title="bidshandler.BIDSTree" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="bidshandler.BIDSTree.html" class="btn btn-neutral float-left" title="bidshandler.BIDSTree" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -246,31 +267,31 @@
 <td>ID of the Project.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.description" title="bidshandler.Project.description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">description</span></code></a></td>
-<td>Real path to the associated description if there is one.</td>
+<td>Path to the associated description if there is one.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.inheritable_files" title="bidshandler.Project.inheritable_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inheritable_files</span></code></a></td>
 <td>List of files that are able to be inherited by child objects.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.participants_tsv" title="bidshandler.Project.participants_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">participants_tsv</span></code></a></td>
-<td>Real path to the associated participants.tsv if there is one.</td>
+<td>Path to the associated participants.tsv if there is one.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.path" title="bidshandler.Project.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
-<td>Determine path location based on parent paths.</td>
+<td>Path to Project folder.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.projects" title="bidshandler.Project.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
-<td>List of contained projects or self if the object itself is a Project</td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.readme" title="bidshandler.Project.readme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readme</span></code></a></td>
-<td>Real path to the associated README.txt if there is one.</td>
+<td>Path to the associated README.txt if there is one.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.scans" title="bidshandler.Project.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
-<td>List of all Scans contained in the Project.</td>
+<td>List of all contained <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>’s.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.sessions" title="bidshandler.Project.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
-<td>List of all Sessions contained in the Project.</td>
+<td>List of all contained <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a>’s.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.subjects" title="bidshandler.Project.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
-<td>List of all Subjects contained in the Project.</td>
+<td>List of all contained <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>’s.</td>
 </tr>
 </tbody>
 </table>
@@ -278,6 +299,36 @@
 <dt id="bidshandler.Project.ID">
 <code class="descname">ID</code><a class="headerlink" href="#bidshandler.Project.ID" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID of the Project.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Project.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/project.html#Project.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Project.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the Project contains a certain Scan, Session or Project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (Instance of <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>, <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a> or <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>) – Object to check whether it is contained in this Project.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Returns True if the object is contained within this Project.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Project.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/project.html#Project.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Project.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the child subject with the corresponding name (if it exists).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.Project.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bidshandler/project.html#Project.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bidshandler.Project.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterable of the contained Subject objects.</p>
 </dd></dl>
 
 <dl class="method">
@@ -327,7 +378,7 @@ structure.</td>
 <dl class="attribute">
 <dt id="bidshandler.Project.description">
 <code class="descname">description</code><a class="headerlink" href="#bidshandler.Project.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Real path to the associated description if there is one.</p>
+<dd><p>Path to the associated description if there is one.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -339,20 +390,19 @@ structure.</td>
 <dl class="attribute">
 <dt id="bidshandler.Project.participants_tsv">
 <code class="descname">participants_tsv</code><a class="headerlink" href="#bidshandler.Project.participants_tsv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Real path to the associated participants.tsv if there is one.</p>
+<dd><p>Path to the associated participants.tsv if there is one.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Project.path">
 <code class="descname">path</code><a class="headerlink" href="#bidshandler.Project.path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine path location based on parent paths.</p>
+<dd><p>Path to Project folder.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Project.projects">
 <code class="descname">projects</code><a class="headerlink" href="#bidshandler.Project.projects" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of contained projects or self if the object itself is a Project</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.Project.query">
@@ -415,7 +465,7 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="bidshandler.querylist.QueryList.html#bidshandler.querylist.QueryList" title="bidshandler.querylist.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.querylist.QueryList</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -425,19 +475,39 @@ Currently regex is not supported, but this may come in the future.</li>
 <dl class="attribute">
 <dt id="bidshandler.Project.readme">
 <code class="descname">readme</code><a class="headerlink" href="#bidshandler.Project.readme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Real path to the associated README.txt if there is one.</p>
+<dd><p>Path to the associated README.txt if there is one.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Project.scans">
 <code class="descname">scans</code><a class="headerlink" href="#bidshandler.Project.scans" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of all Scans contained in the Project.</p>
+<dd><p>List of all contained <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>’s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All Scans within this Project.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="bidshandler.Project.sessions">
 <code class="descname">sessions</code><a class="headerlink" href="#bidshandler.Project.sessions" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of all Sessions contained in the Project.</p>
+<dd><p>List of all contained <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a>’s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All Sessions within this Project.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -461,7 +531,17 @@ Currently regex is not supported, but this may come in the future.</li>
 <dl class="attribute">
 <dt id="bidshandler.Project.subjects">
 <code class="descname">subjects</code><a class="headerlink" href="#bidshandler.Project.subjects" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of all Subjects contained in the Project.</p>
+<dd><p>List of all contained <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>’s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All Subjects within this Project.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -479,7 +559,7 @@ Currently regex is not supported, but this may come in the future.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Matt Sanderson.
+        &copy; Copyright 2019, Matt Sanderson
 
     </p>
   </div>
@@ -496,33 +576,16 @@ Currently regex is not supported, but this may come in the future.</li>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v0.2.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

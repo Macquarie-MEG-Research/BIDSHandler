@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.querymixin &mdash; BIDSHandler v0.2.1 documentation</title>
+  <title>bidshandler.querymixin &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -17,32 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -56,7 +58,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.3
               </div>
             
           
@@ -104,6 +106,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../usage_docs/querying_data.html">Querying BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#new-features">&gt; New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id4">&gt; API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -243,7 +264,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        return_data : :py:class:`bidshandler.QueryList`</span>
+<span class="sd">        return_data : :py:class:`bidshandler.querylist.QueryList`</span>
 <span class="sd">            List of objects that satisfy the provided query conditions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_query</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -406,9 +427,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List of contained projects or self if the object itself is a Project</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># List of contained projects or self if the object itself is a Project.</span>
         <span class="kn">from</span> <span class="nn">.project</span> <span class="k">import</span> <span class="n">Project</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Project</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
@@ -419,9 +438,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">subjects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List of contained subjects or self if the object itself is a Subject</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># List of contained subjects or self if the object itself is a Subject.</span>
         <span class="kn">from</span> <span class="nn">.subject</span> <span class="k">import</span> <span class="n">Subject</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Subject</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
@@ -432,9 +449,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List of contained sessions or self if the object itself is a Session</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># List of contained sessions or self if the object itself is a Session.</span>
         <span class="kn">from</span> <span class="nn">.session</span> <span class="k">import</span> <span class="n">Session</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Session</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
@@ -445,19 +460,15 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">scans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Scan object itself.</span>
-
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This is overwritten by every inheriting class except the Scan class.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The Scan object itself.</span>
+        <span class="c1"># Note:</span>
+        <span class="c1"># This is overwritten by every inheriting class except the Scan class.</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
 
 <span class="c1">#region class methods</span>
 
-    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="QueryMixin.__contains__"><a class="viewcode-back" href="../../generated/bidshandler.querymixin.QueryMixin.html#bidshandler.QueryMixin.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">pass</span></div></div>
 </pre></div>
 
            </div>
@@ -470,7 +481,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Matt Sanderson.
+        &copy; Copyright 2019, Matt Sanderson
 
     </p>
   </div>
@@ -487,33 +498,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'v0.2.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

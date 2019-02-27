@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.querylist.QueryList &mdash; BIDSHandler v0.2.1 documentation</title>
+  <title>bidshandler.querylist.QueryList &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Using BIDSHandler" href="../usage.html" />
     <link rel="prev" title="bidshandler.querymixin.QueryMixin" href="bidshandler.querymixin.QueryMixin.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.3
               </div>
             
           
@@ -106,6 +108,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage_docs/querying_data.html">Querying BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#new-features">&gt; New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id4">&gt; API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -176,7 +197,7 @@
         <a href="../usage.html" class="btn btn-neutral float-right" title="Using BIDSHandler" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="bidshandler.querymixin.QueryMixin.html" class="btn btn-neutral" title="bidshandler.querymixin.QueryMixin" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="bidshandler.querymixin.QueryMixin.html" class="btn btn-neutral float-left" title="bidshandler.querymixin.QueryMixin" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -209,85 +230,110 @@ itself be queried.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.__init__" title="bidshandler.querylist.QueryList.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(*iterable)</td>
 <td>Initialize self.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.append" title="bidshandler.querylist.QueryList.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a>(object)</td>
-<td></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.append" title="bidshandler.querylist.QueryList.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a></td>
+<td>Append object to the end of the list.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.clear" title="bidshandler.querylist.QueryList.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.clear" title="bidshandler.querylist.QueryList.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></td>
+<td>Remove all items from list.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.copy" title="bidshandler.querylist.QueryList.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</td>
-<td></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.copy" title="bidshandler.querylist.QueryList.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a></td>
+<td>Return a shallow copy of the list.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.count" title="bidshandler.querylist.QueryList.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>(value)</td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.count" title="bidshandler.querylist.QueryList.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a></td>
+<td>Return number of occurrences of value.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.extend" title="bidshandler.querylist.QueryList.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a>(iterable)</td>
-<td></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.extend" title="bidshandler.querylist.QueryList.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a></td>
+<td>Extend list by appending elements from the iterable.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.index" title="bidshandler.querylist.QueryList.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a>(value,&nbsp;[start,&nbsp;[stop]])</td>
-<td>Raises ValueError if the value is not present.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.index" title="bidshandler.querylist.QueryList.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a></td>
+<td>Return first index of value.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.insert" title="bidshandler.querylist.QueryList.insert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code></a></td>
-<td>L.insert(index, object) – insert object before index</td>
+<td>Insert object before index.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.pop" title="bidshandler.querylist.QueryList.pop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code></a>([index])</td>
-<td>Raises IndexError if list is empty or index is out of range.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.pop" title="bidshandler.querylist.QueryList.pop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code></a></td>
+<td>Remove and return item at index (default last).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.query" title="bidshandler.querylist.QueryList.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(obj,&nbsp;token,&nbsp;condition,&nbsp;value)</td>
 <td>Query the BIDS object and return the appropriate data.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.remove" title="bidshandler.querylist.QueryList.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(value)</td>
-<td>Raises ValueError if the value is not present.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.remove" title="bidshandler.querylist.QueryList.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></td>
+<td>Remove first occurrence of value.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.reverse" title="bidshandler.querylist.QueryList.reverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse</span></code></a></td>
-<td>L.reverse() – reverse <em>IN PLACE</em></td>
+<td>Reverse <em>IN PLACE</em>.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.sort" title="bidshandler.querylist.QueryList.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort</span></code></a>([key,&nbsp;reverse])</td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.querylist.QueryList.sort" title="bidshandler.querylist.QueryList.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort</span></code></a></td>
+<td>Stable sort <em>IN PLACE</em>.</td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="bidshandler.querylist.QueryList.__contains__">
+<code class="descname">__contains__</code><a class="headerlink" href="#bidshandler.querylist.QueryList.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return key in self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bidshandler.querylist.QueryList.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.querylist.QueryList.__iter__">
+<code class="descname">__iter__</code><a class="headerlink" href="#bidshandler.querylist.QueryList.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement iter(self).</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.append">
-<code class="descname">append</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span> &#x2192; None -- append object to end<a class="headerlink" href="#bidshandler.querylist.QueryList.append" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">append</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append object to the end of the list.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None -- remove all items from L<a class="headerlink" href="#bidshandler.querylist.QueryList.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all items from list.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list -- a shallow copy of L<a class="headerlink" href="#bidshandler.querylist.QueryList.copy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a shallow copy of the list.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.count">
-<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; integer -- return number of occurrences of value<a class="headerlink" href="#bidshandler.querylist.QueryList.count" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of occurrences of value.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.extend">
-<code class="descname">extend</code><span class="sig-paren">(</span><em>iterable</em><span class="sig-paren">)</span> &#x2192; None -- extend list by appending elements from the iterable<a class="headerlink" href="#bidshandler.querylist.QueryList.extend" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">extend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend list by appending elements from the iterable.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.index">
-<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; integer -- return first index of value.<a class="headerlink" href="#bidshandler.querylist.QueryList.index" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raises ValueError if the value is not present.</p>
+<code class="descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return first index of value.</p>
+<p>Raises ValueError if the value is not present.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.insert">
 <code class="descname">insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>L.insert(index, object) – insert object before index</p>
+<dd><p>Insert object before index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.pop">
-<code class="descname">pop</code><span class="sig-paren">(</span><span class="optional">[</span><em>index</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; item -- remove and return item at index (default last).<a class="headerlink" href="#bidshandler.querylist.QueryList.pop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raises IndexError if list is empty or index is out of range.</p>
+<code class="descname">pop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove and return item at index (default last).</p>
+<p>Raises IndexError if list is empty or index is out of range.</p>
 </dd></dl>
 
 <dl class="method">
@@ -351,7 +397,7 @@ Currently regex is not supported, but this may come in the future.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>return_data</strong> – List of objects that satisfy the provided query conditions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.QueryList</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#bidshandler.querylist.QueryList" title="bidshandler.querylist.QueryList"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.querylist.QueryList</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -360,20 +406,22 @@ Currently regex is not supported, but this may come in the future.</li>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.remove">
-<code class="descname">remove</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; None -- remove first occurrence of value.<a class="headerlink" href="#bidshandler.querylist.QueryList.remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raises ValueError if the value is not present.</p>
+<code class="descname">remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove first occurrence of value.</p>
+<p>Raises ValueError if the value is not present.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.reverse">
 <code class="descname">reverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.reverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>L.reverse() – reverse <em>IN PLACE</em></p>
+<dd><p>Reverse <em>IN PLACE</em>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bidshandler.querylist.QueryList.sort">
-<code class="descname">sort</code><span class="sig-paren">(</span><em>key=None</em>, <em>reverse=False</em><span class="sig-paren">)</span> &#x2192; None -- stable sort *IN PLACE*<a class="headerlink" href="#bidshandler.querylist.QueryList.sort" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">sort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bidshandler.querylist.QueryList.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stable sort <em>IN PLACE</em>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -390,7 +438,7 @@ Currently regex is not supported, but this may come in the future.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Matt Sanderson.
+        &copy; Copyright 2019, Matt Sanderson
 
     </p>
   </div>
@@ -407,33 +455,16 @@ Currently regex is not supported, but this may come in the future.</li>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v0.2.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

@@ -15,6 +15,7 @@ bidshandler.Scan
    
       ~Scan.__init__
       ~Scan.contained_files
+      ~Scan.delete
       ~Scan.query
    
    
@@ -28,12 +29,14 @@ bidshandler.Scan
       ~Scan.bids_tree
       ~Scan.channels_tsv
       ~Scan.coordsystem_json
+      ~Scan.emptyroom
       ~Scan.events_tsv
       ~Scan.path
       ~Scan.project
       ~Scan.projects
       ~Scan.raw_file
       ~Scan.raw_file_relative
+      ~Scan.scan_type
       ~Scan.scans
       ~Scan.sessions
       ~Scan.sidecar

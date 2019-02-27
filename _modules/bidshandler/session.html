@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bidshandler.session &mdash; BIDSHandler v0.2.1 documentation</title>
+  <title>bidshandler.session &mdash; BIDSHandler v0.3dev0 documentation</title>
   
 
   
@@ -17,32 +17,34 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -56,7 +58,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.3
               </div>
             
           
@@ -104,6 +106,25 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../usage_docs/querying_data.html">Querying BIDS data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../usage_docs/querying_data.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-3">Version 0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#api-changes">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#new-features">&gt; New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2-1">Version 0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id4">&gt; API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2">Version 0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id7">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -174,13 +195,18 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_get_bids_params</span><span class="p">,</span> <span class="n">_copyfiles</span><span class="p">,</span> <span class="n">_realize_paths</span><span class="p">,</span> <span class="n">_combine_tsv</span>
-<span class="kn">from</span> <span class="nn">.bidserrors</span> <span class="k">import</span> <span class="n">MappingError</span><span class="p">,</span> <span class="n">NoScanError</span><span class="p">,</span> <span class="n">AssociationError</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">_get_bids_params</span><span class="p">,</span> <span class="n">_copyfiles</span><span class="p">,</span> <span class="n">_realize_paths</span><span class="p">,</span> <span class="n">_combine_tsv</span><span class="p">,</span>
+                    <span class="n">_multi_replace</span><span class="p">,</span> <span class="n">_fix_folderless</span><span class="p">,</span> <span class="n">_file_list</span><span class="p">,</span>
+                    <span class="n">_reformat_fname</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.bidserrors</span> <span class="k">import</span> <span class="n">MappingError</span><span class="p">,</span> <span class="n">AssociationError</span><span class="p">,</span> <span class="n">NoScanError</span>
 <span class="kn">from</span> <span class="nn">.scan</span> <span class="k">import</span> <span class="n">Scan</span>
 <span class="kn">from</span> <span class="nn">.querymixin</span> <span class="k">import</span> <span class="n">QueryMixin</span>
 
@@ -253,40 +279,44 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Scan</span><span class="p">):</span>
             <span class="c1"># TODO-LT: handle other modalities</span>
             <span class="c1"># We need to make sure that the scan is of the same person/session:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">_id</span> <span class="ow">and</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">_id</span> <span class="ow">and</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_id</span> <span class="ow">and</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">_id</span><span class="p">):</span>
-                <span class="c1"># Handle merging the scans.tsv file.</span>
-                <span class="k">if</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                    <span class="c1"># We don&#39;t want to add it if it is already in this session.</span>
-                    <span class="c1"># TODO: add overwrite argument to allow it to still be</span>
-                    <span class="c1"># added.</span>
-                    <span class="k">return</span>
-                <span class="n">other_scan_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-                    <span class="n">OrderedDict</span><span class="p">([</span>
-                        <span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">raw_file_relative</span><span class="p">]),</span>
-                        <span class="p">(</span><span class="s1">&#39;acq_time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">acq_time</span><span class="p">])]),</span>
-                    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;acq_time&#39;</span><span class="p">])</span>
-                <span class="c1"># Combine the new data into the original tsv.</span>
-                <span class="n">_combine_tsv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans_tsv</span><span class="p">,</span> <span class="n">other_scan_df</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">)</span>
-
-                <span class="c1"># Assign as a set to avoid any potential doubling of the raw</span>
-                <span class="c1"># file path.</span>
-                <span class="n">files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">associated_files</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-                <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_sidecar</span><span class="p">)</span>
-                <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_raw_file</span><span class="p">)</span>
-                <span class="c1"># Copy the files over.</span>
-                <span class="n">fl_left</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
-                <span class="n">fl_right</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-                    <span class="n">fl_right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">fpath</span><span class="p">))</span>
-                <span class="n">copier</span><span class="p">(</span><span class="n">fl_left</span><span class="p">,</span> <span class="n">fl_right</span><span class="p">)</span>
-                <span class="c1"># Add the scan object to our scans list.</span>
-                <span class="n">scan</span> <span class="o">=</span> <span class="n">Scan</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">raw_file_relative</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
-                            <span class="n">acq_time</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">acq_time</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_scans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AssociationError</span><span class="p">(</span><span class="s2">&quot;scan&quot;</span><span class="p">,</span> <span class="s2">&quot;project, subject and session&quot;</span><span class="p">)</span>
+            <span class="c1"># Handle merging the scans.tsv file.</span>
+            <span class="k">if</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="c1"># We don&#39;t want to add it if it is already in this session.</span>
+                <span class="c1"># TODO: add overwrite argument to allow it to still be</span>
+                <span class="c1"># added.</span>
+                <span class="k">return</span>
+            <span class="n">other_scan_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="n">OrderedDict</span><span class="p">([</span>
+                    <span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">_reformat_fname</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">raw_file_relative</span><span class="p">)]),</span>
+                    <span class="p">(</span><span class="s1">&#39;acq_time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">acq_time</span><span class="p">])]),</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;acq_time&#39;</span><span class="p">])</span>
+            <span class="c1"># Combine the new data into the original tsv.</span>
+            <span class="n">_combine_tsv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans_tsv</span><span class="p">,</span> <span class="n">other_scan_df</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Assign as a set to avoid any potential doubling of the raw</span>
+            <span class="c1"># file path.</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">associated_files</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_sidecar</span><span class="p">)</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_raw_file</span><span class="p">)</span>
+            <span class="c1"># Copy the files over.</span>
+            <span class="n">fl_left</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
+            <span class="n">fl_right</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">fl_right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">fpath</span><span class="p">))</span>
+            <span class="n">copier</span><span class="p">(</span><span class="n">fl_left</span><span class="p">,</span> <span class="n">fl_right</span><span class="p">)</span>
+            <span class="c1"># Add the scan object to our scans list.</span>
+            <span class="n">scan</span> <span class="o">=</span> <span class="n">Scan</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">raw_file_relative</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
+                        <span class="n">acq_time</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">acq_time</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
+
+            <span class="c1"># finally, check to see if the scan had an associated empty</span>
+            <span class="c1"># room file. If so, make sure it comes along too</span>
+            <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">emptyroom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">emptyroom</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot add a </span><span class="si">{0}</span><span class="s2"> object to a Subject&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
@@ -306,10 +336,33 @@
             <span class="n">file_list</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">contained_files</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">file_list</span></div>
 
-<div class="viewcode-block" id="Session.scan"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.scan">[docs]</a>    <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># TODO: Allow this to return a list if mutliple scans match.</span>
-        <span class="c1"># Consider None a wildcard.</span>
-        <span class="sd">&quot;&quot;&quot;Return the contained Scan corresponding to the provided values</span>
+<div class="viewcode-block" id="Session.delete"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete the session information.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">[:]:</span>
+            <span class="c1"># Delete the scan. This will remove it from this sessions&#39; scan</span>
+            <span class="c1"># list.</span>
+            <span class="n">scan</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_tsv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans_tsv</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">_file_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Remove this session from the session list in the subject and delete.</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_sessions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Session.rename"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.rename">[docs]</a>    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the sessions&#39; id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id_ : str</span>
+<span class="sd">            New id for the session object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Session.scan"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.scan">[docs]</a>    <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">return_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of all contained Scan&#39;s corresponding to the provided</span>
+<span class="sd">        values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -319,16 +372,42 @@
 <span class="sd">            Value of `acq` in the BIDS filename.</span>
 <span class="sd">        run : str</span>
 <span class="sd">            Value of `run` in the BIDS filename.</span>
+<span class="sd">        return_all : bool</span>
+<span class="sd">            Whether to return every scan in the session that matches the</span>
+<span class="sd">            provided values or not.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        scan : :class:`bidshandler.Scan`</span>
-<span class="sd">            Scan object.</span>
+<span class="sd">        scan : list(:class:`bidshandler.Scan`)</span>
+<span class="sd">            List of Scan&#39;s.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The `task`, `acq` and `run` arguments may all have regular expressions</span>
+<span class="sd">        passed to them.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># First process any regular expressions passed:</span>
+        <span class="n">tsk_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">task</span><span class="p">)</span> <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">acq_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span> <span class="k">if</span> <span class="n">acq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">run_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">run</span><span class="p">)</span> <span class="k">if</span> <span class="n">run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">valid_scans</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="n">task</span> <span class="ow">and</span> <span class="n">scan</span><span class="o">.</span><span class="n">acq</span> <span class="o">==</span> <span class="n">acq</span> <span class="ow">and</span> <span class="n">scan</span><span class="o">.</span><span class="n">run</span> <span class="o">==</span> <span class="n">run</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">scan</span>
-        <span class="k">raise</span> <span class="n">NoScanError</span></div>
+            <span class="n">_task</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">task</span> <span class="k">if</span> <span class="n">scan</span><span class="o">.</span><span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;.&#39;</span>
+            <span class="n">_acq</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">acq</span> <span class="k">if</span> <span class="n">scan</span><span class="o">.</span><span class="n">acq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;.&#39;</span>
+            <span class="n">_run</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">run</span> <span class="k">if</span> <span class="n">scan</span><span class="o">.</span><span class="n">run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;.&#39;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">tsk_re</span><span class="p">,</span> <span class="n">_task</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">acq_re</span><span class="p">,</span> <span class="n">_acq</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">run_re</span><span class="p">,</span> <span class="n">_run</span><span class="p">)):</span>
+                <span class="n">valid_scans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_all</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">valid_scans</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_scans</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple scans found for </span><span class="si">{0}</span><span class="s2">. To get the &quot;</span>
+                                <span class="s2">&quot;list set `return_all=True`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ID</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">valid_scans</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="k">raise</span> <span class="n">NoScanError</span>
+            <span class="k">return</span> <span class="n">valid_scans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <span class="c1">#region private methods</span>
 
@@ -406,6 +485,7 @@
 <span class="sd">            New uninitialized Session cloned from `other` to be a child of</span>
 <span class="sd">            `subject`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set the directory to be the same as the parent.</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">_realize_paths</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">ID</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Create a new empty session object.</span>
         <span class="n">new_session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -435,12 +515,109 @@
             <span class="n">root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">_generate_map</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">root</span>
 
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subj_id</span><span class="p">,</span> <span class="n">sess_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the session id for all contained files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        subj_id : str</span>
+<span class="sd">            Raw subject ID value. Ie. *without* `sub-`.</span>
+<span class="sd">        sess_id : str</span>
+<span class="sd">            Raw session ID value. Ie. *without* `ses-`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># cache current values and generate new ones for use</span>
+        <span class="n">old_subj_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ID</span>
+        <span class="n">new_subj_id</span> <span class="o">=</span> <span class="s1">&#39;sub-</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subj_id</span><span class="p">)</span>
+        <span class="n">old_sess_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ID</span>
+        <span class="n">new_sess_id</span> <span class="o">=</span> <span class="s1">&#39;ses-</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sess_id</span><span class="p">)</span>
+        <span class="n">old_scans_tsv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_tsv</span>
+        <span class="n">old_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_no_folder</span><span class="p">:</span>
+            <span class="n">new_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">new_sess_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_path</span> <span class="o">=</span> <span class="n">_multi_replace</span><span class="p">(</span><span class="n">old_path</span><span class="p">,</span> <span class="p">[</span><span class="n">old_subj_id</span><span class="p">,</span> <span class="n">old_sess_id</span><span class="p">],</span>
+                                      <span class="p">[</span><span class="n">new_subj_id</span><span class="p">,</span> <span class="n">new_sess_id</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+
+        <span class="n">scan_delete_paths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># call rename on each of the contained Scan objects</span>
+        <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">:</span>
+            <span class="n">scan_delete_paths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">scan</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">subj_id</span><span class="p">,</span> <span class="n">sess_id</span><span class="p">)</span>
+
+        <span class="c1"># update the row data to point to the new scan locations</span>
+        <span class="k">if</span> <span class="n">old_scans_tsv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">old_scans_tsv</span><span class="p">):</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">old_scans_tsv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">_fix_folderless</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">old_sess_id</span><span class="p">,</span> <span class="n">old_subj_id</span><span class="p">)</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">_reformat_fname</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_multi_replace</span><span class="p">(</span>
+                        <span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">old_subj_id</span><span class="p">,</span> <span class="n">old_sess_id</span><span class="p">],</span>
+                        <span class="p">[</span><span class="n">new_subj_id</span><span class="p">,</span> <span class="n">new_sess_id</span><span class="p">])</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">old_scans_tsv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;n/a&#39;</span><span class="p">,</span>
+                          <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span> <span class="o">=</span> <span class="n">_fix_folderless</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span><span class="p">,</span>
+                                              <span class="n">old_sess_id</span><span class="p">,</span> <span class="n">old_subj_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span> <span class="o">=</span> <span class="n">_multi_replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span><span class="p">,</span>
+                                             <span class="p">[</span><span class="n">old_subj_id</span><span class="p">,</span> <span class="n">old_sess_id</span><span class="p">],</span>
+                                             <span class="p">[</span><span class="n">new_subj_id</span><span class="p">,</span> <span class="n">new_sess_id</span><span class="p">])</span>
+
+            <span class="c1"># rename the scans.tsv file</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">old_scans_tsv</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">new_subj_id</span><span class="p">,</span>
+                                             <span class="n">new_sess_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span><span class="p">))</span>
+
+        <span class="c1"># remove the old path</span>
+        <span class="c1"># TODO: check to see if the folders are empty.</span>
+        <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">scan_delete_paths</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+
+        <span class="c1"># change the internal id. self.ID -&gt; new_sess_id</span>
+        <span class="n">old_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">sess_id</span>
+        <span class="c1"># update the parent subject dictionary</span>
+        <span class="k">if</span> <span class="n">old_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_sessions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_sessions</span><span class="p">[</span><span class="n">old_id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_no_folder</span> <span class="o">=</span> <span class="kc">False</span>
+
 <span class="c1">#region properties</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">bids_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parent :class:`bidshandler.BIDSTree` object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">bids_tree</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The recording date of the session.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        known_date : :func:`datetime.date`</span>
+<span class="sd">            Specific date of the year the session ocurred on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">known_date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">:</span>
+            <span class="c1"># if the scan has an acquisition date, load it into a datetime.date</span>
+            <span class="c1"># object and compare</span>
+            <span class="k">if</span> <span class="n">scan</span><span class="o">.</span><span class="n">acq_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">compare_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">acq_time</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">compare_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">acq_time</span><span class="p">,</span>
+                                                     <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
+                <span class="n">compare_date</span> <span class="o">=</span> <span class="n">compare_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">known_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">known_date</span> <span class="o">=</span> <span class="n">compare_date</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">compare_date</span> <span class="o">!=</span> <span class="n">known_date</span><span class="p">:</span>
+                        <span class="n">known_date</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">break</span>
+        <span class="k">return</span> <span class="n">known_date</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">ID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -450,6 +627,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">inheritable_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;List of files that are able to be inherited by child objects.&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: make private?</span>
         <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">inheritable_files</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">):</span>
             <span class="n">abs_path</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
@@ -459,10 +637,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Determine path location based on parent paths.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Path to Session folder.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_no_folder</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -471,17 +649,26 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">scans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List of contained Scans.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List of all contained :class:`bidshandler.Scan`&#39;s.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of :class:`bidshandler.Scan`</span>
+<span class="sd">            All Scans within this Session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">scans_tsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Absolute path of associated scans.tsv file.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Path of associated scans.tsv file if there is one.&quot;&quot;&quot;</span>
+        <span class="n">_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_path</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_tsv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_path</span>
 
 <span class="c1">#region class methods</span>
 
-    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Session.__contains__"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determine whether the Session object contains a scan.</span>
 
 <span class="sd">        Parameters</span>
@@ -499,16 +686,17 @@
                 <span class="k">if</span> <span class="n">scan</span> <span class="o">==</span> <span class="n">other</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can only determine if a Scan is contained.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can only determine if a Scan is contained.&quot;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scans</span><span class="p">)</span>
+<div class="viewcode-block" id="Session.__iter__"><a class="viewcode-back" href="../../generated/bidshandler.Session.html#bidshandler.Session.__iter__">[docs]</a>    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterable of the contained Scan objects.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scans</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;Session, ID: </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1"> scan</span><span class="si">{2}</span><span class="s1">, @ </span><span class="si">{3}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">),</span>
-            <span class="p">(</span><span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -528,7 +716,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Matt Sanderson.
+        &copy; Copyright 2019, Matt Sanderson
 
     </p>
   </div>
@@ -545,33 +733,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'v0.2.1',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
