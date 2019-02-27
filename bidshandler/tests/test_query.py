@@ -63,14 +63,14 @@ def test_query():
     with pytest.raises(ValueError):
         folder.query('scan', 'scans', '=', 1)
 
-    # query a Project object:
+    # query a Project object (test1):
 
-    proj = folder.query('project', 'subjects', '=', 2)[0]
+    proj = folder.query('project', 'sessions', '=', 3)
     assert len(proj.query('subject', 'sessions', '=', 2)) == 1
     assert len(proj.query('subject', 'group', '=', 'neurotypical')) == 1
     assert len(proj.query('session', 'scans', '<=', 3)) == 3
 
-    # query a Subject object:
+    # query a Subject object (sub-1):
 
     subj = proj.query('subject', 'sessions', '=', 2)[0]
     assert len(subj.query('session', 'scans', '>=', 1)) == 2
@@ -78,7 +78,7 @@ def test_query():
     with pytest.raises(ValueError, match='Invalid query'):
         subj.query('project', 'subjects', '=', 1)
 
-    # query a Session object:
+    # query a Session object (ses-1):
     sess = subj.query('session', 'scans', '>', 1)[0]
     assert len(sess.query('scan', 'task', '=', 'resting')) == 1
 

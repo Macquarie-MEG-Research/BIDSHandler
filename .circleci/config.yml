@@ -1,0 +1,63 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: python:3.7
+        steps:
+            - checkout
+            - run:
+                name: Install dependencies
+                command: |
+                  python -m venv venv
+                  . venv/bin/activate
+                  pip install sphinx numpydoc sphinx_rtd_theme pandas pytest
+                  python setup.py develop
+            - run:
+                name: Build docs
+                command: |
+                  . venv/bin/activate
+                  make build-doc
+            - run:
+                name: Run tests
+                command: |
+                  . venv/bin/activate
+                  python -c "from bidshandler.utils import download_test_data;download_test_data()"
+                  cd bidshandler/tests/
+                  pytest
+            - persist_to_workspace:
+                root: docs/_build/
+                paths: html
+            - store_artifacts:
+                path: docs/_build/html/
+                destination: html
+    deploy-docs:
+        docker:
+            - image: node:8.10.0
+        steps:
+            - checkout
+            - attach_workspace:
+                at: docs/_build/
+            - run:
+                name: Install and configure dependencies
+                command: |
+                  npm install -g --silent gh-pages@2.0.1
+                  git config user.email "mq-meg-circle@mq.edu.au"
+                  git config user.name "circle CI"
+            - add_ssh_keys:
+                fingerprints:
+                    - "a5:00:1e:4c:cc:18:56:65:13:28:a5:ab:d2:f2:66:08"
+            - run:
+                name: Deploy docs to gh-pages branch
+                command: gh-pages --dotfiles --message "[skip ci] Auto-update" --dist html_docs/site
+
+workflows:
+    version: 2
+    build:
+        jobs:
+            - build
+            - deploy-docs:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only: master

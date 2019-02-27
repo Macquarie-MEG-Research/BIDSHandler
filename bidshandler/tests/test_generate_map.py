@@ -22,14 +22,28 @@ def test_generate_xml():
 
         tree = ET.ElementTree()
         tree.parse(op.join(tmp, 'map.xml'))
-        # find the first project.
-        proj = tree.find('Project')
-        assert proj.attrib['ID'] == 'test1'
-        subj = proj.find('Subject')
-        assert subj.attrib['ID'] == '1'
+        assert len(tree.findall('Project')) == 2
+        # find the `test1` project
+        for _proj in tree.findall('Project'):
+            if _proj.attrib['ID'] == 'test1':
+                proj = _proj
+        assert len(proj.findall('Subject')) == 2
+        # find subject 1
+        for _subj in proj.findall('Subject'):
+            if _subj.attrib['ID'] == '1':
+                subj = _subj
         assert subj.attrib['sex'] == 'F'
-        sess = subj.find('Session')
-        assert sess.attrib['ID'] == '1'
-        scan = sess.find('Scan')
-        assert (scan.attrib['path'] ==
-                'meg\\sub-1_ses-1_task-resting_run-1_meg\\sub-1_ses-1_task-resting_run-1_meg.con')  # noqa
+        assert len(subj.findall('Session')) == 2
+        for _sess in subj.findall('Session'):
+            if _sess.attrib['ID'] == '1':
+                sess = _sess
+        assert len(sess.findall('Scan')) == 2
+        scan = None
+        for _scan in sess.findall('Scan'):
+            if (_scan.attrib['path'] ==
+                    op.join(
+                        'meg',
+                        'sub-1_ses-1_task-resting_run-1_meg',
+                        'sub-1_ses-1_task-resting_run-1_meg.con')):
+                scan = _scan
+        assert scan is not None
