@@ -48,7 +48,7 @@ jobs:
                     - "a5:00:1e:4c:cc:18:56:65:13:28:a5:ab:d2:f2:66:08"
             - run:
                 name: Deploy docs to gh-pages branch
-                command: gh-pages --dotfiles --message "[skip ci] Auto-update" --dist html_docs/site
+                command: gh-pages --dotfiles --message "[skip ci] Auto-update" --dist docs/_build/html
 
 workflows:
     version: 2
