@@ -10,7 +10,8 @@ import pandas as pd
 from datetime import datetime
 
 from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
-                    _multi_replace, _fix_folderless, _file_list)
+                    _multi_replace, _fix_folderless, _file_list,
+                    _reformat_fname)
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
@@ -96,7 +97,7 @@ class Session(QueryMixin):
                 return
             other_scan_df = pd.DataFrame(
                 OrderedDict([
-                    ('filename', [other.raw_file_relative]),
+                    ('filename', [_reformat_fname(other.raw_file_relative)]),
                     ('acq_time', [other.acq_time])]),
                 columns=['filename', 'acq_time'])
             # Combine the new data into the original tsv.
@@ -357,6 +358,7 @@ class Session(QueryMixin):
                 df = pd.read_csv(old_scans_tsv, sep='\t')
                 for idx, row in enumerate(df['filename']):
                     row = _fix_folderless(self, row, old_sess_id, old_subj_id)
+                    row = _reformat_fname(row)
                     df.at[idx, 'filename'] = _multi_replace(
                         row, [old_subj_id, old_sess_id],
                         [new_subj_id, new_sess_id])

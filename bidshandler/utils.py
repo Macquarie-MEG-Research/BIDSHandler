@@ -277,6 +277,11 @@ def _realize_paths(obj, rel_paths):
     return op.normpath(op.join(obj.path, rel_paths))
 
 
+def _reformat_fname(fname):
+    """Change all the path separators in a file path to `/`"""
+    return fname.replace(os.sep, '/')
+
+
 def _splitall(fpath):
     # credit: Trent Mick:
     # https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
