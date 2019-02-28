@@ -15,9 +15,7 @@ from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
-
-
-_RAW_FILETYPES = ('.nii', '.bdf', '.con', '.sqd')   # TODO: add more...
+from .constants import _RAW_FILETYPES, _SIDECAR_MAP
 
 
 class Session(QueryMixin):
@@ -48,6 +46,9 @@ class Session(QueryMixin):
         self._queryable_types = ('session', 'scan')
 
         self.has_no_folder = no_folder
+
+        # list of folder that contain extra associated data for the session
+        self.extra_data = []
 
         if initialize:
             self._add_scans()
@@ -223,7 +224,10 @@ class Session(QueryMixin):
             full_path = op.join(self.path, fname)
             # Each sub-directory is considered a separate type of recording.
             if op.isdir(full_path):
-                self.recording_types.append(fname)
+                if fname in _SIDECAR_MAP.keys():
+                    self.recording_types.append(fname)
+                else:
+                    self.extra_data.append(fname)
             # The only other non-folder should be the scans tsv.
             else:
                 filename_data = _get_bids_params(fname)
