@@ -69,9 +69,9 @@ def download_test_data(overwrite=True, dst=None):
 
 def _file_list(folder):
     """ List of all the files contained recursively within a directory """
-    for _, _, files in os.walk(folder):
-        for file in files:
-            yield file
+    for root, _, files in os.walk(folder):
+        for _file in files:
+            yield op.join(root, _file)
 
 
 def _bids_params_are_subsets(params1, params2):

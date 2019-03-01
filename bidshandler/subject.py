@@ -76,7 +76,6 @@ class Subject(QueryMixin):
             else:
                 raise ValueError("Added subject must have same ID.")
         elif isinstance(other, Session):
-            # Check to see if we have only one scan without a session folder:
             if not (self._id == other.subject._id and
                     self.project._id == other.project._id):
                 raise AssociationError("session", "project and subject")
@@ -85,6 +84,8 @@ class Subject(QueryMixin):
                 # with the current session with that ID.
                 self.session(other._id).add(other, copier)
             else:
+                # Check to see if we have only one scan without a session
+                # folder:
                 if len(self.sessions) == 1:
                     # If we have only one existing session, we want to
                     # check whether the existing session has no actual

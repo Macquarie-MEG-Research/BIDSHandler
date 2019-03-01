@@ -79,8 +79,21 @@ class Session(QueryMixin):
         """
         if isinstance(other, Session):
             if self._id == other._id:
+                # Copy over all the contained scans.
                 for scan in other.scans:
                     self.add(scan, copier)
+                # Also copy over all the extra files.
+                extra_files = list()
+                for fname in other.extra_data:
+                    extra_files.extend(
+                        list(_file_list(_realize_paths(other, fname))))
+                    self.extra_data.append(fname)
+                # now that we have the full list, we just need the names
+                # relative to this session's path
+                extra_files_rel = list()
+                for fname in extra_files:
+                    extra_files_rel.append(op.relpath(fname, other.path))
+                copier(extra_files, _realize_paths(self, extra_files_rel))
             else:
                 raise ValueError("Added session must have same ID.")
         elif isinstance(other, Scan):
