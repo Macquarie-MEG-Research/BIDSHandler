@@ -166,11 +166,7 @@ def _copyfiles(src_files, dst_files):
     for fnum in range(len(src_files)):
         if not op.exists(op.dirname(dst_files[fnum])):
             os.makedirs(op.dirname(dst_files[fnum]), exist_ok=True)
-        try:
-            shutil.copy(src_files[fnum], dst_files[fnum])
-        except shutil.SameFileError:
-            # For now just skip files that are the same.
-            print('same file!!')
+        shutil.copy(src_files[fnum], dst_files[fnum])
 
 
 def _fix_folderless(session, fname, old_sess_id, old_subj_id):
