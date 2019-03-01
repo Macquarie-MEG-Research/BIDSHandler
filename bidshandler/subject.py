@@ -76,7 +76,6 @@ class Subject(QueryMixin):
             else:
                 raise ValueError("Added subject must have same ID.")
         elif isinstance(other, Session):
-            # Check to see if we have only one scan without a session folder:
             if not (self._id == other.subject._id and
                     self.project._id == other.project._id):
                 raise AssociationError("session", "project and subject")
@@ -85,6 +84,8 @@ class Subject(QueryMixin):
                 # with the current session with that ID.
                 self.session(other._id).add(other, copier)
             else:
+                # Check to see if we have only one scan without a session
+                # folder:
                 if len(self.sessions) == 1:
                     # If we have only one existing session, we want to
                     # check whether the existing session has no actual
@@ -131,7 +132,7 @@ class Subject(QueryMixin):
         return file_list
 
     def delete(self):
-        """Delete the  subject from the parent Project."""
+        """Delete the subject from the parent Project."""
         for session in self.sessions[:]:
             session.delete()
         # remove the subject information from the participants.tsv
@@ -232,6 +233,14 @@ class Subject(QueryMixin):
         df = df.append(other_sub_df, sort=False)
         df.to_csv(project.participants_tsv, sep='\t', index=False,
                   na_rep='n/a', encoding='utf-8')
+
+        # Check if the new parent has a participants.json file.
+        # If not, give it the one with this subject if it has one.
+        if project._participants_json is not None:
+            if other.project._participants_json is not None:
+                shutil.copy(other.project.participants_json,
+                            project.path)
+
         # can now safely get the subject info
         new_subject._load_subject_info()
         return new_subject

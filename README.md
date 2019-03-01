@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/Macquarie-MEG-Research/BIDSHandler.svg?style=svg)](https://circleci.com/gh/Macquarie-MEG-Research/BIDSHandler)
+[![Downloads](https://pepy.tech/badge/bidshandler)](https://pepy.tech/project/bidshandler)
+
 # BIDSHandler
 A simple way to manage and manipulate BIDS compatible data.
 

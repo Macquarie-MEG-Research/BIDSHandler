@@ -12,10 +12,7 @@ from .utils import (_get_bids_params, _realize_paths, _multi_replace,
                     _bids_params_are_subsets, _splitall, _fix_folderless,
                     _file_list, _reformat_fname)
 from .bidserrors import NoScanError
-
-_SIDECAR_MAP = {'meg': 'meg',
-                'fmap': 'phasediff',
-                'func': 'bold'}
+from .constants import _SIDECAR_MAP
 
 
 class Scan(QueryMixin):
@@ -77,7 +74,7 @@ class Scan(QueryMixin):
         return file_list
 
     def delete(self):
-        """Delete all the scan files."""
+        """Delete all the scans' files."""
         for fname in self.contained_files():
             # make sure we only delete files that are in the same directory or
             # lower.
@@ -193,8 +190,11 @@ class Scan(QueryMixin):
                 bids_params = _get_bids_params(fname)
                 if _bids_params_are_subsets(filename_data, bids_params):
                     if bids_params['file'] == 'markers':
-                        self.associated_files['markers'] = op.join(raw_folder,
-                                                                   fname)
+                        if bids_params.get('acq', None) is not None:
+                            acq = '-' + bids_params['acq']
+                        else:
+                            acq = ''
+                        self.associated_files['markers{0}'.format(acq)] = op.join(raw_folder, fname)  # noqa
 
     def _load_info(self):
         """Read the sidecar.json and load the information into self.info"""

@@ -56,6 +56,12 @@ def test_merge_bidstrees():
         dst_bt.project('test1').subject(2).add(
             src_bt.project('test1').subject(2).session(2))
         assert len(dst_bt.project('test1').subject(2).sessions) == 2
+        # check that extra files are brought along
+        sess = dst_bt.project('test2').subject(3).session(1)
+        assert 'code' in sess.extra_data
+        assert 'extradata' in sess.extra_data
+        assert op.exists(op.join(sess.path, 'code', 'analysis.py'))
+        assert op.exists(op.join(sess.path, 'extradata', 'extra.txt'))
 
 
 def test_bidstree_to_bidstree():

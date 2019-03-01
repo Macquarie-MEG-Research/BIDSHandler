@@ -15,9 +15,7 @@ from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
-
-
-_RAW_FILETYPES = ('.nii', '.bdf', '.con', '.sqd')   # TODO: add more...
+from .constants import _RAW_FILETYPES, _SIDECAR_MAP
 
 
 class Session(QueryMixin):
@@ -49,6 +47,9 @@ class Session(QueryMixin):
 
         self.has_no_folder = no_folder
 
+        # list of folder that contain extra associated data for the session
+        self.extra_data = []
+
         if initialize:
             self._add_scans()
             self._check()
@@ -78,8 +79,21 @@ class Session(QueryMixin):
         """
         if isinstance(other, Session):
             if self._id == other._id:
+                # Copy over all the contained scans.
                 for scan in other.scans:
                     self.add(scan, copier)
+                # Also copy over all the extra files.
+                extra_files = list()
+                for fname in other.extra_data:
+                    extra_files.extend(
+                        list(_file_list(_realize_paths(other, fname))))
+                    self.extra_data.append(fname)
+                # now that we have the full list, we just need the names
+                # relative to this session's path
+                extra_files_rel = list()
+                for fname in extra_files:
+                    extra_files_rel.append(op.relpath(fname, other.path))
+                copier(extra_files, _realize_paths(self, extra_files_rel))
             else:
                 raise ValueError("Added session must have same ID.")
         elif isinstance(other, Scan):
@@ -223,7 +237,10 @@ class Session(QueryMixin):
             full_path = op.join(self.path, fname)
             # Each sub-directory is considered a separate type of recording.
             if op.isdir(full_path):
-                self.recording_types.append(fname)
+                if fname in _SIDECAR_MAP.keys():
+                    self.recording_types.append(fname)
+                else:
+                    self.extra_data.append(fname)
             # The only other non-folder should be the scans tsv.
             else:
                 filename_data = _get_bids_params(fname)

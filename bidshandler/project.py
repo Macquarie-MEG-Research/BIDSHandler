@@ -29,6 +29,7 @@ class Project(QueryMixin):
         self._id = id_
         self.bids_tree = bids_tree
         self._participants_tsv = None
+        self._participants_json = None
         self._description = None
         self._readme = None
         self._subjects = dict()
@@ -149,6 +150,8 @@ class Project(QueryMixin):
                 self._subjects[sub_id] = Subject(sub_id, self)
             elif fname == 'participants.tsv':
                 self._participants_tsv = fname
+            elif fname == 'participants.json':
+                self._participants_json = fname
             elif fname == 'dataset_description.json':
                 self._description = fname
             elif fname == 'README.txt':
@@ -230,6 +233,14 @@ class Project(QueryMixin):
             if op.isfile(abs_path):
                 files.append(abs_path)
         return files
+
+    @property
+    def participants_json(self):
+        """Path to the associated participants.tsv if there is one."""
+        _path = None
+        if self._participants_json is not None:
+            _path = _realize_paths(self, self._participants_json)
+        return _path
 
     @property
     def participants_tsv(self):
