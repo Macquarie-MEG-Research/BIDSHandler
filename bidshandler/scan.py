@@ -12,7 +12,7 @@ from .utils import (_get_bids_params, _realize_paths, _multi_replace,
                     _bids_params_are_subsets, _splitall, _fix_folderless,
                     _file_list, _reformat_fname)
 from .bidserrors import NoScanError
-from .constants import _SIDECAR_MAP
+from .constants import SIDECAR_MAP
 
 
 class Scan(QueryMixin):
@@ -118,8 +118,8 @@ class Scan(QueryMixin):
             bids_params = _get_bids_params(fname)
             part = bids_params.pop('part', None)
             if _bids_params_are_subsets(filename_data, bids_params):
-                if (bids_params['file'] == _SIDECAR_MAP.get(self._path,
-                                                            None) and
+                if (bids_params['file'] == SIDECAR_MAP.get(self._path,
+                                                           None) and
                         bids_params['ext'] == '.json'):
                     self._sidecar = fname
                 else:
@@ -153,8 +153,8 @@ class Scan(QueryMixin):
                 bids_params = _get_bids_params(op.basename(fname))
                 if _bids_params_are_subsets(filename_data, bids_params):
                     if bids_params['ext'] == '.json':
-                        if bids_params['file'] == _SIDECAR_MAP.get(self._path,
-                                                                   None):
+                        if bids_params['file'] == SIDECAR_MAP.get(self._path,
+                                                                  None):
                             self._sidecar = op.relpath(fname, self.path)
                         else:
                             self.associated_files[bids_params['file']] = \

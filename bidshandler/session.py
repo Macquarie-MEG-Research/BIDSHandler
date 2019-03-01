@@ -15,7 +15,7 @@ from .utils import (_get_bids_params, _copyfiles, _realize_paths, _combine_tsv,
 from .bidserrors import MappingError, AssociationError, NoScanError
 from .scan import Scan
 from .querymixin import QueryMixin
-from .constants import _RAW_FILETYPES, _SIDECAR_MAP
+from .constants import RAW_FILETYPES, SIDECAR_MAP
 
 
 class Session(QueryMixin):
@@ -237,7 +237,7 @@ class Session(QueryMixin):
             full_path = op.join(self.path, fname)
             # Each sub-directory is considered a separate type of recording.
             if op.isdir(full_path):
-                if fname in _SIDECAR_MAP.keys():
+                if fname in SIDECAR_MAP.keys():
                     self.recording_types.append(fname)
                 else:
                     self.extra_data.append(fname)
@@ -280,7 +280,7 @@ class Session(QueryMixin):
                                 Scan(op.join(rec_type, fname), self))
 
                     for fname in os.listdir(rec_path):
-                        for ext in _RAW_FILETYPES:
+                        for ext in RAW_FILETYPES:
                             if ext in fname:
                                 self._scans.append(
                                     Scan(op.join(rec_type, fname), self))

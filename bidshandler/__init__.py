@@ -11,3 +11,4 @@ from .scan import Scan  # noqa
 from .bidserrors import (NoProjectError, NoSubjectError, NoSessionError,  # noqa
                          NoScanError, IDError, MappingError, AssociationError)
 from .utils import download_test_data  # noqa
+from .extensions import mne_params  # noqa

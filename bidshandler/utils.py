@@ -5,8 +5,16 @@ from datetime import datetime, date
 import zipfile
 import urllib.request
 import tempfile
+from warnings import warn
 
-import pandas as pd
+try:
+    from mne.io.kit.kit import get_kit_info
+    MNE_INSTALLED = True
+except ImportError:
+    MNE_INSTALLED = False
+
+from pandas import read_csv
+from numpy import ndarray
 
 from .constants import test_path
 
@@ -94,7 +102,7 @@ def _bids_params_are_subsets(params1, params2):
 
 def _combine_tsv(tsv, df, drop_column=None):
     """Merge a df into a tsv file"""
-    orig_df = pd.read_csv(tsv, sep='\t')
+    orig_df = read_csv(tsv, sep='\t')
     orig_df = orig_df.append(df, sort=False)
     if drop_column is not None:
         orig_df.drop_duplicates(subset=drop_column, keep='last', inplace=True)
@@ -190,6 +198,22 @@ def _get_bids_params(fname):
         else:
             data['file'] = i
     return data
+
+
+def _get_mrk_meas_date(mrk):
+    """Find the measurement date from a KIT marker file."""
+    if not MNE_INSTALLED:
+        warn('MNE may be required to generate values to be loaded with MNE.')
+        return datetime.min
+    info = get_kit_info(mrk, False)[0]
+    meas_date = info.get('meas_date', None)
+    if isinstance(meas_date, (tuple, list, ndarray)):
+        meas_date = meas_date[0]
+    if meas_date is not None:
+        meas_datetime = datetime.fromtimestamp(meas_date)
+    else:
+        meas_datetime = datetime.min
+    return meas_datetime
 
 
 def _multi_replace(str_in, old, new):
