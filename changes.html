@@ -120,12 +120,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-2-1">Version 0.2.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">&gt; API Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-2">Version 0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id6">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">&gt; New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -210,20 +210,22 @@
 <ul class="simple">
 <li>Scan object has new properties: <cite>scan_type</cite> and <cite>emptyroom</cite>. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14">#14</a>)</li>
 <li>Searching for a <cite>Scan</cite> within a <cite>Session</cite> can now accept regex and is able to return more than one scan if multiple match. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/15">#15</a>)</li>
+<li><cite>Session</cite> objects have a <cite>.extra_data</cite> property which contains a list of folder names containing extra data associated with the session. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/18">#18</a>)</li>
 </ul>
 </div>
 <div class="section" id="new-features">
 <h3>&gt; New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>MEG data with an associated empty room file now brings the data along when it is added to another BIDS folder hierarchy. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14">#14</a>)</li>
+<li>Session objects will now bring along and merge any extra data such as code that they have associated with them. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/18">#18</a>)</li>
 </ul>
 </div>
 </div>
 <div class="section" id="version-0-2-1">
 <h2>Version 0.2.1<a class="headerlink" href="#version-0-2-1" title="Permalink to this headline">¶</a></h2>
 <p>Date: 11th Feb 2019</p>
-<div class="section" id="id4">
-<h3>&gt; API Changes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>&gt; API Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>All functions in <cite>bidshandler.utils</cite> are now private with the exception of the new function <cite>download_test_data</cite>. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/13">#13</a>)</li>
 </ul>
@@ -232,14 +234,14 @@
 <div class="section" id="version-0-2">
 <h2>Version 0.2<a class="headerlink" href="#version-0-2" title="Permalink to this headline">¶</a></h2>
 <p>Date: 5th Feb 2019</p>
-<div class="section" id="id6">
-<h3>&gt; API Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>&gt; API Changes<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><cite>BIDSFolder</cite> renamed to <cite>BIDSTree</cite></li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>&gt; New Features<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>&gt; New Features<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Query functionality. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/8">#8</a>)</li>
 <li><cite>BIDSTree</cite> objects are able to have an <cite>.xml</cite> file generated to map out their entire structure. (<a class="reference external" href="https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/4">#4</a>)</li>

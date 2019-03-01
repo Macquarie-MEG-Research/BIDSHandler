@@ -13,11 +13,13 @@ Version 0.3
 
 - Scan object has new properties: `scan_type` and `emptyroom`. (`#14 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14>`_)
 - Searching for a `Scan` within a `Session` can now accept regex and is able to return more than one scan if multiple match. (`#15 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/15>`_)
+- `Session` objects have a `.extra_data` property which contains a list of folder names containing extra data associated with the session. (`#18 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/18>`_)
 
 > New Features
 --------------
 
 - MEG data with an associated empty room file now brings the data along when it is added to another BIDS folder hierarchy. (`#14 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/14>`_)
+- Session objects will now bring along and merge any extra data such as code that they have associated with them. (`#18 <https://github.com/Macquarie-MEG-Research/BIDSHandler/pull/18>`_)
 
 
 Version 0.2.1

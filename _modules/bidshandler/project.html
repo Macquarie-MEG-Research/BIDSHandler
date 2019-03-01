@@ -119,12 +119,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2-1">Version 0.2.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id4">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2">Version 0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id7">&gt; New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id8">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id9">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -223,6 +223,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="n">id_</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bids_tree</span> <span class="o">=</span> <span class="n">bids_tree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_participants_json</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_readme</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subjects</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -343,6 +344,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_subjects</span><span class="p">[</span><span class="n">sub_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">(</span><span class="n">sub_id</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">fname</span> <span class="o">==</span> <span class="s1">&#39;participants.tsv&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_participants_tsv</span> <span class="o">=</span> <span class="n">fname</span>
+            <span class="k">elif</span> <span class="n">fname</span> <span class="o">==</span> <span class="s1">&#39;participants.json&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_participants_json</span> <span class="o">=</span> <span class="n">fname</span>
             <span class="k">elif</span> <span class="n">fname</span> <span class="o">==</span> <span class="s1">&#39;dataset_description.json&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="n">fname</span>
             <span class="k">elif</span> <span class="n">fname</span> <span class="o">==</span> <span class="s1">&#39;README.txt&#39;</span><span class="p">:</span>
@@ -424,6 +427,14 @@
             <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">abs_path</span><span class="p">):</span>
                 <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">abs_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">files</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">participants_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to the associated participants.tsv if there is one.&quot;&quot;&quot;</span>
+        <span class="n">_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_json</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_path</span> <span class="o">=</span> <span class="n">_realize_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_participants_json</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_path</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">participants_tsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

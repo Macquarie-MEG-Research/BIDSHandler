@@ -121,12 +121,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2-1">Version 0.2.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changes.html#id4">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id6">&gt; API Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../changes.html#version-0-2">Version 0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changes.html#id6">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changes.html#id7">&gt; New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id8">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changes.html#id9">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -272,25 +272,28 @@
 <tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.inheritable_files" title="bidshandler.Project.inheritable_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inheritable_files</span></code></a></td>
 <td>List of files that are able to be inherited by child objects.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.participants_tsv" title="bidshandler.Project.participants_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">participants_tsv</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.participants_json" title="bidshandler.Project.participants_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">participants_json</span></code></a></td>
 <td>Path to the associated participants.tsv if there is one.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.path" title="bidshandler.Project.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.participants_tsv" title="bidshandler.Project.participants_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">participants_tsv</span></code></a></td>
+<td>Path to the associated participants.tsv if there is one.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.path" title="bidshandler.Project.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></td>
 <td>Path to Project folder.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.projects" title="bidshandler.Project.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.projects" title="bidshandler.Project.projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">projects</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.readme" title="bidshandler.Project.readme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readme</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.readme" title="bidshandler.Project.readme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readme</span></code></a></td>
 <td>Path to the associated README.txt if there is one.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.scans" title="bidshandler.Project.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.scans" title="bidshandler.Project.scans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scans</span></code></a></td>
 <td>List of all contained <a class="reference internal" href="bidshandler.Scan.html#bidshandler.Scan" title="bidshandler.Scan"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Scan</span></code></a>’s.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.sessions" title="bidshandler.Project.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.sessions" title="bidshandler.Project.sessions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sessions</span></code></a></td>
 <td>List of all contained <a class="reference internal" href="bidshandler.Session.html#bidshandler.Session" title="bidshandler.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Session</span></code></a>’s.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#bidshandler.Project.subjects" title="bidshandler.Project.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#bidshandler.Project.subjects" title="bidshandler.Project.subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subjects</span></code></a></td>
 <td>List of all contained <a class="reference internal" href="bidshandler.Subject.html#bidshandler.Subject" title="bidshandler.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bidshandler.Subject</span></code></a>’s.</td>
 </tr>
 </tbody>
@@ -385,6 +388,12 @@ structure.</td>
 <dt id="bidshandler.Project.inheritable_files">
 <code class="descname">inheritable_files</code><a class="headerlink" href="#bidshandler.Project.inheritable_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of files that are able to be inherited by child objects.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bidshandler.Project.participants_json">
+<code class="descname">participants_json</code><a class="headerlink" href="#bidshandler.Project.participants_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the associated participants.tsv if there is one.</p>
 </dd></dl>
 
 <dl class="attribute">

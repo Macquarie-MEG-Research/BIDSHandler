@@ -30,6 +30,7 @@ bidshandler.Project
       ~Project.ID
       ~Project.description
       ~Project.inheritable_files
+      ~Project.participants_json
       ~Project.participants_tsv
       ~Project.path
       ~Project.projects

@@ -119,12 +119,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2-1">Version 0.2.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id4">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../changes.html#version-0-2">Version 0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id6">&gt; API Changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id7">&gt; New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id8">&gt; API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../changes.html#id9">&gt; New Features</a></li>
 </ul>
 </li>
 </ul>
@@ -270,7 +270,6 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Added subject must have same ID.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Session</span><span class="p">):</span>
-            <span class="c1"># Check to see if we have only one scan without a session folder:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">_id</span> <span class="ow">and</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">_id</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">AssociationError</span><span class="p">(</span><span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="s2">&quot;project and subject&quot;</span><span class="p">)</span>
@@ -279,6 +278,8 @@
                 <span class="c1"># with the current session with that ID.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">copier</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Check to see if we have only one scan without a session</span>
+                <span class="c1"># folder:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="c1"># If we have only one existing session, we want to</span>
                     <span class="c1"># check whether the existing session has no actual</span>
@@ -325,7 +326,7 @@
         <span class="k">return</span> <span class="n">file_list</span></div>
 
 <div class="viewcode-block" id="Subject.delete"><a class="viewcode-back" href="../../generated/bidshandler.Subject.html#bidshandler.Subject.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Delete the  subject from the parent Project.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Delete the subject from the parent Project.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">[:]:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="c1"># remove the subject information from the participants.tsv</span>
@@ -426,6 +427,14 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_sub_df</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">participants_tsv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;n/a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check if the new parent has a participants.json file.</span>
+        <span class="c1"># If not, give it the one with this subject if it has one.</span>
+        <span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">_participants_json</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">_participants_json</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">participants_json</span><span class="p">,</span>
+                            <span class="n">project</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
         <span class="c1"># can now safely get the subject info</span>
         <span class="n">new_subject</span><span class="o">.</span><span class="n">_load_subject_info</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">new_subject</span>
