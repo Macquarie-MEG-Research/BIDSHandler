@@ -1,6 +1,6 @@
 import setuptools
 
-VERSION = "0.3dev0"
+VERSION = "0.3"
 
 DESCRIPTION = "Simple way to manage and manipulate BIDS compatible data"
 DOWNLOAD_URL = "https://github.com/Macquarie-MEG-Research/BIDSHandler"

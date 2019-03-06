@@ -59,17 +59,15 @@ QueryMixin (:py:mod:`bidshandler.querymixin`):
 
 .. currentmodule:: bidshandler.querymixin
 
-.. autosummary::
-   :toctree: generated/
+.. toctree::
 
-   QueryMixin
+   manual/QueryMixin
 
 
 QueryList (:py:mod:`bidshandler.querylist`):
 
 .. currentmodule:: bidshandler.querylist
 
-.. autosummary::
-   :toctree: generated/
+.. toctree::
 
-   QueryList
+   manual/QueryList

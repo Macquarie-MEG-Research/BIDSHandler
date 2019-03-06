@@ -26,10 +26,11 @@ author = 'Matt Sanderson'
 # The short X.Y version
 version = '0.3'
 # The full version, including alpha/beta/rc tags
-release = 'v0.3dev0'
+release = 'v0.3'
 
 
 def trim_docstring_with_noqa(app, what, name, obj, options, lines):
+    # remove the first line of docstrings with noqa (required for formatting)
     if isinstance(lines, list) and len(lines) > 0:
         if lines[0] == '.. # noqa':
             del lines[0]
@@ -43,7 +44,7 @@ def setup(app):
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-# needs_sphinx = '1.0'
+# needs_sphinx = '1.8'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -61,7 +62,6 @@ extensions = [
 
 autodoc_default_options = {
     'member-order': 'bysource',
-    'undoc-members': False,
     'show-inheritance': True,
     'inherited-members': True,
     'special-members': '__contains__,__iter__,__getitem__',
